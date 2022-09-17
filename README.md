@@ -1,0 +1,3 @@
+# planetcapital
+
+Find your best investing idea's at the speed of light...
