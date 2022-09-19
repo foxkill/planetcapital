@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Ticker;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('layouts.layout');
-});
+    $tikr = Ticker::orderBy('tikr')->get();
+    $tickers = $tikr->toArray();
+    // dd($tickers);
+    return view('layouts.layout', ['tickers' => $tickers]);
+})->name('root');
