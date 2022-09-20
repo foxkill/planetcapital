@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tickers', function (Blueprint $table) {
+        Schema::create('exchanges', function (Blueprint $table) {
             $table->id();
-            $table->string('tikr', 16);
-            $table->string('name')->index();
+            $table->string('exchange_short_name')->index();
+            $table->string('exchange')->index();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tickers');
+        Schema::dropIfExists('exchanges');
     }
 };
