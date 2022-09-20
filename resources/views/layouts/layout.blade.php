@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
    <meta charset="utf-8">
    <title>{{ config('app.name', 'Planet Capital') }}</title>
 
    <!-- mobile responsive meta -->
    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
+   <meta name="csrf-token" content="{{ csrf_token() }}">
    <!-- ** Plugins Needed for the Project ** -->
    <!-- plugins -->
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+   <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"> -->
+   <link rel="stylesheet" href="//cdn.webix.com/edge/webix.css" type="text/css">
    <!-- <link rel="stylesheet" href="plugins/themify-icons/themify-icons.css"> -->
    <!-- Main Stylesheet -->
    @vite(['resources/css/app.css', 'resources/ts/app.ts'])
@@ -18,10 +20,11 @@
    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
 
+   <!-- <script src="//cdn.webix.com/edge/webix.js" type="text/javascript"></script> -->
 </head>
 
 <body>
-   <nav class="navbar is-sticky-top navigation" role="navigation" aria-label="main navigation">
+   <nav class="" role="navigation" aria-label="main navigation">
       <div class="container">
          <div class="navbar-brand">
             <a class="navbar-item" href="{{ route('root') }}">
@@ -52,7 +55,7 @@
       </div>
    </nav>
 
-   <!-- banner -->
+   <!-- banner w/search -->
    <section class="section pb-0">
       <div class="container">
          <div class="columns is-justify-content-space-between is-align-items-center">
@@ -77,7 +80,7 @@
    <!-- topics -->
    <section class="section pb-0">
       <div class="container">
-         <h2 class="section-title">Bcolumnsse Your Topics</h2>
+         <h2 class="section-title">Your Topics</h2>
          <div class="columns is-multiline">
             <!-- topic -->
             <div class="column is-3-widescreen is-4-desktop is-6-tablet">
@@ -174,8 +177,7 @@
                         praesentium
                         nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit
                         recusandae
-                        maxime perspiciatis iste placeat architecto, mollitia delectus <a
-                           href="https://examplesite.com">link</a>
+                        maxime perspiciatis iste placeat architecto, mollitia delectus <a href="https://examplesite.com">link</a>
                         ut ab quibusdam. Magnam cumque numquam tempore reprehenderit illo, unde cum omnis vel sed
                         temporibus,
                         repudiandae impedit nam ad enim porro, qui labore fugiat quod suscipit fuga necessitatibus.
@@ -193,8 +195,7 @@
                         praesentium
                         nisi officiis maiores quia sapiente totam omnis vel sequi corporis ipsa incidunt reprehenderit
                         recusandae
-                        maxime perspiciatis iste placeat architecto, mollitia delectus <a
-                           href="https://examplesite.com">link</a>
+                        maxime perspiciatis iste placeat architecto, mollitia delectus <a href="https://examplesite.com">link</a>
                         ut ab quibusdam.</p>
                   </div>
                </div>
@@ -247,7 +248,7 @@
    </section>
    <!-- /call to action -->
 
-   @include('includes.footer') 
+   @include('includes.footer')
 
    <!-- plugins -->
    <!-- <script src="plugins/jQuery/jquery.min.js"></script> -->

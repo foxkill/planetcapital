@@ -3,9 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\File;
 use Illuminate\Database\Seeder;
+use App\Models\Exchange;
 use App\Models\Ticker;
-use File;
 
 class TickerSeeder extends Seeder
 {
@@ -18,12 +19,21 @@ class TickerSeeder extends Seeder
     {
         Ticker::truncate();
 
-        $tickerJson = File::get('database/seeders/tickers.json');
+        $symbolsJson = File::get('database/seeders/symbols.json');
 
-        $tickers = json_decode($tickerJson);
+        $symbols = json_decode($symbolsJson);
 
-        foreach ($tickers as $key => $ticker) {
-            Ticker::create(['tikr' => $ticker, 'name' => '']);
+        $exchanges = Exchange::all();
+
+        foreach ($symbols as $key => $symbol) {
+            $exchange = $exchanges->where('exchange_short_name', $symbol->exchangeShortName)?->first();
+            Ticker::create(
+                [
+                    'tikr' => $symbol->symbol,
+                    'name' => $symbol->name,
+                    'exchange_id' => $exchange ? $exchange->id : 0,
+                ]
+            );
         }
     }
 }
