@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TickersController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Ticker;
 
@@ -15,8 +16,10 @@ use App\Models\Ticker;
 */
 
 Route::get('/', function () {
-    $tikr = Ticker::orderBy('tikr')->get();
+    $tikr = Ticker::orderBy('tikr')->where('exchange_id', 2)->get();
     $tickers = $tikr->toArray();
     // dd($tickers);
-    return view('layouts.layout', ['tickers' => $tickers]);
+    return view('layouts.app', ['tickers' => $tickers]);
 })->name('root');
+
+Route::get('/search/1', [TickersController::class, 'show'])->name('search');
