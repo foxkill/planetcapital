@@ -14,38 +14,16 @@
    <!-- <link rel="stylesheet" href="//cdn.webix.comg/edge/webix.css" type="text/css"> -->
    <!-- <link rel="stylesheet" href="plugins/themify-icons/themify-icons.css"> -->
    <!-- Main Stylesheet -->
-   @vite(['resources/css/app.css', 'resources/ts/app.ts'])
+   @viteReactRefresh
+   @vite(['resources/css/app.css', 'resources/ts/app.tsx'])
 
-   <script src="https://cdn.tailwindcss.com"></script>
    <!-- <script src="//cdn.webix.com/edge/webix.js" type="text/javascript"></script> -->
    <!--Favicon-->
    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-   <script>
-      tailwind.config = {
-         theme: {
-            screens: {
-               sm: '480px',
-               md: '768px',
-               lg: '976px',
-               xl: '1440px'
-            },
-            extend: {
-               colors: {
-                  'search-field': '#f1f2f3',
-                  primary: '#ff0043',
-                  light: '#999',
-               },
-               backgroundImage: {
-                  'icon-search': "url('images/icon-search-small.svg')",
-               },
-            }
-         }
-      }
-   </script>
 </head>
 
-<body>
+<body class="antialiased font-montserrat text-base leading-6 text-gray-800">
    <noscript>Does not work without javascript</noscript>
    <nav class="relative container mx-auto p-6" role="navigation" aria-label="main navigation">
       <!-- Flex container -->
@@ -64,6 +42,7 @@
          <a href="#" class="hidden p-3 pt-2 px-6 rounded-full bg-blue-400 text-white baseline md:flex">Login</a>
       </div>
    </nav>
+
    <!-- Hero section -->
    <section id="hero">
       <!-- Flex container -->
@@ -219,9 +198,7 @@
       </div>
    </section>
    <!-- /call to action -->
-
    @include('includes.footer')
-
    <!-- plugins -->
    <!-- <script src="plugins/jQuery/jquery.min.js"></script> -->
    <!-- <script src="plugins/masonry/masonry.min.js"></script> -->

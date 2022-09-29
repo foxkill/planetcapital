@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticker;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
 
 class TickersController extends Controller
 {

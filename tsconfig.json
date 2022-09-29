@@ -1,5 +1,12 @@
 {
+    "include": ["./resources/ts/**/*"],
     "compilerOptions": {
+        "jsx": "react",
+        "allowJs": true,
+        "baseUrl": ".",
+        "paths": {
+            "@components/*": ["resources/ts/components"]
+        },
         "target": "es5",
         "module": "esnext",
         "moduleResolution": "node",
