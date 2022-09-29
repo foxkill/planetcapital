@@ -16,10 +16,9 @@ use App\Models\Ticker;
 */
 
 Route::get('/', function () {
-    $tikr = Ticker::orderBy('tikr')->where('exchange_id', 2)->get();
+    $tikr = Ticker::orderBy('tikr')->take(100)->where('exchange_id', 2)->get();
     $tickers = $tikr->toArray();
-    // dd($tickers);
     return view('layouts.app', ['tickers' => $tickers]);
 })->name('root');
 
-Route::get('/search/1', [TickersController::class, 'show'])->name('search');
+Route::get('/security/{exchange}/{security}', [TickersController::class, 'show'])->name('search');

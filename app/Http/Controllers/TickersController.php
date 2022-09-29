@@ -47,13 +47,11 @@ class TickersController extends Controller
      */
     public function show(Request $request, Ticker $ticker)
     {
-        $this->validate($request, ['ticker' => 'required']);
-
-        if ($request->has('ticker')) {
-            dd($request);
-        } else {
-            redirect()->back();
-        }
+        $this->validate($request, ['security' => 'required|string']);
+        // $input = $request->all();
+        // $request->isMethod('get')
+        // redirect()->back();
+        return redirect()->route('root');
     }
 
     /**

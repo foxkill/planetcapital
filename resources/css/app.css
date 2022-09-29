@@ -178,7 +178,7 @@ ul {
   list-style: none;
 }
 
-a {
+/* a {
   color: inherit;
 }
 
@@ -202,7 +202,7 @@ select:focus {
 
 a:hover {
   color: #FF0043;
-}
+} */
 
 .slick-slide {
   outline: 0;

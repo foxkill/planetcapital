@@ -32,8 +32,9 @@
             },
             extend: {
                colors: {
-                  pageRed: '#FF0043',
-                  'search-field': '#f1f2f3'
+                  'search-field': '#f1f2f3',
+                  primary: '#ff0043',
+                  light: '#999',
                },
                backgroundImage: {
                   'icon-search': "url('images/icon-search-small.svg')",
@@ -45,6 +46,7 @@
 </head>
 
 <body>
+   <noscript>Does not work without javascript</noscript>
    <nav class="relative container mx-auto p-6" role="navigation" aria-label="main navigation">
       <!-- Flex container -->
       <div class="flex flex-wrap items-center justify-between">
@@ -67,12 +69,12 @@
       <!-- Flex container -->
       <div class="flex flex-col-reverse md:flex-row items-center px-6 mx-auto mt-10 space-y-0 md:space-y-0">
          <!-- Left item -->
-         <div class="flex flex-col mb-32 space-y-12 md:w-1/2">
+         <div class="flex flex-col mb-32 space-y-2 md:w-1/2">
             <h1 class="max-w-md text-4xl text-center font-bold md:text-5xl md:text-left">
                Search for your favorite ticker here...
             </h1>
             <!-- searchbox -->
-            <form action="{{route('search')}}" method="GET">
+            <form action="{{route('search', ['exchange' => 'nasdaq', 'security' => '*'])}}" method="GET">
                @csrf
                <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300">Search</label>
                <div class="relative">
@@ -81,130 +83,32 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                      </svg>
                   </div>
-                  <input type="search" id="ticker" class="block p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for tickers like AAPL..." required="" list="tickerlist">
+                  <input type="search" name="security" class="block p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search for tickers like AAPL..." required="" list="tickerlist">
                   <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+                  @if ($errors->any())
+                  <div class="alert alert-danger">
+                     <ul>
+                        @foreach ($errors->all() as $error)
+                        <li class="text-red-600">{{ $error }}</li>
+                        @endforeach
+                     </ul>
+                  </div>
+                  @endif
                   @include('includes.tickerlist', $tickers)
                </div>
             </form>
          </div>
          <!-- Image -->
-         <div class="flex p-10">
+         <div class="flex p-10 space-y-2">
             <img src="images/banner.webp" class="rounded">
          </div>
       </div>
    </section>
-
-   <!--
-   <nav class="" role="navigation" aria-label="main navigation">
+   <!-- Cards -->
+   <section class="section">
       <div class="container">
-         <div class="navbar-brand">
-            <a class="navbar-item" href="{{ route('root') }}">
-               <img class="img-fluid" src="images/logo.png" alt="Planet Capital Logo" width="155px">
-            </a>
-
-            <a role="button" class="navbar-burger burger" aria-expanded="false" data-target="navbar-links">
-               <span aria-hidden="true"></span>
-               <span aria-hidden="true"></span>
-               <span aria-hidden="true"></span>
-            </a>
-         </div>
-
-         <div id="navbar-links" class="navbar-menu">
-            <div class="navbar-start ml-auto">
-               <a class="navbar-item" href="{{ route('root') }}">Home</a>
-               <a class="navbar-item" href="list.html">Dashboard</a>
-               <a class="navbar-item" href="search.html">Watchlist</a>
-            </div>
-
-            <div class="navbar-end ml-0">
-               <div class="navbar-item py-0">
-                  <a href="changelog.html" class="btn btn-sm btn-outline-primary ml-4">changelog</a>
-                  <a href="contact.html" class="btn btn-sm btn-primary ml-4">contact</a>
-               </div>
-            </div>
-         </div>
-      </div>
-   </nav>
-   -->
-   <!-- banner w/search -->
-   <!--
-   <section class="section pb-0">
-      <div class="container">
-         <div class="columns is-justify-content-space-between is-align-items-center">
-            <div class="column is-7-desktop has-text-centered-mobile has-text-centered-tablet has-text-left-desktop">
-               <h1 class="mb-4">{{ config('app.name', 'Planet Capital') }}</h1>
-               <p class="mb-4">Lorem ipsum dolor amet, consetetur sadiffspscing elitr, diam nonumy invidunt ut labore et
-                  dolore magna aliquyam erat, sed diam voluptua At.</p>
-               <form class="search-wrapper" action="search.html">
-                  <input id="search-by" name="s" type="search" class="input input-lg" placeholder="Search stocks here..." list="tickerlist">
-                  <button type="submit" class="btn btn-primary">Search</button>
-                  @include('includes.tickerlist', $tickers)
-               </form>
-            </div>
-            <div class="column is-4-desktop hidden-on-tablet">
-               <img src="images/banner.png" alt="illustration" class="img-fluid">
-            </div>
-         </div>
-      </div>
-   </section>
-   -->
-   <!-- /banner -->
-
-   <!--
-   <section class="section pb-0">
-      <div class="container">
-         <h2 class="section-title">Your Topics</h2>
-         <div class="columns is-multiline">
-            <div class="column is-3-widescreen is-4-desktop is-6-tablet">
-               <div class="card match-height">
-                  <div class="card-body">
-                     <i class="card-icon ti-panel mb-5"></i>
-                     <h3 class="card-title h4">Basic Startup</h3>
-                     <p class="card-text">Cras at dolor eget urna varius faucibus tempus in elit dolor sit amet.</p>
-                     <a href="list.html" class="stretched-link"></a>
-                  </div>
-               </div>
-            </div>
-            <div class="column is-3-widescreen is-4-desktop is-6-tablet">
-               <div class="card match-height">
-                  <div class="card-body">
-                     <i class="card-icon ti-credit-card mb-5"></i>
-                     <h3 class="card-title h4">Account Bill</h3>
-                     <p class="card-text">Cras at dolor eget urna varius faucibus tempus in elit dolor sit amet.</p>
-                     <a href="list.html" class="stretched-link"></a>
-                  </div>
-               </div>
-            </div>
-            <div class="column is-3-widescreen is-4-desktop is-6-tablet">
-               <div class="card match-height">
-                  <div class="card-body">
-                     <i class="card-icon ti-package mb-5"></i>
-                     <h3 class="card-title h4">Our Features</h3>
-                     <p class="card-text">Cras at dolor eget urna varius faucibus tempus in elit dolor sit amet.</p>
-                     <a href="list.html" class="stretched-link"></a>
-                  </div>
-               </div>
-            </div>
-            <div class="column is-3-widescreen is-4-desktop is-6-tablet">
-               <div class="card match-height">
-                  <div class="card-body">
-                     <i class="card-icon ti-settings mb-5"></i>
-                     <h3 class="card-title h4">Theme Facility</h3>
-                     <p class="card-text">Cras at dolor eget urna varius faucibus tempus in elit dolor sit amet.</p>
-                     <a href="list.html" class="stretched-link"></a>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </section>
-   -->
-
-   <!-- faq -->
-   <section class="section pb-0">
-      <div class="container">
-         <h2 class="section-title">Mostly Asked Questions</h2>
-         <div class="columns masonry-wrapper">
+         <h1 class="">The Ratios...</h1>
+         <div class="">
             <!-- faq item -->
             <div class="column is-6-desktop">
                <div class="card card-lg">
@@ -297,7 +201,6 @@
       </div>
    </section>
    <!-- /faq -->
-
    <!-- call to action -->
    <section class="section">
       <div class="container">
