@@ -1,12 +1,17 @@
-/*  typography */
 @import url("https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800&display=swap");
-body {
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*  typography */
+/* body {
   font-family: "Montserrat", sans-serif;
   -webkit-font-smoothing: antialiased;
   font-size: 16px;
   line-height: 1.6;
   color: #333;
-}
+} */
 
 p, .paragraph {
   font-weight: 400;
