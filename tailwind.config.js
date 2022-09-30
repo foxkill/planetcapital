@@ -2,7 +2,7 @@
 module.exports = {
   content: [
     "./resources/**/*.blade.php",
-    "./resources/**/*.ts",
+    "./resources/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
     screens: {
@@ -22,5 +22,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
 }
