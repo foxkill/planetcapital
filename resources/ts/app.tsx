@@ -9,10 +9,10 @@ import App from './components/App';
 const appContainer = document.getElementById('app');
 
 if (appContainer) {
-    ReactDOM.render(
+    const root = ReactDom.createRoot(appContainer) 
+    root.render(
         <React.StrictMode>
-            <App />
-        </React.StrictMode>,
-        appContainer
-    ) 
+        <App />
+        </React.StrictMode>
+    )
 }

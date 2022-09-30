@@ -1,12 +1,15 @@
+import { Footer } from './Footer/Footer';
+import { Hero } from './Hero/Hero';
+import { Navbar } from './Navbar/Navbar';
 import React from "react"
-import Section from "./Section"
 
-const App = (props) => {
+const App = () => {
     return (
-        <div className="App">
-            <h1>Hello new component</h1>
-           {props.children} 
-        </div>
+        <main>
+            <Navbar />
+            <Hero />
+            <Footer />
+        </main>
     )
 }
 
