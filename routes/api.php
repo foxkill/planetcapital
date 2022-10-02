@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Models\Ticker;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+
+Route::get('/tickers', function (Request $request) {
+    // return $request->user();
+    // throw new Exception('this and that');
+    return response()->json(Ticker::where('exchange_id', 2)->orderBy('tikr')->get());
 });
+
