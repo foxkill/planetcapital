@@ -3,16 +3,10 @@ import './bootstrap.ts'
 
 import ReactDom from 'react-dom/client'
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './components/App';
+import Layout from './Shared/Layout';
 
 const appContainer = document.getElementById('app');
 
 if (appContainer) {
-    const root = ReactDom.createRoot(appContainer) 
-    root.render(
-        <React.StrictMode>
-        <App />
-        </React.StrictMode>
-    )
+    ReactDom.createRoot(appContainer).render(<Layout />)
 }
