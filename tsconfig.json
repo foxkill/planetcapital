@@ -5,8 +5,9 @@
         "allowJs": true,
         "baseUrl": ".",
         "paths": {
-            "@components/*": ["resources/ts/components"]
+            "@/*": ["./resources/ts/*"]
         },
+        "lib": ["DOM", "ES2015"],
         "target": "es5",
         "module": "esnext",
         "moduleResolution": "node",
