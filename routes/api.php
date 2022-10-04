@@ -20,8 +20,12 @@ use App\Models\Ticker;
 
 
 Route::get('/tickers', function (Request $request) {
-    // return $request->user();
-    // throw new Exception('this and that');
-    return response()->json(Ticker::where('exchange_id', 2)->orderBy('tikr')->get());
+    return response()->json(
+        Ticker::select(['id', 'tikr', 'name', 'exchange_id'])->where('exchange_id', 2)->orderBy('tikr')->get()
+    );
 });
 
+
+Route::get('/security/{exchange}/{tikr}/summary', function (Request $request) {
+    return response()->json([$request->tikr, $request->exchange]);
+});
