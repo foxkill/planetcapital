@@ -5,19 +5,23 @@
 // Closed Source
 //
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Tickerlist from "../Tickerlist";
 import useFetch from "../../useFetch";
 
 export function TickerSearch() {
     const [hasFormResults, setHasFormResults] = useState(false)
+    const [value, setValue] = useState("")
     const [endpoint, setEndpoint] = useState("")
-    const tickerListRef = useRef<HTMLDataListElement>(); 
+    const tickerListRef = useRef<HTMLDataListElement>(null); 
     const searchField = useRef<HTMLInputElement>(null);
     
     const info = useFetch(endpoint)
-    console.log(info)
 
+    useEffect(() => {
+      searchField.current?.focus()
+    }, [])
+    
     function submit() {
         const val = (searchField.current?.value as string).toUpperCase()
         if (!val) {
@@ -35,7 +39,14 @@ export function TickerSearch() {
             <p className="py-6"></p>
             <div className="form-control">
                 <div className="input-group">
-                    <input ref={searchField} type="text" placeholder="Search, i. e. AAPL..." className="input input-bordered" list="tickerlist" required />
+                    <input  
+                        onChange={e => setValue(e.target.value)}
+                        value={value} ref={searchField} 
+                        type="search" 
+                        placeholder="Search, i. e. AAPL..." 
+                        className="input input-bordered" 
+                        list="tickerlist" 
+                        required />
                     <button className="btn btn-square" onClick={submit}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -44,7 +55,7 @@ export function TickerSearch() {
                 </div>
                 <Tickerlist ref={tickerListRef} />
             </div>
-        </div></>;
+        </div></>
 }
 
 export default TickerSearch
