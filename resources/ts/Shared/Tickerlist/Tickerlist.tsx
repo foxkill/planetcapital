@@ -1,9 +1,9 @@
 import useFetch from "../../useFetch"
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import Info from "../Info";
 import { Ticker } from "@/types/app";
 
-function Tickerlist() {
+const Tickerlist = forwardRef((props , ref) => {
     // const [info, setInfo] = useState<Information>(useFetch("http://localhost/api/tickers"))
     const info = useFetch("http://localhost/api/tickers")
 
@@ -31,15 +31,15 @@ function Tickerlist() {
         )
     }
 
-    const options = info.data.map((item: Ticker) => <option key={item.id}>{item.tikr}</option>)
+    const options = info.data.map((item: Ticker) => <option className="!bg-white" key={item.id} data-value={item.name} data-exchange-id={item.exchange_id} name={item.tikr}>{item.tikr}</option>)
 
     return (
         <>
-            <datalist id="tickerlist">
-                {options}
-            </datalist>
+        <datalist className="!bg-white rounded" id="tickerlist" ref={ref}>
+            {options}
+        </datalist>
         </>
     );
-}
+})
 
 export default Tickerlist;
