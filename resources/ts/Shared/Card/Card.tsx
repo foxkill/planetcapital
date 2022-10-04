@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Card = (props: {text: string}) => {
+const Card = (props: {data: ISecurity}) => {
     return (
         <div className="card w-80 h-60 bg-base-100 hover:shadow-xl">
             <div className="card-body">
@@ -11,7 +11,7 @@ const Card = (props: {text: string}) => {
                         </svg>
                     </button>
                 </div>
-                <p>{props.text}</p>
+                <p>{props.data.symbol}</p>
             </div>
         </div>
     )
