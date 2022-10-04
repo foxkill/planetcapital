@@ -16,7 +16,10 @@ function useFetch(url: string): Information {
     }
 
     useEffect(() => {
-        console.log("im in fetch")
+        console.log("im in fetch", url)
+        if (!url) {
+            return;
+        }
         get<Resp>(url)
             .then((response: AxiosResponse<Resp>) => {
                 setData(response.data)
