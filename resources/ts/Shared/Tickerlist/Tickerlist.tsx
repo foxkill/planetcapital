@@ -29,7 +29,10 @@ const Tickerlist = forwardRef<HTMLDataListElement>((props, ref) => {
         )
     }
 
-    const options = info.data.map((item: Ticker) => <option className="!bg-white" key={item.id} data-value={item.name} data-exchange-id={item.exchange_id} name={item.tikr}>{item.tikr}</option>)
+    const options = info.data.map((item: Ticker) => <option className="!bg-white" 
+        key={item.id} data-value={item.name} 
+        data-exchange-id={item.exchange_id} 
+        name={item.tikr}>{item.tikr}</option>)
 
     return (
         <datalist className="!bg-white rounded" id="tickerlist" ref={ref}>
