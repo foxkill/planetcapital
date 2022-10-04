@@ -3,11 +3,11 @@ import { useState, useEffect } from 'react'
 import { Ticker, Information } from './types/app'
 
 type Resp = {
-    data: Ticker[]
+    data: Ticker[] | ISecurity
 }
 
 function useFetch(url: string): Information {
-    const [data, setData] = useState<any | null>(null)
+    const [data, setData] = useState<Resp>()
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState(null)
 
@@ -18,7 +18,7 @@ function useFetch(url: string): Information {
     useEffect(() => {
         console.log("im in fetch", url)
         if (!url) {
-            return;
+            setData([])
         }
         get<Resp>(url)
             .then((response: AxiosResponse<Resp>) => {
