@@ -49,6 +49,10 @@ class TickersController extends Controller
     public function show(Request $request, Ticker $ticker)
     {
         $this->validate($request, ['security' => 'required|string']);
+
+        if ($request->wantsJson()) {
+            return response()->json(['id' => $request->security]);
+        }
         // $input = $request->all();
         // $request->isMethod('get')
         // redirect()->back();
