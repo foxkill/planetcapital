@@ -8,15 +8,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import Tickerlist from "../Tickerlist";
 import useFetch from "../../useFetch";
+type SetEndPointFunc = (endpoint: string) => void
 
-export function TickerSearch() {
-    const [hasFormResults, setHasFormResults] = useState(false)
+export function TickerSearch(props: { setEndPoint: SetEndPointFunc }) {
     const [value, setValue] = useState("")
-    const [endpoint, setEndpoint] = useState("")
     const tickerListRef = useRef<HTMLDataListElement>(null); 
     const searchField = useRef<HTMLInputElement>(null);
     
-    const info = useFetch(endpoint)
+    // const info = useFetch(endpoint)
 
     useEffect(() => {
       searchField.current?.focus()
@@ -29,7 +28,7 @@ export function TickerSearch() {
         }
         const security = tickerListRef.current?.options.namedItem(val)
         if (security?.getAttribute('data-exchange-id')) {
-            setEndpoint("/api/security/nasdaq/" + val + "/summary")
+            props.setEndPoint("/api/security/nasdaq/" + val + "/summary")
         }
     }
 
