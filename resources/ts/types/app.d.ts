@@ -1,3 +1,5 @@
+import ISecurity from "./security";
+
 export {Ticker, Information};
 
 declare global {
@@ -15,7 +17,7 @@ declare interface Ticker {
 }
 
 declare interface Information {
-    data: Ticker[];
+    data: Ticker[]|ISecurity|undefined;
     loading: boolean;
     err: any;
 }

@@ -2,12 +2,8 @@ import axios, { AxiosError, AxiosResponse } from 'axios'
 import { useState, useEffect } from 'react'
 import { Ticker, Information } from './types/app'
 
-type Resp = {
-    data: Ticker[] | ISecurity
-}
-
 function useFetch(url: string): Information {
-    const [data, setData] = useState<Resp>()
+    const [data, setData] = useState<Ticker[]|ISecurity|undefined>()
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState(null)
 
@@ -18,12 +14,16 @@ function useFetch(url: string): Information {
     useEffect(() => {
         console.log("im in fetch", url)
         if (!url) {
-            setData([])
+            return
         }
-        get<Resp>(url)
-            .then((response: AxiosResponse<Resp>) => {
-                setData(response.data)
-                return response.data
+        get<Ticker[]>(url)
+            .then((response: AxiosResponse<Ticker[]>) => {
+                const { data } = response
+                return data
+            })
+            // @ts-ignore
+            .then((d: Ticker[]) => {
+                setData(d)
             })
             .catch((err) => {
                 console.error(err)

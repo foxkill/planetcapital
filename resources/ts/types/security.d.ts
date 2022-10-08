@@ -6,6 +6,7 @@
 //
 
 declare interface ISecurity {
+    id?: number
     symbol: string;
     date: Date;
     period: string;
@@ -64,3 +65,6 @@ declare interface ISecurity {
     enterpriseValueMultiple: number;
     priceFairValue: number;
 }
+
+export declare type ShortCutType = keyof ISecurity
+export default ISecurity
