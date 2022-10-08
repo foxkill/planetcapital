@@ -23,7 +23,7 @@
    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
 </head>
 
-<body class="antialiased font-montserrat text-base text-gray-800">
+<body class="antialiased font-montserrat text-base text-gray-800 bg-base-200">
    <noscript>Does not work without javascript</noscript>
    <div id="app"></div>
 </body>
