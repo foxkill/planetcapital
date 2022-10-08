@@ -8,7 +8,7 @@ const Tickerlist = forwardRef<HTMLDataListElement>((props, ref) => {
     if (info?.loading) {
         return (
             <label className="label">
-                <span className="label-text-alt">Es lädt...</span>
+                <span className="label-text-alt">Ticker werden geladen...</span>
             </label>
         )
     }
@@ -29,9 +29,9 @@ const Tickerlist = forwardRef<HTMLDataListElement>((props, ref) => {
         )
     }
 
-    const options = info.data.map((item: Ticker) => <option className="!bg-white" 
-        key={item.id} data-value={item.name} 
-        data-exchange-id={item.exchange_id} 
+    const options = (info.data as Ticker[]).map((item: Ticker) => <option className="!bg-white"
+        key={item.id} data-value={item.name}
+        data-exchange-id={item.exchange_id}
         name={item.tikr}>{item.tikr}</option>)
 
     return (

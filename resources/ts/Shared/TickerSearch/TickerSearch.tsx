@@ -12,19 +12,17 @@ type SetEndPointFunc = (endpoint: string) => void
 
 export function TickerSearch(props: { setEndPoint: SetEndPointFunc }) {
     const [value, setValue] = useState("")
-    const tickerListRef = useRef<HTMLDataListElement>(null); 
+    const tickerListRef = useRef<HTMLDataListElement>(null);
     const searchField = useRef<HTMLInputElement>(null);
-    
-    // const info = useFetch(endpoint)
 
     useEffect(() => {
-      searchField.current?.focus()
+        searchField.current?.focus()
     }, [])
-    
+
     function submit() {
         const val = (searchField.current?.value as string).toUpperCase()
         if (!val) {
-           return 
+            return
         }
         const security = tickerListRef.current?.options.namedItem(val)
         if (security?.getAttribute('data-exchange-id')) {
@@ -32,18 +30,19 @@ export function TickerSearch(props: { setEndPoint: SetEndPointFunc }) {
         }
     }
 
-    return <><img src="images/banner.webp" className="max-w-sm rounded-lg shadow-2xl" />
+    return <>
+        <img src="images/banner.webp" className="rounded-lg shadow-2xl max-w-xs sm:max-w-lg" />
         <div>
-            <h1 className="text-5xl font-bold">Search for your favorite ticker here...</h1>
-            <p className="py-6"></p>
+            <h1 className="text-4xl font-bold text-center lg:text-left">Search for your favorite ticker here...</h1>
+            <p className="hidden md:block py-6 pr-14"></p>
             <div className="form-control">
-                <div className="input-group">
-                    <input  
+                <div className="input-group justify-center lg:justify-start">
+                    <input
                         onChange={e => setValue(e.target.value)}
                         value={value} ref={searchField} 
                         type="search" 
                         placeholder="Search, i. e. AAPL..." 
-                        className="input input-bordered" 
+                        className="input input-bordered w-full" 
                         list="tickerlist" 
                         required />
                     <button className="btn btn-square" onClick={submit}>
@@ -52,9 +51,12 @@ export function TickerSearch(props: { setEndPoint: SetEndPointFunc }) {
                         </svg>
                     </button>
                 </div>
+            </div>
+            <div className="form-control">
                 <Tickerlist ref={tickerListRef} />
             </div>
-        </div></>
+        </div>
+        </>
 }
 
 export default TickerSearch

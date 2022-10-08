@@ -7,7 +7,7 @@ export function Hero() {
     return (
         <>
             <div className="hero min-h-[75vh] bg-base-200">
-                <div className="hero-content flex-col lg:flex-row-reverse">
+                <div className="hero-content flex-col lg:flex-row-reverse lg:gap-16">
                     <TickerSearch setEndPoint={setEndPoint}/>
                 </div>
             </div>
