@@ -6,6 +6,7 @@ import Cards from './Cards';
 import SecurityContext from './SecurityContext';
 import useFetch from '../useFetch';
 import { Information } from '@/types/app';
+import ISecurity from '@/types/security';
 
 const Layout = () => {
     const [endPoint, setEndPoint] = useState("")
@@ -17,7 +18,7 @@ const Layout = () => {
             <Navbar />
             <SecurityContext.Provider value={{endPoint, setEndPoint}}>
             <Hero />
-            <Cards visible={true} data={info.data as unknown as ISecurity}/>
+            <Cards visible={!!info.data} data={info.data as ISecurity}/>
             </SecurityContext.Provider>
             <Footer />
         </>
