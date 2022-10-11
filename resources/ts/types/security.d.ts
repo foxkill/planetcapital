@@ -66,5 +66,12 @@ declare interface ISecurity {
     priceFairValue: number;
 }
 
-export declare type ShortCutType = keyof ISecurity
+export declare type SecurityProperties = keyof ISecurity
+
+// export declare type ShortCutType = ISecurity[keyof ISecurity]
+// export declare type ShortCutType<T> = {
+//     [P in keyof T]: T[P]
+// }
+// export declare type ShortCutIndexType = ShortCutType<ISecurity>
+
 export default ISecurity

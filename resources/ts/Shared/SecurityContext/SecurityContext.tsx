@@ -4,8 +4,9 @@
 // https://github.com/foxkill/\var\www\html
 // Closed Source
 //
-import {createContext} from 'react'
+import { createContext } from "react"
+import { ISecurityContext } from "@/types/security.context"
 
-const SecurityContext = createContext({}) 
+const securityContext = createContext<ISecurityContext>({} as ISecurityContext) 
 
-export default SecurityContext
+export default securityContext

@@ -1,23 +1,13 @@
-import ISecurity from "./security";
+//
+// Licence
+// Copyright (c) 2009-2022 Stefan Martin
+// https://github.com/foxkill/planetcapital
+// Closed Source
+//
 
-export {Ticker, Information};
-
-declare global {
+declare module "global" {
     interface Window {
         _: any;
         axios: any;
     }
-}
-
-declare interface Ticker {
-    id: number;
-    tikr: string;
-    name: string;
-    exchange_id: number;
-}
-
-declare interface Information {
-    data: Ticker[]|ISecurity|undefined;
-    loading: boolean;
-    err: any;
 }

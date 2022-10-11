@@ -1,6 +1,6 @@
 import React from "react";
 export function Footer({ }) {
-    return <div>
+    return <>
         <footer className="footer p-10 bg-neutral text-neutral-content">
             <div>
                 <span className="footer-title">Services</span>
@@ -23,7 +23,7 @@ export function Footer({ }) {
                 <a className="link link-hover">Cookie policy</a>
             </div>
         </footer>
-    </div>
+    </>
 }
 
 export default Footer

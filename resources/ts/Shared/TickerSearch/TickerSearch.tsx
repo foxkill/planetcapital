@@ -5,28 +5,42 @@
 // Closed Source
 //
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Tickerlist from "../Tickerlist";
-import useFetch from "../../useFetch";
-type SetEndPointFunc = (endpoint: string) => void
+import securityContext from '../SecurityContext';
 
-export function TickerSearch(props: { setEndPoint: SetEndPointFunc }) {
+export function TickerSearch(): JSX.Element {
     const [value, setValue] = useState("")
     const tickerListRef = useRef<HTMLDataListElement>(null);
     const searchField = useRef<HTMLInputElement>(null);
+    const context = useContext(securityContext)
 
     useEffect(() => {
         searchField.current?.focus()
     }, [])
 
     function submit() {
+        const exchanges: Record<number, string> = {
+            0: "",
+            1: "amex",
+            2: "nasdaq",
+            3: "nyse",
+        }
+
         const val = (searchField.current?.value as string).toUpperCase()
+
         if (!val) {
             return
         }
+
         const security = tickerListRef.current?.options.namedItem(val)
-        if (security?.getAttribute('data-exchange-id')) {
-            props.setEndPoint("/api/security/nasdaq/" + val + "/summary")
+
+        const exchangeId = security?.getAttribute('data-exchange-id') || 0
+        const exchange = exchanges[exchangeId]
+
+        if (exchange) {
+            const endpoint = `/api/security/${exchange}/${val.toLowerCase()}/relative-valuation/${context.endpointType.toLocaleLowerCase()}`
+            context.setEndPoint(endpoint)
         }
     }
 
@@ -34,16 +48,16 @@ export function TickerSearch(props: { setEndPoint: SetEndPointFunc }) {
         <img src="images/banner.webp" className="rounded-lg shadow-2xl max-w-xs sm:max-w-lg" />
         <div>
             <h1 className="text-4xl font-bold text-center lg:text-left">Search for your favorite ticker here...</h1>
-            <p className="hidden md:block py-6 pr-14"></p>
+            <p className="py-6 pr-14"></p>
             <div className="form-control">
                 <div className="input-group justify-center lg:justify-start">
                     <input
                         onChange={e => setValue(e.target.value)}
-                        value={value} ref={searchField} 
-                        type="search" 
-                        placeholder="Search, i. e. AAPL..." 
-                        className="input input-bordered w-full" 
-                        list="tickerlist" 
+                        value={value} ref={searchField}
+                        type="search"
+                        placeholder="Search, i. e. AAPL..."
+                        className="input input-bordered w-full"
+                        list="tickerlist"
                         required />
                     <button className="btn btn-square" onClick={submit}>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -56,7 +70,7 @@ export function TickerSearch(props: { setEndPoint: SetEndPointFunc }) {
                 <Tickerlist ref={tickerListRef} />
             </div>
         </div>
-        </>
+    </>
 }
 
 export default TickerSearch

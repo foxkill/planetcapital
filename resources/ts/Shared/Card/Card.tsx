@@ -5,20 +5,34 @@
 // Closed Source
 //
 import React from "react";
-import ISecurity, { ShortCutType } from "@/types/security";
+import ISecurity, { SecurityProperties } from "@/types/security";
 import { ExternalLinkImage } from '../Images/ExternalLinkImage';
 import { InformationImage } from "../Images/InformationImage";
+import ISecurityTTM from "@/types/security.ttm";
+import IPeriodType from "@/types/period";
 
 interface CardProps {
-    data: ISecurity
-    ikey: ShortCutType
+    type?: IPeriodType
+    data: ISecurity | undefined
+    ikey: SecurityProperties
     children: React.ReactNode
 }
 // href="https://www.alphaspread.com/security/nyse/asix/relative-valuation/ratio/price-to-sales"
 
 const Card = (props: CardProps) => {
-    const data = props.data || {}
-    let value = props.data[props.ikey as string]?.toFixed(1) ?? "0.0"
+    const keymap = {
+        "FY": "",
+        "TTM": "TTM",
+        "QTR": "",
+    }
+
+    if (!props.data) {
+       return null 
+    }
+
+    const key = props.ikey + keymap[props.type ?? "FY"]
+    let value = props.data[key]?.toFixed(2) ?? "0.00"
+
     return (
         <div className="card card-bordered w-60 h-60 bg-base-100 hover:shadow-xl">
             <div className="bg-slate-200 relative p-2 justify-self-auto">
@@ -32,7 +46,7 @@ const Card = (props: CardProps) => {
                 </button>
             </div>
             <div className="card-body text-center">
-                {props.data.period}
+                {props.data.period ?? props.type}
             </div>
         </div>
     )
