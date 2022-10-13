@@ -1,6 +1,6 @@
 import useFetch from "../../useFetch"
-import React, { forwardRef, useEffect, useState } from "react";
-import { Ticker } from "@/types/app";
+import React, { forwardRef } from "react";
+import Ticker from "@/types/ticker";
 
 const Tickerlist = forwardRef<HTMLDataListElement>((props, ref) => {
     const info = useFetch("http://localhost/api/tickers")
@@ -13,7 +13,7 @@ const Tickerlist = forwardRef<HTMLDataListElement>((props, ref) => {
         )
     }
 
-    if (info?.err) {
+    if (info?.error) {
         return (
             <label className="label">
                 <span className="label-text-alt text-red-600">Es ist ein Fehler aufgetreten</span>

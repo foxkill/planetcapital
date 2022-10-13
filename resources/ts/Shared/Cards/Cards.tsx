@@ -1,13 +1,15 @@
 //
 // Licence
 // Copyright (c) 2009-2022 Stefan Martin
-// https://github.com/foxkill/\var\www\html
+// https://github.com/foxkill/planetapi
 // Closed Source
 //
-import React, { ReactNode, useContext } from "react";
+import React, { ReactNode, useContext, useDebugValue } from "react";
 import Card from "../Card";
 import ISecurity, { SecurityProperties } from "@/types/security";
 import securityContext from "../SecurityContext";
+import valuations from "../../Models/valuation.models";
+import { useSecurity } from "../SecurityContext/SecurityContext";
 
 function HugeHeader({ data, children }: { data: ISecurity, children: ReactNode }) {
     return <h2 className="min-h-4 !mt-0 !mb-16 uppercase text-center text-4xl font-bold">{children} {data?.symbol ? "(" + data.symbol + ")" : ""}</h2>
@@ -54,66 +56,24 @@ function Error({ error, children }: { error: any, children: ReactNode }) {
     )
 }
 
-
-export function Cards(props: { data: ISecurity, visible: boolean }): JSX.Element {
-    const context = useContext(securityContext)
-
-    const data = context.data as ISecurity
-    const type = context.endpointType
-
-    const valuations: Record<string, SecurityProperties>[] = [
-        { 'p/e': 'priceEarningsRatio' },
-        { 'peg': 'priceEarningsToGrowthRatio' },
-        { 'p/s': 'priceSalesRatio' },
-        { 'p/b': 'priceToBookRatio' },
-        { 'p/b': 'priceToBookRatio' },
-        { 'p/fcf': 'priceToFreeCashFlowsRatio'},
-        { 'p/ocf': 'priceToOperatingCashFlowsRatio'},
-        { 'p/fcf': 'priceToFreeCashFlowsRatio'},
-        { 'cash_ratio': 'cashRatio'}
-    ]
-
+export function Cards(props: { visible: boolean }): JSX.Element {
+    const ctx = useSecurity()
+    
     return (
         <>
-            <Error error={context.error}>Es konnten keine Daten für diese Aktie geladen werden</Error>
+            <Error error={ctx.context.information.error}>Es konnten keine Daten für diese Aktie geladen werden</Error>
             {/* Container */}
             <div className={`${props.visible ? '' : 'hidden '}` + "container bg-base-200 mx-auto pt-4 pb-20 place-self-center"}>
                 {/* Huge Header */}
-                <HugeHeader data={props.data}>Valuation Multiples</HugeHeader>
+                <HugeHeader data={ctx.context.information.data as ISecurity}>Valuation Multiples</HugeHeader>
                 {/* Grid */}
                 <div className="grid grid-rows-auto grid-cols-1 lg:grid-cols-child-size-lg  md:grid-cols-child-size-md sm:grid-cols-child-size-sm justify-center place-items-center gap-8 bg-base-200 pl-14 pr-14">
-                    <Card key={"pe"}
-                        ikey={"priceEarningsRatio"}
-                        data={data}
-                        type={type}>P/E</Card>
-                    <Card key={"peg"}
-                        ikey={"priceEarningsToGrowthRatio"}
-                        data={data}
-                        type={type}>PEG</Card>
-                    <Card key={"p/s"}
-                        ikey={"priceToSalesRatio"}
-                        data={data}
-                        type={type}>P/S</Card>
-                    <Card key={"p/b"}
-                        ikey={"priceToBookRatio"}
-                        data={data}
-                        type={type}>P/B</Card>
-                    <Card key={"P/FCF"}
-                        ikey={"priceToFreeCashFlowsRatio"}
-                        data={data}
-                        type={type}>P/FCF</Card>
-                    <Card key={"p/ocf"}
-                        ikey={"priceToOperatingCashFlowsRatio"}
-                        data={data}
-                        type={type}>P/OCF</Card>
-                    <Card key={"cashRatio"}
-                        ikey={"cashRatio"}
-                        data={data}
-                        type={type}>Cash Ratio</Card>
-                    <Card key={"quickRatio"}
-                        ikey={"quickRatio"}
-                        data={data}
-                        type={type}>Quick Ratio</Card>
+                    {
+                        valuations.map((value, index) => {
+                            const [key, val] = Object.entries(value)[0]
+                            return <Card type={ctx.context.periodType} key={index} ikey={val} data={ctx.context.information.data as ISecurity}>{key}</Card>
+                        })
+                    }
                 </div>
             </div>
         </>

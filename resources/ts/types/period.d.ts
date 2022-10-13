@@ -5,6 +5,7 @@
 // Closed Source
 //
 
-declare type IPeriodType = "FY" | "TTM" | "QTR"
+declare type PeriodTypes = "FY" | "TTM" | "QTR"
 
-export default IPeriodType
+export default PeriodTypes
+export type PeriodTypesAsString  = `${PeriodTypes}`

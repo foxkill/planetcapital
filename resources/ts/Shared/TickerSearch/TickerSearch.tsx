@@ -1,19 +1,20 @@
 //
 // Licence
 // Copyright (c) 2009-2022 Stefan Martin
-// https://github.com/foxkill/\var\www\html
+// https://github.com/foxkill/planetapi
 // Closed Source
 //
 
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Tickerlist from "../Tickerlist";
 import securityContext from '../SecurityContext';
+import SelectPeriod from "../SelectPeriod/SelectPeriod";
 
 export function TickerSearch(): JSX.Element {
     const [value, setValue] = useState("")
     const tickerListRef = useRef<HTMLDataListElement>(null);
     const searchField = useRef<HTMLInputElement>(null);
-    const context = useContext(securityContext)
+    const ctx = useContext(securityContext)
 
     useEffect(() => {
         searchField.current?.focus()
@@ -39,8 +40,8 @@ export function TickerSearch(): JSX.Element {
         const exchange = exchanges[exchangeId]
 
         if (exchange) {
-            const endpoint = `/api/security/${exchange}/${val.toLowerCase()}/relative-valuation/${context.endpointType.toLocaleLowerCase()}`
-            context.setEndPoint(endpoint)
+            const endpoint = `/api/security/${exchange}/${val.toLowerCase()}/relative-valuation/${ctx.context.periodType.toLocaleLowerCase()}`
+            ctx.setContext({...ctx.context, endpoint})
         }
     }
 
@@ -53,7 +54,8 @@ export function TickerSearch(): JSX.Element {
                 <div className="input-group justify-center lg:justify-start">
                     <input
                         onChange={e => setValue(e.target.value)}
-                        value={value} ref={searchField}
+                        value={value} 
+                        ref={searchField}
                         type="search"
                         placeholder="Search, i. e. AAPL..."
                         className="input input-bordered w-full"
@@ -66,6 +68,7 @@ export function TickerSearch(): JSX.Element {
                     </button>
                 </div>
             </div>
+            <SelectPeriod />
             <div className="form-control">
                 <Tickerlist ref={tickerListRef} />
             </div>

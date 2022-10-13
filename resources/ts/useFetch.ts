@@ -1,10 +1,10 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { useState, useEffect } from 'react'
-import Information from './types/information'
+import IInformation from './types/information'
 import ISecurity from './types/security'
 import Ticker from './types/ticker'
  
-function useFetch(url: string): Information {
+function useFetch(url: string): IInformation {
     const [data, setData] = useState<Ticker[] | ISecurity | undefined>()
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState(null)
@@ -24,7 +24,6 @@ function useFetch(url: string): Information {
                 const { data } = response
                 return data
             })
-            // @ts-ignore
             .then((d: Ticker[]) => {
                 setData(d)
             })
@@ -36,7 +35,7 @@ function useFetch(url: string): Information {
             })
     }, [url])
 
-    return { data, loading, err: error }
+    return { data, loading, error: error }
 }
 
 export default useFetch

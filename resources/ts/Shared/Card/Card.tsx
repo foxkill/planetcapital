@@ -9,10 +9,10 @@ import ISecurity, { SecurityProperties } from "@/types/security";
 import { ExternalLinkImage } from '../Images/ExternalLinkImage';
 import { InformationImage } from "../Images/InformationImage";
 import ISecurityTTM from "@/types/security.ttm";
-import IPeriodType from "@/types/period";
+import PeriodTypes from "@/types/period";
 
 interface CardProps {
-    type?: IPeriodType
+    type?: PeriodTypes
     data: ISecurity | undefined
     ikey: SecurityProperties
     children: React.ReactNode

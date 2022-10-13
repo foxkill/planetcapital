@@ -9,10 +9,10 @@ import ISecurity from "./security";
 import Ticker from "./ticker";
 
 
-declare interface Information {
+declare interface IInformation {
     data: Ticker[] | ISecurity | undefined;
     loading: boolean;
-    err: any;
+    error: any;
 }
 
-export default Information
+export default IInformation

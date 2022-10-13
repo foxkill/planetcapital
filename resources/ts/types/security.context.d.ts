@@ -5,20 +5,19 @@
 // Closed Source
 //
 
-import ISecurityTTM from "./security.ttm"
-import ISecurity from "./security"
-import Ticker from "./ticker"
-import IPeriodType from "./period"
+import PeriodTypes from "./period"
+import IInformation from "./information"
 
-export declare type SetEndPointFunc = (endpoint: string) => void
-
+// export declare type SetEndPointFunc = (endpoint: string) => void
+export declare type SetStringValueFunc = (value: string) => void
+export declare type SetContextFunc = (value: ISecurityContext) => void
 //
 // Security Context Data
 //
 export declare interface ISecurityContext  {
-    setEndPoint: SetEndPointFunc
     endpoint: string
-    endpointType: IPeriodType
-    data: Ticker[] | ISecurity | ISecurityTTM | undefined
-    error: any
+    setEndPoint: SetStringValueFunc
+    periodType: PeriodTypes
+    setContext?: (value: ISecurityContext) => void
+    information: IInformation
 }
