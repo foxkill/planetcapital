@@ -12,11 +12,9 @@ const valuations: Record<string, SecurityProperties>[] = [
     { 'peg': 'priceEarningsToGrowthRatio' },
     { 'p/s': 'priceSalesRatio' },
     { 'p/b': 'priceToBookRatio' },
-    { 'p/b': 'priceToBookRatio' },
-    { 'p/fcf': 'priceToFreeCashFlowsRatio' },
     { 'p/ocf': 'priceToOperatingCashFlowsRatio' },
     { 'p/fcf': 'priceToFreeCashFlowsRatio' },
-    { 'cash_ratio': 'cashRatio' }
+    { 'cash ratio': 'cashRatio' }
 ]
 
 export default valuations
