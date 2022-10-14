@@ -5,13 +5,15 @@
 // Closed Source
 //
 import PeriodTypes from '@/types/period'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useSecurity } from '../SecurityContext/SecurityContext'
 
 const SelectPeriod = (): JSX.Element => {
     const securityContext = useSecurity()
 
     const periodTypes: PeriodTypes[] = ["FY", "TTM", "QTR"]
+
+    const currentPeriodType = securityContext.context.periodType
 
     function setPeriod(event) {
         const periodType = event.target.getAttribute('data-value') as PeriodTypes
@@ -25,19 +27,22 @@ const SelectPeriod = (): JSX.Element => {
         }
     }
 
-    return (<>
-        {
-            periodTypes.map((value, index) => {
-                const checked = value === securityContext.context.periodType ? true : false
-                return <div className="form-control" key={value}>
-                    <label className="label cursor-pointer">
-                        <span className="label-text">{value}</span>
-                        <input onClick={setPeriod} type="radio" data-value={value} name="radio-period" className="radio" defaultChecked={checked}/>
-                    </label>
-                </div>
-            })
-        }
-    </>
+    return (<div className="hero bg-base-200 min-h-[10vh]">
+        <div className="hero-content gap-10">
+            {
+                periodTypes.map((value, index) => {
+                    return (
+                        <div className="form-control" key={value}>
+                            <label className="label cursor-pointer">
+                                <span className="label-text mr-5">{value}</span>
+                                <input key={index} onClick={setPeriod} type="radio" data-value={value} name="radio-period" className="radio" defaultChecked={value == currentPeriodType} />
+                            </label>
+                        </div>
+                    )
+                })
+            }
+        </div>
+    </div>
     )
 }
 

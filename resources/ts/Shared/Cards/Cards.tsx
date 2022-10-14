@@ -7,25 +7,19 @@
 import React, { ReactNode, useContext, useDebugValue } from "react";
 import Card from "../Card";
 import ISecurity, { SecurityProperties } from "@/types/security";
-import securityContext from "../SecurityContext";
-import valuations from "../../Models/valuation.models";
+import valuations from "../../models/valuation.models";
 import { useSecurity } from "../SecurityContext/SecurityContext";
 
 function HugeHeader({ data, children }: { data: ISecurity, children: ReactNode }) {
-    return <h2 className="min-h-4 !mt-0 !mb-16 uppercase text-center text-4xl font-bold">{children} {data?.symbol ? "(" + data.symbol + ")" : ""}</h2>
+    return <h2 className="min-h-4 !mt-0 !mb-16 uppercase text-center text-4xl font-bold">{children}</h2>
 }
 
 function Error({ error, children }: { error: any, children: ReactNode }) {
-    if (!error) {
-        return null
-    }
-
     let msg = children
 
     if (error.response) {
         try {
             console.log(error.response.data);
-
             msg = JSON.parse(error.response.data.message)
         } catch (error) {
         }
@@ -56,22 +50,39 @@ function Error({ error, children }: { error: any, children: ReactNode }) {
     )
 }
 
-export function Cards(props: { visible: boolean }): JSX.Element {
+export function Cards(): JSX.Element | null {
     const ctx = useSecurity()
+   
+    if (!ctx.context) {
+       return null 
+    }
     
+    const { data, error, loading } = ctx.context.information
+    
+    const visible = !! data
+
+    // if (!visible) {
+    //     console.log("Preventing re render")
+    //     return null 
+    // }
+
+    if (error) {
+        return (
+            <Error error={error}>Es konnten keine Daten für diese Aktie geladen werden</Error>
+        )
+    }
     return (
         <>
-            <Error error={ctx.context.information.error}>Es konnten keine Daten für diese Aktie geladen werden</Error>
             {/* Container */}
-            <div className={`${props.visible ? '' : 'hidden '}` + "container bg-base-200 mx-auto pt-4 pb-20 place-self-center"}>
+            <div className={`${visible ? '' : 'hidden '}` + "container bg-base-200 mx-auto pt-4 pb-20 place-self-center"}>
                 {/* Huge Header */}
-                <HugeHeader data={ctx.context.information.data as ISecurity}>Valuation Multiples</HugeHeader>
+                <HugeHeader data={data as ISecurity}>Valuation Multiples: {ctx.context.symbol}</HugeHeader>
                 {/* Grid */}
                 <div className="grid grid-rows-auto grid-cols-1 lg:grid-cols-child-size-lg  md:grid-cols-child-size-md sm:grid-cols-child-size-sm justify-center place-items-center gap-8 bg-base-200 pl-14 pr-14">
                     {
                         valuations.map((value, index) => {
                             const [key, val] = Object.entries(value)[0]
-                            return <Card type={ctx.context.periodType} key={index} ikey={val} data={ctx.context.information.data as ISecurity}>{key}</Card>
+                            return <Card type={ctx.context.periodType} key={key} ikey={val} data={data as ISecurity}>{key}</Card>
                         })
                     }
                 </div>

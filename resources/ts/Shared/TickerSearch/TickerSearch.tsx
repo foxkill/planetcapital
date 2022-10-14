@@ -41,7 +41,7 @@ export function TickerSearch(): JSX.Element {
 
         if (exchange) {
             const endpoint = `/api/security/${exchange}/${val.toLowerCase()}/relative-valuation/${ctx.context.periodType.toLocaleLowerCase()}`
-            ctx.setContext({...ctx.context, endpoint})
+            ctx.setContext({...ctx.context, exchange, symbol: val})
         }
     }
 
@@ -68,7 +68,6 @@ export function TickerSearch(): JSX.Element {
                     </button>
                 </div>
             </div>
-            <SelectPeriod />
             <div className="form-control">
                 <Tickerlist ref={tickerListRef} />
             </div>
