@@ -10,6 +10,8 @@ const securityContextModel: ISecurityContext = {
     endpoint: "",
     setEndPoint: () => { },
     periodType: "TTM",
+    symbol: "",
+    exchange: "",
     information: { 
         data: undefined,
         error: undefined,
