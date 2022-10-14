@@ -53,7 +53,7 @@ Route::get('/security/{exchange}/{security}/relative-valuation/{period}', functi
     $cachedSecurity = Redis::get($key);
 
     if (isset($cachedSecurity)) {
-        return response()->json(json_decode($cachedSecurity), 201);
+        return response()->json(json_decode($cachedSecurity), 200);
     }
 
     $endpoint = sprintf(

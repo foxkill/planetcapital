@@ -18,6 +18,8 @@ export declare interface ISecurityContext  {
     endpoint: string
     setEndPoint: SetStringValueFunc
     periodType: PeriodTypes
-    setContext?: (value: ISecurityContext) => void
+    symbol: string
+    exchange: string
     information: IInformation
+    setContext?: (value: ISecurityContext) => void
 }
