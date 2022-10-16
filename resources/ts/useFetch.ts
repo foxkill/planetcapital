@@ -11,7 +11,7 @@ import IRatio from './types/ratio'
 import Ticker from './types/ticker'
  
 function useFetch<T>(url: string): IInformation<T> {
-    const [data, setData] = useState<T>(null)
+    const [data, setData] = useState<T|null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState(null)
 
