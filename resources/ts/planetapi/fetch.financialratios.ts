@@ -5,25 +5,21 @@
 // Closed Source
 //
 
-import PeriodTypes from "@/types/period";
-import ISecurity from "@/types/security";
-import axios, { AxiosResponse } from "axios";
-
-function get<T, R = AxiosResponse<T>>(u: string): Promise<R> {
-    return axios.get(u)
-}
+import IRatio from "@/types/ratio";
+import { AxiosResponse } from "axios";
+import { get } from "./axios.get";
 
 function fetchFinancialRatios({queryKey}): Promise<any> {
-    const [_key, {symbol, exchange, period}] = queryKey
+    const [_key, {symbol, exchange, periodType}] = queryKey
 
     if (!symbol || !exchange) {
-       return new Promise((value) => "Symbol and Exchange must be given")
+       throw new Error("Symbol and Exchange must be given")
     }
 
-    const endpoint = `/api/security/${exchange.toLowerCase()}/${symbol.toLowerCase()}/relative-valuation/${period.toLowerCase()}`
+    const endpoint = `/api/security/${exchange.toLowerCase()}/${symbol.toLowerCase()}/relative-valuation/${periodType.toLowerCase()}`
 
-    return get<ISecurity>(endpoint)
-        .then((response: AxiosResponse<ISecurity>) => response.data) 
+    return get<IRatio>(endpoint)
+        .then((response: AxiosResponse<IRatio>) => response.data) 
         .catch((err) => {
             throw err
         })
