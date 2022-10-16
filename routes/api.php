@@ -1,5 +1,5 @@
 <?php
-
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Http;
@@ -22,6 +22,7 @@ use App\Models\Ticker;
 const FMP_RATIOS_FY = 'https://financialmodelingprep.com/api/v3/ratios/%s?limit=%s&apikey=%s';
 const FMP_RATIOS_TTM = 'https://financialmodelingprep.com/api/v3/ratios-ttm/%s?limit=%s&apikey=%s';
 const FMP_RATIOS_QTR = 'https://financialmodelingprep.com/api/v3/ratios/%s?limit=%s&apikey=%s&period=quarter';
+const FMP_PROFILE = 'https://financialmodelingprep.com/api/v3/profile/%s?apikey=%s';
 
 Route::get('/tickers', function (Request $request) {
     return response()->json(
@@ -53,7 +54,7 @@ Route::get('/security/{exchange}/{security}/relative-valuation/{period}', functi
     $cachedSecurity = Redis::get($key);
 
     if (isset($cachedSecurity)) {
-        return response()->json(json_decode($cachedSecurity), 200);
+        return response()->json(json_decode($cachedSecurity), Response::HTTP_OK);
     }
 
     $endpoint = sprintf(
@@ -67,7 +68,46 @@ Route::get('/security/{exchange}/{security}/relative-valuation/{period}', functi
         $data = $response->json();
         if (count($data)) {
             Redis::set($key, json_encode($data[0]));
-            return response()->json($data[0]);
+            return response()->json($data[0], Response::HTTP_CREATED);
+        }
+    }
+
+    $response->throw()->json();
+    // return response()->json(['status' => 'error'], 418);
+});
+
+//
+// Profile
+// 
+Route::get('/security/{exchange}/{security}/profile', function (Request $request) {
+    $key = join(
+        '_',
+        [
+            'security',
+            'profile',
+            strtolower($request->security)
+        ]
+    );
+
+    $cachedSecurity = Redis::get($key);
+
+    if (isset($cachedSecurity)) {
+        return response()->json(json_decode($cachedSecurity), Response::HTTP_OK);
+    }
+
+    $endpoint = sprintf(
+        FMP_PROFILE,
+        $request->security,
+        env('FMP_API_KEY')
+    );
+
+    $response = Http::acceptJson()->get($endpoint);
+
+    if ($response->ok()) {
+        $data = $response->json();
+        if (count($data)) {
+            Redis::set($key, json_encode($data[0]));
+            return response()->json($data[0], Response::HTTP_CREATED);
         }
     }
 
