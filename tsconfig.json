@@ -2,6 +2,7 @@
     "include": ["./resources/ts/**/*"],
     "compilerOptions": {
         "jsx": "react",
+        "isolatedModules": true,
         "allowJs": true,
         "baseUrl": ".",
         "paths": {
