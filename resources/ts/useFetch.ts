@@ -1,11 +1,17 @@
-import axios, { AxiosError, AxiosResponse } from 'axios'
+//
+// Licence
+// Copyright (c) 2009-2022 Stefan Martin
+// https://github.com/foxkill/planetcapital
+// Closed Source
+//
+import axios, { AxiosResponse } from 'axios'
 import { useState, useEffect } from 'react'
 import IInformation from './types/information'
-import ISecurity from './types/security'
+import IRatio from './types/ratio'
 import Ticker from './types/ticker'
  
-function useFetch(url: string): IInformation {
-    const [data, setData] = useState<Ticker[] | ISecurity | undefined>()
+function useFetch<T>(url: string): IInformation<T> {
+    const [data, setData] = useState<T>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState(null)
 
@@ -19,12 +25,12 @@ function useFetch(url: string): IInformation {
         if (!url) {
             return
         }
-        get<Ticker[]>(url)
-            .then((response: AxiosResponse<Ticker[]>) => {
+        get<T>(url)
+            .then((response: AxiosResponse<T>) => {
                 const { data } = response
                 return data
             })
-            .then((d: Ticker[]) => {
+            .then((d: T) => {
                 setData(d)
             })
             .catch((err) => {
