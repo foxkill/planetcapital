@@ -11,7 +11,7 @@ import fetchFinancialRatios from "../../planetapi/fetch.financialratios"
 import { useQuery } from "react-query"
 import IRatio from "@/types/ratio"
 import { IProfile } from "@/types/profile"
-import fetchProfile from "../../planetapi/fetch.profile"
+import fetchProfile from "@/planetapi/fetch.profile"
 
 interface ISecurityContextContainer {
     context: ISecurityContext
