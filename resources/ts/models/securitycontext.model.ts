@@ -12,11 +12,18 @@ const securityContextModel: ISecurityContext = {
     periodType: "TTM",
     symbol: "",
     exchange: "",
-    information: { 
-        data: undefined,
-        error: undefined,
+    information: {
+        data: null,
+        error: null,
         loading: true
-    }
+    },
+    getQueryKey: () => {
+        return "";
+    },
+    companyName: "",
+    image: "",
+    price: 0,
+    changes: 0
 }
 
 export default securityContextModel

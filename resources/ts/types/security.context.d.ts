@@ -7,6 +7,9 @@
 
 import PeriodTypes from "./period"
 import IInformation from "./information"
+import IRatio from "./ratio"
+import IRatioTTM from "./ratio.ttm"
+import { IProfile } from "./profile"
 
 // export declare type SetEndPointFunc = (endpoint: string) => void
 export declare type SetStringValueFunc = (value: string) => void
@@ -19,7 +22,12 @@ export declare interface ISecurityContext  {
     setEndPoint: SetStringValueFunc
     periodType: PeriodTypes
     symbol: string
+    companyName: string
+    image: string,
+    price: number
+    changes: number,
     exchange: string
-    information: IInformation
+    information: IInformation<IRatio>
     setContext?: (value: ISecurityContext) => void
+    getQueryKey: () => string
 }
