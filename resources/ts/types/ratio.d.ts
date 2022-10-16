@@ -5,7 +5,7 @@
 // Closed Source
 //
 
-declare interface ISecurity {
+declare interface IRatio {
     id?: number
     symbol: string;
     date: Date;
@@ -66,7 +66,7 @@ declare interface ISecurity {
     priceFairValue: number;
 }
 
-export declare type SecurityProperties = keyof ISecurity
+export declare type RatioProperties = keyof IRatio
 
 // export declare type ShortCutType = ISecurity[keyof ISecurity]
 // export declare type ShortCutType<T> = {
@@ -74,4 +74,4 @@ export declare type SecurityProperties = keyof ISecurity
 // }
 // export declare type ShortCutIndexType = ShortCutType<ISecurity>
 
-export default ISecurity
+export default IRatio

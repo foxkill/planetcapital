@@ -5,7 +5,7 @@
 // Closed Source
 //
 
-declare interface ISecurityTTM {
+declare interface IRatioTTM {
     dividendYielTTM: number;
     dividendYielPercentageTTM: number;
     peRatioTTM: number;
@@ -66,6 +66,6 @@ declare interface ISecurityTTM {
     dividendPerShareTTM: number;
 }
 
-export default ISecurityTTM;
+export default IRatioTTM;
 
-export declare type SecurityTTMProperties = keyof ISecurityTTM
+export declare type SecurityTTMProperties = keyof IRatioTTM

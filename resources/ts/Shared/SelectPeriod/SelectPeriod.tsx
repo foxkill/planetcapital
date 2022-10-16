@@ -4,9 +4,9 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-import PeriodTypes from '@/types/period'
-import React, { useMemo } from 'react'
-import { useSecurity } from '../SecurityContext/SecurityContext'
+import PeriodTypes from "@/types/period"
+import React, { useMemo } from "react"
+import { useSecurity } from "../SecurityContext/SecurityContext"
 
 const SelectPeriod = (): JSX.Element => {
     const securityContext = useSecurity()

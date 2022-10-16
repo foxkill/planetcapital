@@ -6,11 +6,13 @@
 //
 import React, { ReactNode, useContext, useDebugValue } from "react";
 import Card from "../Card";
-import ISecurity, { SecurityProperties } from "@/types/security";
+import IRatio, { RatioProperties } from "@/types/ratio";
 import valuations from "../../models/valuation.models";
 import { useSecurity } from "../SecurityContext/SecurityContext";
+import Spinner from "../Spinner";
+import CompanyInfo from "../CompanyInfo";
 
-function HugeHeader({ data, children }: { data: ISecurity, children: ReactNode }) {
+function HugeHeader({ data, children }: { data: IRatio, children: ReactNode }) {
     return <h2 className="min-h-4 !mt-0 !mb-16 uppercase text-center text-4xl font-bold">{children}</h2>
 }
 
@@ -52,37 +54,48 @@ function Error({ error, children }: { error: any, children: ReactNode }) {
 
 export function Cards(): JSX.Element | null {
     const ctx = useSecurity()
-   
+
     if (!ctx.context) {
-       return null 
+        return null
     }
-    
+
     const { data, error, loading } = ctx.context.information
-    
-    const visible = !! data
+    const visible = !!data
 
-    // if (!visible) {
-    //     console.log("Preventing re render")
-    //     return null 
-    // }
-
+    // Must be always visible.
     if (error) {
         return (
             <Error error={error}>Es konnten keine Daten für diese Aktie geladen werden</Error>
         )
     }
+
     return (
         <>
             {/* Container */}
             <div className={`${visible ? '' : 'hidden '}` + "container bg-base-200 mx-auto pt-4 pb-20 place-self-center"}>
                 {/* Huge Header */}
-                <HugeHeader data={data as ISecurity}>Valuation Multiples: {ctx.context.symbol}</HugeHeader>
+                <HugeHeader data={data as IRatio}>Valuation Multiples</HugeHeader>
+                <div className="flex justify-center items-center pb-10">
+                <CompanyInfo>{ctx.context?.companyName}</CompanyInfo>
+                </div>
+                {/* Loading Spinner */}
+                {
+                    loading &&
+                    (
+                        <div className="hero bg-base-20 min-h-[60vh]">
+                            <div className="hero-content flex flex-col">
+                                <Spinner></Spinner>
+                            </div>
+                        </div>
+                    )
+                }
                 {/* Grid */}
                 <div className="grid grid-rows-auto grid-cols-1 lg:grid-cols-child-size-lg  md:grid-cols-child-size-md sm:grid-cols-child-size-sm justify-center place-items-center gap-8 bg-base-200 pl-14 pr-14">
                     {
+                        !loading &&
                         valuations.map((value, index) => {
                             const [key, val] = Object.entries(value)[0]
-                            return <Card type={ctx.context.periodType} key={key} ikey={val} data={data as ISecurity}>{key}</Card>
+                            return <Card type={ctx.context.periodType} key={key} ikey={val} data={data as IRatio}>{key}</Card>
                         })
                     }
                 </div>
@@ -92,3 +105,4 @@ export function Cards(): JSX.Element | null {
 }
 
 export default Cards
+

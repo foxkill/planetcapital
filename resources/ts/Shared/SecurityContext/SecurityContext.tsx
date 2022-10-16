@@ -7,12 +7,11 @@
 import React, { createContext, ReactNode, useContext, useState } from "react"
 import { ISecurityContext } from "@/types/security.context"
 import securityContextModel from "../../models/securitycontext.model"
-import useFetch from "../../useFetch"
-import IInformation from "@/types/information"
-import createRatiosEndpoint from "../../createRatiosEndpoint"
 import fetchFinancialRatios from "../../planetapi/fetch.financialratios"
 import { useQuery } from "react-query"
-import ISecurity from "@/types/security"
+import IRatio from "@/types/ratio"
+import { IProfile } from "@/types/profile"
+import fetchProfile from "../../planetapi/fetch.profile"
 
 interface ISecurityContextContainer {
     context: ISecurityContext
@@ -30,13 +29,13 @@ const SecurityContext = createContext<ISecurityContextContainer>({} as ISecurity
 function SecurityContextProvider({ children }: ISecurityContextProps): JSX.Element {
     const [context, setContext] = useState<ISecurityContext>(securityContextModel)
 
-    const { isLoading } = useQuery<ISecurity>(
+    const { isLoading } = useQuery<IRatio>(
         [
             ["ratios", context.symbol, context.exchange, context.periodType].join("-"),
             {
                 symbol: context.symbol,
                 exchange: context.exchange,
-                period: context.periodType
+                periodType: context.periodType
             }
         ],
         fetchFinancialRatios as any,
@@ -48,17 +47,44 @@ function SecurityContextProvider({ children }: ISecurityContextProps): JSX.Eleme
                 
                 context.information.data = data 
                 context.information.error = null
+                context.information.loading = false
             },
-            onError: (err) => { context.information.error = err}
+            onError: (err) => { 
+                context.information.data = null
+                context.information.error = err
+                context.information.loading = false
+            }
         }
     )
 
+    useQuery<IProfile>(
+        [
+            ["profile", context.symbol, context.exchange].join("-"),
+            { symbol: context.symbol, exchange: context.exchange}
+        ],
+        fetchProfile,
+        {
+            enabled: Boolean(context.symbol && context.exchange),
+            retry: false,
+            onSuccess: (data: IProfile) => { 
+                console.log("set company name");
+                context.companyName = data.companyName
+                context.image = data.image
+                context.price = data.price
+                context.changes = data.changes
+            },
+        }
+    )
+
+    context.information.loading = isLoading
 
     return (<SecurityContext.Provider value={{ context, setContext }}>
         {children}
     </SecurityContext.Provider>)
 }
-
+//
+// Helper function for accessing the context.
+//
 const useSecurity = () => useContext(SecurityContext)
 
 export { SecurityContextProvider, useSecurity }

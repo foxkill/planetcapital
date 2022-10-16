@@ -5,16 +5,16 @@
 // Closed Source
 //
 import React from "react";
-import ISecurity, { SecurityProperties } from "@/types/security";
+import IRatio, { RatioProperties } from "@/types/ratio";
 import { ExternalLinkImage } from '../Images/ExternalLinkImage';
 import { InformationImage } from "../Images/InformationImage";
-import ISecurityTTM from "@/types/security.ttm";
+import IRatioTTM from "@/types/ratio.ttm";
 import PeriodTypes from "@/types/period";
 
 interface CardProps {
     type?: PeriodTypes
-    data: ISecurity | undefined
-    ikey: SecurityProperties
+    data: IRatio | undefined
+    ikey: RatioProperties
     children: React.ReactNode
 }
 // href="https://www.alphaspread.com/security/nyse/asix/relative-valuation/ratio/price-to-sales"

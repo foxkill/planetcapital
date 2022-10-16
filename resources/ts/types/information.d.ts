@@ -5,12 +5,12 @@
 // Closed Source
 //
 
-import ISecurity from "./security";
+import IRatio from "./ratio";
 import Ticker from "./ticker";
 
 
-declare interface IInformation {
-    data: Ticker[] | ISecurity | undefined;
+declare interface IInformation<T> {
+    data: T | null;
     loading: boolean;
     error: any;
 }

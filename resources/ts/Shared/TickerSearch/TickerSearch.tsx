@@ -8,7 +8,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Tickerlist from "../Tickerlist";
 import securityContext from '../SecurityContext';
-import SelectPeriod from "../SelectPeriod/SelectPeriod";
 
 export function TickerSearch(): JSX.Element {
     const [value, setValue] = useState("")
