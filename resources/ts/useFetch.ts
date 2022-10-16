@@ -7,8 +7,6 @@
 import axios, { AxiosResponse } from 'axios'
 import { useState, useEffect } from 'react'
 import IInformation from './types/information'
-import IRatio from './types/ratio'
-import Ticker from './types/ticker'
  
 function useFetch<T>(url: string): IInformation<T> {
     const [data, setData] = useState<T|null>(null)
