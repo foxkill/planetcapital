@@ -19,7 +19,7 @@ export function TickerSearch(): JSX.Element {
         searchField.current?.focus()
     }, [])
 
-    function submit() {
+    function submit(): void {
         const exchanges: Record<number, string> = {
             0: "",
             1: "amex",
@@ -39,7 +39,6 @@ export function TickerSearch(): JSX.Element {
         const exchange = exchanges[exchangeId]
 
         if (exchange) {
-            const endpoint = `/api/security/${exchange}/${val.toLowerCase()}/relative-valuation/${ctx.context.periodType.toLocaleLowerCase()}`
             ctx.setContext({...ctx.context, exchange, symbol: val})
         }
     }
@@ -52,7 +51,9 @@ export function TickerSearch(): JSX.Element {
             <div className="form-control">
                 <div className="input-group justify-center lg:justify-start">
                     <input
-                        onChange={e => setValue(e.target.value)}
+                        onChange={(e): void => {
+                            return setValue(e.target.value);
+                        }}
                         value={value} 
                         ref={searchField}
                         type="search"

@@ -18,6 +18,7 @@ function useFetch<T>(url: string): IInformation<T> {
     }
 
     useEffect(() => {
+        // eslint-disable-next-line no-console
         console.log("im in fetch", url)
         setError(null)
         if (!url) {

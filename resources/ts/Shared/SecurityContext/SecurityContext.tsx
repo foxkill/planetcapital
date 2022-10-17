@@ -6,8 +6,8 @@
 //
 import React, { createContext, ReactNode, useContext, useState } from "react"
 import { ISecurityContext } from "@/types/security.context"
-import securityContextModel from "../../models/securitycontext.model"
-import fetchFinancialRatios from "../../planetapi/fetch.financialratios"
+import securityContextModel from "@/models/securitycontext.model"
+import fetchFinancialRatios from "@/planetapi/fetch.financialratios"
 import { useQuery } from "react-query"
 import IRatio from "@/types/ratio"
 import { IProfile } from "@/types/profile"
@@ -67,7 +67,7 @@ function SecurityContextProvider({ children }: ISecurityContextProps): JSX.Eleme
             enabled: Boolean(context.symbol && context.exchange),
             retry: false,
             onSuccess: (data: IProfile) => { 
-                console.log("set company name");
+                // console.log("set company name");
                 context.companyName = data.companyName
                 context.image = data.image
                 context.price = data.price
@@ -85,7 +85,7 @@ function SecurityContextProvider({ children }: ISecurityContextProps): JSX.Eleme
 //
 // Helper function for accessing the context.
 //
-const useSecurity = () => useContext(SecurityContext)
+const useSecurity = (): ISecurityContextContainer => useContext(SecurityContext)
 
 export { SecurityContextProvider, useSecurity }
 export default SecurityContext

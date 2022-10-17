@@ -1,5 +1,6 @@
 import React from "react";
-export function Footer({ }) {
+
+export function Footer(): JSX.Element {
     return <>
         <footer className="footer p-10 bg-neutral text-neutral-content">
             <div>

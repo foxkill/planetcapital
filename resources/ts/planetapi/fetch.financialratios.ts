@@ -9,17 +9,18 @@ import IRatio from "@/types/ratio";
 import { AxiosResponse } from "axios";
 import { get } from "./axios.get";
 
-function fetchFinancialRatios({queryKey}): Promise<any> {
-    const [_key, {symbol, exchange, periodType}] = queryKey
+function fetchFinancialRatios({ queryKey }): Promise<any> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_, { symbol, exchange, periodType }] = queryKey
 
     if (!symbol || !exchange) {
-       throw new Error("Symbol and Exchange must be given")
+        throw new Error("Symbol and Exchange must be given")
     }
 
     const endpoint = `/api/security/${exchange.toLowerCase()}/${symbol.toLowerCase()}/relative-valuation/${periodType.toLowerCase()}`
 
     return get<IRatio>(endpoint)
-        .then((response: AxiosResponse<IRatio>) => response.data) 
+        .then((response: AxiosResponse<IRatio>) => response.data)
         .catch((err) => {
             throw err
         })

@@ -13,6 +13,7 @@ interface ISpinnerProps {
     height?: number
     width?: number
 }
+
 function Spinner({ color, fillcolor, height, width, children }: ISpinnerProps): JSX.Element {
     const clr = color ?? "text-gray-200"
     const fillclr = fillcolor ?? "fill-gray-200"

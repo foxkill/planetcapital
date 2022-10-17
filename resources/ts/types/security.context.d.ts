@@ -8,8 +8,6 @@
 import PeriodTypes from "./period"
 import IInformation from "./information"
 import IRatio from "./ratio"
-import IRatioTTM from "./ratio.ttm"
-import { IProfile } from "./profile"
 
 // export declare type SetEndPointFunc = (endpoint: string) => void
 export declare type SetStringValueFunc = (value: string) => void

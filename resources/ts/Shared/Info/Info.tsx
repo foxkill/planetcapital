@@ -7,7 +7,7 @@
 
 import React from 'react';
 
-const Info = (props: { message: string, position?: string }) => {
+const Info = (props: { message: string, position?: string }): JSX.Element => {
     return <div className={`toast toast-${props.position ? props.position : 'top'}`}>
         <div className="alert alert-info">
             <div>

@@ -5,7 +5,7 @@
 // Closed Source
 //
 import PeriodTypes from "@/types/period"
-import React, { useMemo } from "react"
+import React from "react"
 import { useSecurity } from "../SecurityContext/SecurityContext"
 
 const SelectPeriod = (): JSX.Element => {
@@ -15,7 +15,7 @@ const SelectPeriod = (): JSX.Element => {
 
     const currentPeriodType = securityContext.context.periodType
 
-    function setPeriod(event) {
+    function setPeriod(event: { target: { getAttribute: (arg0: string) => string } }): void {
         const periodType = event.target.getAttribute('data-value') as PeriodTypes
 
         if (!periodType || periodTypes.indexOf(periodType) < 0) {

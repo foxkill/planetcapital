@@ -8,7 +8,6 @@ import React from "react";
 import IRatio, { RatioProperties } from "@/types/ratio";
 import { ExternalLinkImage } from '../Images/ExternalLinkImage';
 import { InformationImage } from "../Images/InformationImage";
-import IRatioTTM from "@/types/ratio.ttm";
 import PeriodTypes from "@/types/period";
 
 interface CardProps {
@@ -19,7 +18,7 @@ interface CardProps {
 }
 // href="https://www.alphaspread.com/security/nyse/asix/relative-valuation/ratio/price-to-sales"
 
-const Card = (props: CardProps) => {
+const Card = (props: CardProps): JSX.Element | null => {
     const keymap = {
         "FY": "",
         "TTM": "TTM",
@@ -27,7 +26,7 @@ const Card = (props: CardProps) => {
     }
 
     if (!props.data) {
-       return null 
+        return null 
     }
 
     const key = props.ikey + keymap[props.type ?? "FY"]

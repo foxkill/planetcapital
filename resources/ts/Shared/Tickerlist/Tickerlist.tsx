@@ -4,7 +4,9 @@ import Ticker from "@/types/ticker";
 import Spinner from "../Spinner";
 import IInformation from "@/types/information";
 
-function Message(props: { info: IInformation }): JSX.Element {
+type DatalistProperties = JSX.IntrinsicElements["datalist"];
+
+function Message<T>(props: { info: IInformation<T> }): JSX.Element {
     const { info } = props
 
     if (info?.loading) {
@@ -40,16 +42,19 @@ function Message(props: { info: IInformation }): JSX.Element {
     </label>
 }
 
-const Tickerlist = forwardRef<HTMLDataListElement>((props, ref) => {
-    const info = useFetch("http://localhost/api/tickers")
-
+const Tickerlist = forwardRef<HTMLDataListElement, DatalistProperties>((props, ref) => {
+    const info = useFetch<Ticker[]>("http://localhost/api/tickers")
+    // 
+    // We need a ref because this datalist must later accessible for 
+    // being queried
+    // 
     return (
         <>
             <Message info={info}></Message>
             <datalist id="tickerlist" ref={ref}>
                 {
                     info.data &&
-                    (info?.data as Ticker[]).map((item: Ticker) => <option
+                    (info.data as Ticker[]).map((item: Ticker) => <option
                         key={item.id} data-value={item.name}
                         data-exchange-id={item.exchange_id}
                         name={item.tikr}>{item.tikr}</option>)
@@ -58,5 +63,7 @@ const Tickerlist = forwardRef<HTMLDataListElement>((props, ref) => {
         </>
     );
 })
+
+Tickerlist.displayName = "TickerList"
 
 export default Tickerlist;

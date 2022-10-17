@@ -1,6 +1,6 @@
 import React from "react";
 
-export function Navbar({ }) {
+export function Navbar(): JSX.Element {
     return <nav className="relative container mx-auto p-6" role="navigation" aria-label="main navigation">
         <div className="flex flex-wrap items-center justify-between">
             { /*  Logo */ }
