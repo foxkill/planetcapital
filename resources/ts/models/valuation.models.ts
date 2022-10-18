@@ -5,16 +5,18 @@
 // Closed Source
 //
 
-import { SecurityProperties } from "@/types/security";
+import { RatioProperties } from "@/types/ratio";
 
-const valuations: Record<string, SecurityProperties>[] = [
+const valuations: Record<string, RatioProperties>[] = [
     { 'p/e': 'priceEarningsRatio' },
     { 'peg': 'priceEarningsToGrowthRatio' },
     { 'p/s': 'priceSalesRatio' },
     { 'p/b': 'priceToBookRatio' },
     { 'p/ocf': 'priceToOperatingCashFlowsRatio' },
     { 'p/fcf': 'priceToFreeCashFlowsRatio' },
-    { 'cash ratio': 'cashRatio' }
+    { 'cash ratio': 'cashRatio' },
+    { 'current ratio': 'currentRatio' },
+    { 'quick ratio': 'quickRatio' },
 ]
 
 export default valuations
