@@ -15,8 +15,8 @@ const SelectPeriod = (): JSX.Element => {
 
     const currentPeriodType = securityContext.context.periodType
 
-    function setPeriod(event: { target: { getAttribute: (arg0: string) => string } }): void {
-        const periodType = event.target.getAttribute('data-value') as PeriodTypes
+    function setPeriod(event: React.MouseEvent<HTMLInputElement>): void {
+        const periodType = (event.target as HTMLInputElement).getAttribute('data-value') as PeriodTypes
 
         if (!periodType || periodTypes.indexOf(periodType) < 0) {
             return
@@ -35,7 +35,7 @@ const SelectPeriod = (): JSX.Element => {
                         <div className="form-control" key={value}>
                             <label className="label cursor-pointer">
                                 <span className="label-text mr-5">{value}</span>
-                                <input key={index} onClick={setPeriod} type="radio" data-value={value} name="radio-period" className="radio" defaultChecked={value == currentPeriodType} />
+                                <input key={index} onClick={(e: React.MouseEvent<HTMLInputElement>): void => setPeriod(e)} type="radio" data-value={value} name="radio-period" className="radio" defaultChecked={value == currentPeriodType} />
                             </label>
                         </div>
                     )
