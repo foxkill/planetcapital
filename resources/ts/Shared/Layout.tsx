@@ -9,6 +9,7 @@ import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from "react-query/devtools";
 import CompanyInfo from './CompanyInfo';
 import TickerSearch from './TickerSearch';
+import SelectPeriod from './SelectPeriod/SelectPeriod';
 
 const Layout = (): JSX.Element => {
     return (
@@ -16,13 +17,14 @@ const Layout = (): JSX.Element => {
             <Navbar />
             <QueryClientProvider client={qc}>
                 <SecurityContextProvider>
-                    <Hero><TickerSearch></TickerSearch></Hero>
-                    <Hero>
-                        {/* <div className="flex justify-center items-center pb-10"> */}
-                        <CompanyInfo>No Company</CompanyInfo>
-                        {/* </div> */}
+                    <Hero useColumnLayout={true} height={60}><TickerSearch></TickerSearch></Hero>
+                    <Hero height={30}><CompanyInfo /></Hero>
+                    <Hero useColumnLayout={false} height={60}>
+                        <Cards>
+                            Valuation Multiples
+                            <SelectPeriod></SelectPeriod>
+                        </Cards>
                     </Hero>
-                    <Cards />
                 </SecurityContextProvider>
                 <ReactQueryDevtools />
             </QueryClientProvider>
