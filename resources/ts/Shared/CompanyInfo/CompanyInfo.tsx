@@ -4,12 +4,12 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-import fetchProfile from '@/planetapi/fetch.profile'
-import { IProfile } from '@/types/profile'
-import React, { useState } from 'react'
-import { useQuery } from 'react-query'
-import { useSecurity } from '../SecurityContext/SecurityContext'
-import Spinner from '../Spinner'
+import fetchProfile from "@/planetapi/fetch.profile"
+import { IProfile } from "@/types/profile"
+import React, { useState } from "react"
+import { useQuery } from "react-query"
+import { useSecurity } from "../SecurityContext/SecurityContext"
+import Spinner from "../Spinner"
 
 function CompanyInfo(): JSX.Element {
     const { symbol, exchange } = useSecurity().context
@@ -18,6 +18,7 @@ function CompanyInfo(): JSX.Element {
     const [price, setPrice] = useState(0.0) 
     const [changes, setChanges] = useState(0.0)
     const [image, setImage] = useState("")
+    const [currency, setCurrency] = useState("")
 
     const { isLoading, isError } = useQuery<IProfile>(
         [
@@ -33,11 +34,12 @@ function CompanyInfo(): JSX.Element {
                 setPrice(data.price)
                 setChanges(data.changes)
                 setImage(data.image)
+                setCurrency(data.currency)
             }
         }
     )
 
-    const color = changes < 0 ? { color: 'red' } : { color: 'green' }
+    const color = changes < 0 ? { color: "red" } : { color: "green" }
 
     function toPercentage(price: number, change: number): number {
         const oldPrice = price - change
@@ -46,10 +48,10 @@ function CompanyInfo(): JSX.Element {
 
     const percentageChange = toPercentage(price, changes).toPrecision(3)
 
-    const sign = changes > 0 ? '+' : ''
+    const sign = changes > 0 ? "+" : ""
 
     return (
-        <div className={`stats shadow ${symbol ? '' : ' hidden'}`}>
+        <div className={`stats shadow ${symbol ? "" : " hidden"}`}>
             <div className="stat">
                 <div className="stat-figure text-secondary">
                     <div className="avatar">
@@ -60,7 +62,7 @@ function CompanyInfo(): JSX.Element {
                 </div>
                 <div className="stat-value">{companyName}</div>
                 <div className="stat-title">{exchange.toUpperCase() + ":" + symbol.toUpperCase()}</div>
-                <div className="stat-desc">{price + " USD "}<span style={color}>{sign + changes.toPrecision(3) + " USD "}({sign + percentageChange}%)</span></div>
+                <div className="stat-desc">{price + ` ${currency} `}<span style={color}>{sign + changes.toPrecision(3) + " USD "}({sign + percentageChange}%)</span></div>
             </div>
         </div>
     )
