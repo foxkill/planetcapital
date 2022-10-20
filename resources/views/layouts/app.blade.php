@@ -17,6 +17,7 @@
    @viteReactRefresh
    @vite(['resources/css/app.css', 'resources/ts/app.tsx'])
 
+   @inertiaHead
    <!-- <script src="//cdn.webix.com/edge/webix.js" type="text/javascript"></script> -->
    <!--Favicon-->
    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
@@ -25,6 +26,6 @@
 
 <body class="antialiased font-montserrat text-base text-gray-800 bg-base-200">
    <noscript>Does not work without javascript</noscript>
-   <div id="app"></div>
+   @inertia
 </body>
 </html>

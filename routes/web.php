@@ -3,6 +3,7 @@
 use App\Http\Controllers\TickersController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Ticker;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,9 +17,6 @@ use App\Models\Ticker;
 */
 
 Route::get('/', function () {
-    $tikr = Ticker::orderBy('tikr')->take(100)->where('exchange_id', 2)->get();
-    $tickers = $tikr->toArray();
-    return view('layouts.app', ['tickers' => $tickers]);
+    Inertia::setRootView('layouts.app');
+    return inertia('app');
 })->name('root');
-
-Route::get('/security/{exchange}/{security}', [TickersController::class, 'show'])->name('search');

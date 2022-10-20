@@ -4,9 +4,9 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-import axios, { AxiosResponse } from 'axios'
-import { useState, useEffect } from 'react'
-import IInformation from './types/information'
+import axios, { AxiosResponse } from "axios"
+import { useState, useEffect } from "react"
+import IInformation from "./types/information"
  
 function useFetch<T>(url: string): IInformation<T> {
     const [data, setData] = useState<T|null>(null)
