@@ -10,7 +10,8 @@
 	"extensions": [
 		"bmewburn.vscode-intelephense-client",
 		"xdebug.php-debug",
-		"bradlc.vscode-tailwindcss"
+		"bradlc.vscode-tailwindcss",
+		"dbaeumer.vscode-eslint"
 		// "mikestead.dotenv",
 		// "amiralizadeh9480.laravel-extra-intellisense",
 		// "ryannaddy.laravel-artisan",
