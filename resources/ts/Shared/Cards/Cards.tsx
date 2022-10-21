@@ -9,12 +9,12 @@ import Card from "../Card";
 import IRatio from "@/types/ratio";
 import valuations from "../../models/valuation.models";
 import { useSecurity } from "../SecurityContext/SecurityContext";
-import styles from './Cards.styles'
+import styles from "./Cards.styles"
 
 function HugeHeader({ children }: { children: ReactNode }): JSX.Element {
-    return <div className="max-w-md pb-6">
+    return (<div className="pb-6 text-center">
         <h1 className="uppercase text-4xl font-bold">{children}</h1>
-    </div>
+    </div>)
 }
 
 function Error({ error, children }: { error: any, children: ReactNode }): JSX.Element | null {

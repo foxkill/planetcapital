@@ -7,7 +7,7 @@
 
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Tickerlist from "../Tickerlist";
-import securityContext from '../SecurityContext';
+import securityContext from "../SecurityContext";
 
 export function TickerSearch(): JSX.Element {
     const [value, setValue] = useState("")
@@ -35,7 +35,7 @@ export function TickerSearch(): JSX.Element {
 
         const security = tickerListRef.current?.options.namedItem(val)
 
-        const exchangeId = security?.getAttribute('data-exchange-id') || 0
+        const exchangeId = security?.getAttribute("data-exchange-id") || 0
         const exchange = exchanges[exchangeId]
 
         if (exchange) {
@@ -44,7 +44,7 @@ export function TickerSearch(): JSX.Element {
     }
 
     return <>
-        <img src="images/banner.webp" className="rounded-lg shadow-2xl max-w-xs sm:max-w-lg" />
+        <img src="/images/banner.webp" className="rounded-lg shadow-2xl max-w-xs sm:max-w-lg" />
         <div>
             <h1 className="text-4xl font-bold text-center lg:text-left">Search for your favorite ticker here...</h1>
             <p className="py-6 pr-14"></p>
