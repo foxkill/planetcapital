@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\TickersController;
 use Illuminate\Support\Facades\Route;
-use App\Models\Ticker;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 /*
@@ -18,5 +17,27 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     Inertia::setRootView('layouts.app');
-    return inertia('app');
+    return inertia('app', ['title' => 'Planet Capital']);
 })->name('root');
+
+Route::get('/security/{exchange}/{symbol}/relative-valuation/', function (Request $req) {
+    Inertia::setRootView('layouts.app');
+    return inertia('RelativeValuation/Index', [
+        'symbol' => $req->symbol,
+        'exchange' => $req->exchange,
+    ]);
+});
+
+Route::get('/security/{exchange}/{symbol}/relative-valuation/ratio/{ratio}', function (Request $req) {
+    Inertia::setRootView('layouts.app');
+    return inertia('RelativeValuation/Ratio/Index', [
+        'ratio' => $req->ratio,
+        'symbol' => $req->symbol,
+        'exchange' => $req->exchange,
+    ]);
+});
+
+Route::get('/dashboard', function () {
+    Inertia::setRootView('layouts.app');
+    return inertia('Dashboard/Index');
+})->name('dashboard');
