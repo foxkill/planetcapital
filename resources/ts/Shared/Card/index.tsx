@@ -4,4 +4,4 @@
 // https://github.com/foxkill
 // Closed Source
 //
-export {default} from './Card'
+export {default} from "./Card"
