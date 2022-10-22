@@ -20,8 +20,8 @@
    @inertiaHead
    <!-- <script src="//cdn.webix.com/edge/webix.js" type="text/javascript"></script> -->
    <!--Favicon-->
-   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
-   <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+   <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+   <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
 </head>
 
 <body class="antialiased font-montserrat text-base text-gray-800 bg-base-200">
