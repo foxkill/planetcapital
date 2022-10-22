@@ -5,10 +5,16 @@
 // Closed Source
 //
 
+import Hero from "@/Shared/Hero"
+import Layout from "@/Shared/Layout"
 import React from "react"
+import { Head } from "@inertiajs/inertia-react"
 
-function App(): JSX.Element {
-    return (<h1>Ich bin eine Application</h1>)
+function Dashboard(): JSX.Element {
+    return <Layout>
+        <Head title="Dashboard"></Head>
+        <Hero>Hallo, ich bin dein Dashboard !</Hero>
+    </Layout>
 }
 
-export default App
+export default Dashboard
