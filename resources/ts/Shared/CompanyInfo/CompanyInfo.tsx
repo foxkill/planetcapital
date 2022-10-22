@@ -20,7 +20,7 @@ function CompanyInfo(): JSX.Element {
     const [image, setImage] = useState("")
     const [currency, setCurrency] = useState("")
 
-    const { isLoading, isError } = useQuery<IProfile>(
+    const { isLoading } = useQuery<IProfile>(
         [
             ["profile", symbol, exchange].join("-"),
             { symbol: symbol, exchange: exchange}
