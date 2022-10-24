@@ -8,7 +8,7 @@
 import React from "react";
 
 interface IHeroProperties {
-    children: React.ReactNode
+    children?: React.ReactNode
     useColumnLayout?: boolean
     height?: number
 }
