@@ -17,12 +17,13 @@ interface CardProps {
     data: IRatio | undefined
     ikey: RatioProperties
     children: React.ReactNode
+    width?: number
 }
 // href="https://www.alphaspread.com/security/nyse/asix/relative-valuation/ratio/price-to-sales"
 
 const Card = (props: CardProps): JSX.Element | null => {
-
     const { context } = useSecurity()
+
     const keymap = {
         "FY": "",
         "TTM": "TTM",
@@ -33,12 +34,14 @@ const Card = (props: CardProps): JSX.Element | null => {
         return null 
     }
 
+    const width = props.width ? props.width : "full"
+
     const key = props.ikey + keymap[props.type ?? "FY"]
     let value = props.data[key]?.toFixed(2) ?? "0.00"
  
     const detailUrl = props.ikey.split(/(?=[A-Z])/).join("-").toLowerCase();
     return (
-        <div className="card card-bordered w-60 h-60 bg-base-100 hover:shadow-xl">
+        <div className={`card card-bordered w-${width} h-60 bg-base-100 hover:shadow-xl`}>
             <div className="bg-slate-200 relative p-2 justify-self-auto">
                 <h2 className="leading-8 pt-2 text-4xl text-center">{value}</h2>
                 <p className="pt-1 pb-1 text-sm text-center leading-4 uppercase">{props.children}</p>

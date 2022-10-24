@@ -7,15 +7,12 @@
 import React, { ReactNode } from "react";
 import Card from "../Card";
 import IRatio from "@/types/ratio";
-import valuations from "../../models/valuation.models";
+// import valuations from "../../models/valuation.models";
 import { useSecurity } from "../SecurityContext/SecurityContext";
 import styles from "./Cards.styles"
-
-function HugeHeader({ children }: { children: ReactNode }): JSX.Element {
-    return (<div className="pb-6 text-center">
-        <h1 className="uppercase text-4xl font-bold">{children}</h1>
-    </div>)
-}
+import HugeHeader from "../HugeHeader/HugeHeader";
+import { Valuations } from "@/models/valuation.models";
+import Hero from "../Hero";
 
 function Error({ error, children }: { error: any, children: ReactNode }): JSX.Element | null {
     let msg = children
@@ -60,12 +57,14 @@ function Error({ error, children }: { error: any, children: ReactNode }): JSX.El
 
 interface ICardsProperties {
     children: React.ReactNode
+    valuations: Valuations
 }
 
 export function Cards(props: ICardsProperties): JSX.Element | null {
     const ctx = useSecurity()
 
     if (!ctx.context) {
+        console.log("context is null in cards, f*ck");
         return null
     }
 
@@ -78,13 +77,13 @@ export function Cards(props: ICardsProperties): JSX.Element | null {
             <div className={"grid " + styles.cards}>
                 {
                     (!loading && !error) &&
-                    valuations.map((value) => {
+                    props.valuations.map((value) => {
                         const [key, val] = Object.entries(value)[0]
                         return <Card type={ctx.context.periodType} key={key} ikey={val} data={data as IRatio}>{key}</Card>
                     })
                 }
             </div>
-            <p></p>
+            <Hero></Hero>
         </>
     )
 }
