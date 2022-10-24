@@ -19,4 +19,6 @@ const valuations: Record<string, RatioProperties>[] = [
     { "quick ratio": "quickRatio" },
 ]
 
+export type Valuations = typeof valuations
+
 export default valuations
