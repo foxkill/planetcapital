@@ -16,7 +16,7 @@ const SelectPeriod = (): JSX.Element => {
     const currentPeriodType = securityContext.context.periodType
 
     function setPeriod(event: React.MouseEvent<HTMLInputElement>): void {
-        const periodType = (event.target as HTMLInputElement).getAttribute('data-value') as PeriodTypes
+        const periodType = (event.target as HTMLInputElement).getAttribute("data-value") as PeriodTypes
 
         if (!periodType || periodTypes.indexOf(periodType) < 0) {
             return
