@@ -31,7 +31,7 @@ Route::get('/tickers', function (Request $request) {
 });
 
 
-Route::get('/security/{exchange}/{security}/relative-valuation/{period}', function (Request $request) {
+Route::get('/security/{exchange}/{security}/relative-valuation/{period}/limit/{limit}', function (Request $request) {
     $periodsUrl = [
         'fy' => FMP_RATIOS_FY,
         'ttm' => FMP_RATIOS_TTM,
@@ -47,28 +47,44 @@ Route::get('/security/{exchange}/{security}/relative-valuation/{period}', functi
             'ratios',
             // TODO: check valid period.
             strtolower($request->period),
-            strtolower($request->security)
+            strtolower($request->security),
+            $request->limit ?? 1, 
         ]
     );
 
     $cachedSecurity = Redis::get($key);
 
+    // Use cached entry if available.
     if (isset($cachedSecurity)) {
-        return response()->json(json_decode($cachedSecurity), Response::HTTP_OK);
+        $data = json_decode($cachedSecurity);
+        if (count($data) == 1) {
+            $data = $data[0];
+        }
+        return response()->json($data, Response::HTTP_OK);
     }
 
+    // Build the endpoint.
     $endpoint = sprintf(
         $periodsUrl[$period], 
-        strtoupper($request->security), 1, env('FMP_API_KEY')
+        strtoupper($request->security), 
+        $request->limit ?? 1, 
+        env('FMP_API_KEY')
     );
 
     $response = Http::acceptJson()->get($endpoint);
 
     if ($response->ok()) {
         $data = $response->json();
-        if (count($data)) {
-            Redis::set($key, json_encode($data[0]));
-            return response()->json($data[0], Response::HTTP_CREATED);
+        $count = count($data);
+
+        if ($count) {
+            Redis::set($key, json_encode($data));
+
+            if (count($data) == 1) {
+                $data = $data[0];
+            }
+
+            return response()->json($data, Response::HTTP_CREATED);
         }
     }
 
