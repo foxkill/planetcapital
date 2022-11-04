@@ -4,15 +4,19 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-import React from "react"
+import React, { useState } from "react"
 import Hero from "@/Shared/Hero"
 import Layout from "@/Shared/Layout"
 import { Link } from "@inertiajs/inertia-react"
 import Formula from "@/Shared/Formula"
-import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
 import RatioCard from "@/Shared/RatioCard"
 import InfoCard from "@/Shared/InfoCard"
 import HistoryChart from "@/Shared/Charts"
+import { useQuery } from "react-query"
+import IRatio from "@/types/ratio"
+import fetchFinancialRatios from "@/planetapi/fetch.financialratios"
+import { Serie } from "@nivo/line"
+import { timeFormat, timeParse } from "d3-time-format"
 
 interface IRatioProperties {
     ratio: string
@@ -20,136 +24,68 @@ interface IRatioProperties {
     exchange: string
 }
 
-
 function Ratio({ ratio, symbol, exchange }: IRatioProperties): JSX.Element {
+    const [data, setData] = useState<Serie[]>([])
     const displayRatio = ratio.split("-").join(" ")
-    const ctx = useSecurity()
-    const { data, error, loading } = ctx.context.information
+
+    useQuery<IRatio[]>(
+        [
+            ["ratios", symbol, exchange, "FY"].join("-").toLocaleLowerCase(),
+            {
+                symbol: symbol,
+                exchange: exchange,
+                periodType: "FY",
+                limit: 10
+            }
+        ],
+        fetchFinancialRatios,
+        {
+            enabled: Boolean(symbol && exchange),
+            retry: false,
+            onSuccess: (data: IRatio[]) => {
+
+                const tp = timeParse("%Y-%m-%d")
+                const tf = timeFormat("%b-%Y")
+                const currentDate = new Date()
+
+                const dp = data.map((v) => {
+                    const parsedDate = (v.date as unknown as string).split("-")
+
+                    const pd = tp(v.date as unknown as string) ?? currentDate
+                    const formattedDate = tf(pd)
+                    return {
+                        x: parsedDate[0] + "-01-01",
+                        y: v.currentRatio.toPrecision(2),
+                        d: formattedDate
+                    }
+                })
+
+
+                const serie: Serie = {
+                    id: "MHO",
+                    data: dp
+                }
+
+                // setData(serie)
+                setData([serie])
+                // context.information.data = data
+                // context.information.error = null
+                // context.information.loading = false
+            },
+            onError: (err) => {
+                // context.information.data = null
+                // context.information.error = err
+                // context.information.loading = false
+            }
+        }
+    )
 
     const valuations: Record<string, string>[] = [
         { "current p/e": "priceToOperatingCashFlowsRatio" },
         { "p/s": "priceToSalesRatio" },
         { "p/e": "priceEarningsRatio" }
     ]
-    const cdata = [
-        {
-            "id": "MHO",
-            "data": [
-                {
-                    "x": "2016-10-01",
-                    "y": 11.3
-                },
-                {
-                    "x": "2016-11-01",
-                    "y": 10.6
-                },
-                {
-                    "x": "2016-12-01",
-                    "y": 11.6
-                },
-                {
-                    "x": "2017-01-01",
-                    "y": 11.0
-                },
-                {
-                    "x": "2017-02-01",
-                    "y": 10.9
-                },
-                {
-                    "x": "2017-03-01",
-                    "y": 10.6
-                },
-                {
-                    "x": "2017-04-01",
-                    "y": 9.4
-                },
-                {
-                    "x": "2017-05-01",
-                    "y": 10.6
-                },
-                {
-                    "x": "2017-06-01",
-                    "y": 10.8
-                },
-                {
-                    "x": "2017-07-01",
-                    "y": 11.0
-                },
-                {
-                    "x": "2017-08-01",
-                    "y": 10.1
-                },
-                {
-                    "x": "2017-09-01",
-                    "y": 9.6
-                },
-                {
-                    "x": "2017-10-01",
-                    "y": 9.7
-                },
-                {
-                    "x": "2017-11-01",
-                    "y": 12.1
-                },
-                {
-                    "x": "2017-12-01",
-                    "y": 12.9
-                },
-                {
-                    "x": "2018-01-01",
-                    "y": 13.6
-                },
-                {
-                    "x": "2018-02-01",
-                    "y": 12.4
-                },
-                {
-                    "x": "2018-03-01",
-                    "y": 11.4
-                },
-                {
-                    "x": "2018-04-01",
-                    "y": 11.9
-                },
-                {
-                    "x": "2018-05-01",
-                    "y": 12.9
-                },
-                {
-                    "x": "2018-06-01",
-                    "y": 10.8
-                },
-                {
-                    "x": "2018-07-01",
-                    "y": 8.9
-                },
-                {
-                    "x": "2018-08-01",
-                    "y": 8.8
-                },
-                {
-                    "x": "2018-09-01",
-                    "y": 8.8
-                },
-                {
-                    "x": "2018-10-01",
-                    "y": 7.3
-                },
-                {
-                    "x": "2018-11-01",
-                    "y": 7.5
-                },
-                {
-                    "x": "2018-12-01",
-                    "y": 7.3
-                },
-                {
-                    "x": "2019-01-01",
-                    "y": 5.4
-                },
-            ]
-        }
-    ]
+
     return <Layout>
         <Hero height={20}>
             <div className="text-sm breadcrumbs">
@@ -242,7 +178,7 @@ function Ratio({ ratio, symbol, exchange }: IRatioProperties): JSX.Element {
                         </div>
                     </InfoCard>
                     <InfoCard key={2} caption={"History"} colSpan="col-span-1 lg:col-span-3">
-                        <HistoryChart data={cdata}></HistoryChart>
+                        <HistoryChart data={data}></HistoryChart>
                     </InfoCard>
                 </div>
             </div>
