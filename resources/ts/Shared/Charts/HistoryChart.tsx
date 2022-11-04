@@ -6,21 +6,11 @@
 //
 import React, { ReactNode } from "react"
 import { ResponsiveLine, Layer, CustomLayerProps, PointSymbolProps } from "@nivo/line"
-import { DotsItem } from "@nivo/core"
+import { DotsItem, useTheme } from "@nivo/core"
+import daisyuiColors from "daisyui/src/colors/themes"
 
 interface HistoryChartProperties {
     data: any[]
-}
-
-interface IPoint {
-    x: number
-    y: number
-}
-
-interface ICustomPointProperties {
-    currentPoint: IPoint
-    borderWidth: number
-    borderColor: string
 }
 
 const CustomSymbol = ({ size, color, borderWidth, borderColor }: PointSymbolProps): ReactNode => (
@@ -65,7 +55,7 @@ function LastPoint({ points, ...props }: CustomLayerProps): JSX.Element {
 }
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars
 const CustomPoint = (props: CustomLayerProps): ReactNode | null => {
-    const { currentPoint, pointBorderWidth: borderWidth, pointBorderColor: borderColor } = props;
+    const { currentPoint } = props;
     // it will show the current point
     if (!currentPoint) {
         return null
@@ -111,6 +101,8 @@ const CustomPoint = (props: CustomLayerProps): ReactNode | null => {
     // )
 }
 
+const { "[data-theme=light]": theme } = daisyuiColors
+
 const HistoryChart = ({ data }: HistoryChartProperties): JSX.Element => (
     // Einsatz von Layern
     // https://codesandbox.io/s/fancy-line-chart-3quqe
@@ -129,10 +121,12 @@ const HistoryChart = ({ data }: HistoryChartProperties): JSX.Element => (
     //       ] as Layer[]
     //     }
 
+    
     <ResponsiveLine
         data={data}
         curve={"monotoneX"}
-        colors={{ scheme: "spectral" }}
+        // colors={{ scheme: "spectral" }}
+        colors={[theme["base-300"], theme.secondary]}
         lineWidth={3}
         // pointColor={{ theme: "background" }}
         pointSize={10}
@@ -145,11 +139,11 @@ const HistoryChart = ({ data }: HistoryChartProperties): JSX.Element => (
         enableGridX={false}
         enableGridY={false}
         xFormat="time:%b-%Y"
-        gridXValues={[2016,2017,2018]}
+        // gridXValues={[2016,2017,2018]}
         xScale={{
             type: "time",
             format: "%Y-%m-%d",
-            precision: "month",
+            precision: "day",
             useUTC: false
         }}
         yScale={{
@@ -160,6 +154,15 @@ const HistoryChart = ({ data }: HistoryChartProperties): JSX.Element => (
             reverse: false,
         }}
         axisBottom={{
+            // tickValues: [
+            //     2016,
+            //     2017,
+            //     2018,
+            //     2019,
+            //     2020,
+            //     2021,
+            //     2022,
+            // ],
             tickValues: "every year",
             tickSize: 0,
             tickPadding: 20,
@@ -183,7 +186,7 @@ const HistoryChart = ({ data }: HistoryChartProperties): JSX.Element => (
             return (
                 <>
                     <div className="w-40 rounded" style={{ background: "white", padding: "9px 12px", border: "1px solid #ccc" }}>
-                        <div className="text-center font-bold">{point.data.xFormatted}</div>
+                        <div className="text-center font-bold">{point.data.d}</div>
                         <hr></hr>
                         <div key={point.id} style={{ padding: "3px 0" }}>
                             EV/S: <div className="float-right">{point.data.yFormatted}</div>
