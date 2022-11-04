@@ -28,4 +28,5 @@ export declare interface ISecurityContext  {
     information: IInformation<IRatio>
     setContext?: (value: ISecurityContext) => void
     getQueryKey: () => string
+    limit: number
 }

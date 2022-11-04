@@ -35,7 +35,8 @@ function SecurityContextProvider({ children }: ISecurityContextProps): JSX.Eleme
             {
                 symbol: context.symbol,
                 exchange: context.exchange,
-                periodType: context.periodType
+                periodType: context.periodType,
+                limit: context.limit
             }
         ],
         fetchFinancialRatios as any,

@@ -11,13 +11,13 @@ import { get } from "./axios.get";
 
 function fetchFinancialRatios({ queryKey }): Promise<any> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_, { symbol, exchange, periodType }] = queryKey
+    const [_, { symbol, exchange, periodType, limit }] = queryKey
 
     if (!symbol || !exchange) {
         throw new Error("Symbol and Exchange must be given")
     }
 
-    const endpoint = `/api/security/${exchange.toLowerCase()}/${symbol.toLowerCase()}/relative-valuation/${periodType.toLowerCase()}`
+    const endpoint = `/api/security/${exchange.toLowerCase()}/${symbol.toLowerCase()}/relative-valuation/${periodType.toLowerCase()}/limit/${limit}`
 
     return get<IRatio>(endpoint)
         .then((response: AxiosResponse<IRatio>) => response.data)
