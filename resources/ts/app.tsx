@@ -1,11 +1,11 @@
 // import "./bootstrap.ts"
-import ReactDom from "react-dom/client"
 import React from "react";
+import ReactDom from "react-dom/client"
 import { createInertiaApp } from "@inertiajs/inertia-react"
 import { InertiaProgress } from "@inertiajs/progress"
-import qc from "@/planetapi/queryclient"
 import { SecurityContextProvider } from "@/Shared/SecurityContext/SecurityContext";
 import { QueryClientProvider } from "react-query";
+import qc from "@/planetapi/queryclient"
 // import { ReactQueryDevtools } from "react-query/devtools";
 
 createInertiaApp({
