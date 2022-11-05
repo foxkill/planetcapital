@@ -29,56 +29,6 @@ const SecurityContext = createContext<ISecurityContextContainer>({} as ISecurity
 function SecurityContextProvider({ children }: ISecurityContextProps): JSX.Element {
     const [context, setContext] = useState<ISecurityContext>(securityContextModel)
 
-    const { isLoading } = useQuery<IRatio>(
-        [
-            ["ratios", context.symbol, context.exchange, context.periodType].join("-"),
-            {
-                symbol: context.symbol,
-                exchange: context.exchange,
-                periodType: context.periodType,
-                limit: context.limit
-            }
-        ],
-        fetchFinancialRatios as any,
-        {
-            enabled: Boolean(context.symbol && context.exchange),
-            retry: false,
-            onSuccess: (data) => { 
-                console.log("set data");
-                
-                context.information.data = data 
-                context.information.error = null
-                context.information.loading = false
-            },
-            onError: (err) => { 
-                context.information.data = null
-                context.information.error = err
-                context.information.loading = false
-            }
-        }
-    )
-
-    useQuery<IProfile>(
-        [
-            ["profile", context.symbol, context.exchange].join("-"),
-            { symbol: context.symbol, exchange: context.exchange}
-        ],
-        fetchProfile,
-        {
-            enabled: Boolean(context.symbol && context.exchange),
-            retry: false,
-            onSuccess: (data: IProfile) => { 
-                // console.log("set company name");
-                context.companyName = data.companyName
-                context.image = data.image
-                context.price = data.price
-                context.changes = data.changes
-            },
-        }
-    )
-
-    context.information.loading = isLoading
-
     return (<SecurityContext.Provider value={{ context, setContext }}>
         {children}
     </SecurityContext.Provider>)
