@@ -13,16 +13,19 @@ import CompanyInfo from "@/Shared/CompanyInfo";
 import TickerSearch from "@/Shared/TickerSearch";
 import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod";
 import valuations from "@/models/valuation.models";
+import HugeHeader from "@/Shared/HugeHeader";
 
 function App(): JSX.Element {
     return (
         <>
             <Hero useColumnLayout={true} height={60}><TickerSearch></TickerSearch></Hero>
             <Hero height={30}><CompanyInfo /></Hero>
+            <Hero height={30} contextAware>
+                <HugeHeader>Valuation Multiples</HugeHeader>
+                <SelectPeriod></SelectPeriod>
+            </Hero>
             <Hero useColumnLayout={false} height={60}>
                 <Cards valuations={valuations}>
-                    Valuation Multiples
-                    <SelectPeriod></SelectPeriod>
                 </Cards>
             </Hero>
         </>
