@@ -12,11 +12,11 @@ createInertiaApp({
     resolve: (name) => import(/* @vite-ignore */ `./Pages/${name}`),
     setup({ el, App, props }) {
         ReactDom.createRoot(el).render(
-            <QueryClientProvider client={qc}>
-                <SecurityContextProvider>
+            <SecurityContextProvider>
+                <QueryClientProvider client={qc}>
                     <App {...props} />
-                </SecurityContextProvider>
-            </QueryClientProvider>
+                </QueryClientProvider>
+            </SecurityContextProvider>
         )
     }
 })
