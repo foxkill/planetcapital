@@ -6,15 +6,24 @@
 //
 
 import React from "react";
+import { useSecurity } from "../SecurityContext/SecurityContext";
 
 interface IHeroProperties {
     children?: React.ReactNode
     useColumnLayout?: boolean
     height?: number
+    contextAware?: boolean
 }
 
-export function Hero({ children, useColumnLayout, height }: IHeroProperties): JSX.Element {
-    // const ctx = useContext(securityContext)
+export function Hero({ children, useColumnLayout, height, contextAware }: IHeroProperties): JSX.Element | null {
+    const ctx = useSecurity()
+
+    if (contextAware) {
+        if (! ctx.context.symbol && !ctx.context.exchange) {
+            return null
+        }
+    }
+
     const h = !height ? "min-h-screen" : `min-h-[${height}vh]`
     return (
         <>
