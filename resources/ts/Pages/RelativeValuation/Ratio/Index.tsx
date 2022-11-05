@@ -43,7 +43,6 @@ function Ratio({ ratio, symbol, exchange }: IRatioProperties): JSX.Element {
             enabled: Boolean(symbol && exchange),
             retry: false,
             onSuccess: (data: IRatio[]) => {
-
                 const tp = timeParse("%Y-%m-%d")
                 const tf = timeFormat("%b-%Y")
                 const currentDate = new Date()
