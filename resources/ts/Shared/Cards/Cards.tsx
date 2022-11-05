@@ -13,6 +13,9 @@ import styles from "./Cards.styles"
 import HugeHeader from "../HugeHeader/HugeHeader";
 import { Valuations } from "@/models/valuation.models";
 import Hero from "../Hero";
+import { useQuery } from "react-query";
+import fetchFinancialRatios from "@/planetapi/fetch.financialratios";
+import Spinner from "../Spinner";
 
 function Error({ error, children }: { error: any, children: ReactNode }): JSX.Element | null {
     let msg = children
@@ -61,26 +64,44 @@ interface ICardsProperties {
 }
 
 export function Cards(props: ICardsProperties): JSX.Element | null {
-    const ctx = useSecurity()
+    const context = useSecurity().context
 
-    if (!ctx.context) {
-        console.log("context is null in cards, f*ck");
-        return null
-    }
+    const ratioQuery = useQuery<IRatio>(
+        [
+            ["ratios", context.symbol, context.exchange, context.periodType].join("-").toLocaleLowerCase(),
+            {
+                symbol: context.symbol,
+                exchange: context.exchange,
+                periodType: context.periodType,
+                limit: context.limit
+            }
+        ],
+        fetchFinancialRatios,
+        {
+            enabled: Boolean(context.symbol && context.exchange),
+            retry: false,
+        }
+    )
 
-    const { data, error, loading } = ctx.context.information
+
+    // const { data, error, loading } = context.information
 
     return (
         <>
             <HugeHeader>{props.children}</HugeHeader>
-            <Error error={error}>Es konnten keine Daten für diese Aktie geladen werden</Error>
+            <Error error={ratioQuery.error}>Es konnten keine Daten für diese Aktie geladen werden</Error>
             <div className={"grid " + styles.cards}>
                 {
-                    (!loading && !error) &&
-                    props.valuations.map((value) => {
-                        const [key, val] = Object.entries(value)[0]
-                        return <Card type={ctx.context.periodType} key={key} ikey={val} data={data as IRatio}>{key}</Card>
-                    })
+                    ratioQuery.isLoading ? (
+                        <div className="text-center w-full lg:col-span-4 md:col-span-3">
+                            <Spinner height={24} width={24}></Spinner>
+                        </div>
+                    ) : (
+                        props.valuations.map((value) => {
+                            const [key, val] = Object.entries(value)[0]
+                            return <Card type={context.periodType} key={key} ikey={val} data={ratioQuery.data as IRatio}>{key}</Card>
+                        })
+                    )
                 }
             </div>
             <Hero></Hero>
