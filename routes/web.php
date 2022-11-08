@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RatiosController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -20,6 +21,7 @@ Route::get('/', function () {
     return inertia('app', ['title' => 'Planet Capital']);
 })->name('root');
 
+// RelativeValuation
 Route::get('/security/{exchange}/{symbol}/relative-valuation/', function (Request $req) {
     Inertia::setRootView('layouts.app');
     return inertia('RelativeValuation/Index', [
@@ -28,14 +30,8 @@ Route::get('/security/{exchange}/{symbol}/relative-valuation/', function (Reques
     ]);
 });
 
-Route::get('/security/{exchange}/{symbol}/relative-valuation/ratio/{ratio}', function (Request $req) {
-    Inertia::setRootView('layouts.app');
-    return inertia('RelativeValuation/Ratio/Index', [
-        'ratio' => $req->ratio,
-        'symbol' => $req->symbol,
-        'exchange' => $req->exchange,
-    ]);
-});
+Route::get('/security/{exchange}/{symbol}/relative-valuation/ratio/{ratio}', [RatiosController::class, 'index'])
+    ->name('ratios');
 
 Route::get('/dashboard', function () {
     Inertia::setRootView('layouts.app');

@@ -19,28 +19,33 @@ import { Serie } from "@nivo/line"
 import { timeFormat, timeParse } from "d3-time-format"
 
 interface IRatioProperties {
-    ratio: string
     symbol: string
     exchange: string
+    ratio: string
+    ratioShortName: string
+    ratioCamelCaseName: string
+    ratioDefinition: string
+    ratioExplicitName: string
+    ratioFormula: string
 }
 
-function Ratio({ ratio, symbol, exchange }: IRatioProperties): JSX.Element {
+function Ratio(props: IRatioProperties): JSX.Element {
     const [data, setData] = useState<Serie[]>([])
-    const displayRatio = ratio.split("-").join(" ")
+    const displayRatio = props.ratio.split("-").join(" ")
 
     useQuery<IRatio[]>(
         [
-            ["ratios", symbol, exchange, "FY"].join("-").toLocaleLowerCase(),
+            ["ratios", props.symbol, props.exchange, "FY"].join("-").toLocaleLowerCase(),
             {
-                symbol: symbol,
-                exchange: exchange,
+                symbol: props.symbol,
+                exchange: props.exchange,
                 periodType: "FY",
                 limit: 10
             }
         ],
         fetchFinancialRatios,
         {
-            enabled: Boolean(symbol && exchange),
+            enabled: Boolean(props.symbol && props.exchange),
             retry: false,
             onSuccess: (data: IRatio[]) => {
                 const tp = timeParse("%Y-%m-%d")
@@ -59,9 +64,8 @@ function Ratio({ ratio, symbol, exchange }: IRatioProperties): JSX.Element {
                     }
                 })
 
-
                 const serie: Serie = {
-                    id: "MHO",
+                    id: props.symbol,
                     data: dp
                 }
 
@@ -80,9 +84,9 @@ function Ratio({ ratio, symbol, exchange }: IRatioProperties): JSX.Element {
     )
 
     const valuations: Record<string, string>[] = [
-        { "current p/e": "priceToOperatingCashFlowsRatio" },
-        { "p/s": "priceToSalesRatio" },
-        { "p/e": "priceEarningsRatio" }
+        { "current": "priseToSalesRatio" },
+        { "median": "priceToSalesRatio" },
+        { "industry": "priceToSalesRatio" }
     ]
 
     return <Layout>
@@ -90,15 +94,15 @@ function Ratio({ ratio, symbol, exchange }: IRatioProperties): JSX.Element {
             <div className="text-sm breadcrumbs">
                 <ul>
                     {/* Goes to summary */}
-                    <li><a>{symbol.toUpperCase()}</a></li>
+                    <li><a>{props.symbol.toUpperCase()}</a></li>
                     { /* Goes to parent */}
-                    <li><Link href={`/security/${exchange.toLowerCase()}/${symbol.toLowerCase()}/relative-valuation`}>Relative Valuation</Link></li>
-                    <li>{ratio}</li>
+                    <li><Link href={`/security/${props.exchange.toLowerCase()}/${props.symbol.toLowerCase()}/relative-valuation`}>Relative Valuation</Link></li>
+                    <li>{props.ratio}</li>
                 </ul>
             </div>
         </Hero>
         <Hero height={60}>
-            <h2 className="!mt-0 mb-16 text-3xl font-bold min-h-[1rem] text-center uppercase pb-0">P/S
+            <h2 className="!mt-0 mb-16 text-3xl font-bold min-h-[1rem] text-center uppercase pb-0">{props.ratioShortName}
                 <div className="text-gray-400 text-3xl uppercase font-light">{displayRatio}</div>
             </h2>
             <div className="alert alert-info shadow-lg pb-4">
@@ -106,10 +110,7 @@ function Ratio({ ratio, symbol, exchange }: IRatioProperties): JSX.Element {
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="strokeCurrent flex-shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info flex-shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> */}
                     <span>
-                        <b>The Price to Free Cash Flow To Equity (P/FCFE)</b> ratio is a valuation multiple that compares a companys
-                        market capitalization to the amount of free cash flow available for equity shareholders. This metric
-                        is very similar to the P/OCF but is considered a more exact measure, owing to the fact that it uses
-                        free cash flow, which subtracts capital expenditures (CapEx) from a companys operating cash flow.
+                        The <b>{props.ratioExplicitName + " (" + props.ratioShortName.toUpperCase()+")"} </b>{props.ratioDefinition}
                         <div className="divider"></div>
                         <Formula>P/OCF</Formula> = <Formula>Market Cap</Formula> / <Formula>FCFE</Formula>
                     </span>
@@ -119,8 +120,8 @@ function Ratio({ ratio, symbol, exchange }: IRatioProperties): JSX.Element {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full">
                 {
                     valuations.map((value) => {
-                        const [key, val] = Object.entries(value)[0]
-                        return <RatioCard caption={key} key={key}>9.9</RatioCard>
+                        const [key] = Object.entries(value)[0]
+                        return <RatioCard caption={key + " " + props.ratioShortName} key={key}>9.9</RatioCard>
                     })
                 }
             </div>
@@ -129,10 +130,10 @@ function Ratio({ ratio, symbol, exchange }: IRatioProperties): JSX.Element {
         <div className="hero min-h-[60vh] bg-base-300">
             <div className="hero-content flex-col w-full">
                 <h2 className="!mt-0 mb-16 text-3xl font-bold min-h-[1rem] text-center uppercase pb-0">
-                    P/E History
+                    {props.ratioShortName} History
                 </h2>
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 !w-full">
-                    <InfoCard key={1} caption={"Statistics"} colSpan="col-span-1 lg:col-span-2">
+                    <InfoCard key={1} caption={"Statistics"} ratio={props.ratioExplicitName} colSpan="col-span-1 lg:col-span-2">
                         <div className="overflow-x-auto">
                             <table className="table w-full">
                                 <thead>
@@ -176,8 +177,8 @@ function Ratio({ ratio, symbol, exchange }: IRatioProperties): JSX.Element {
                             </table>
                         </div>
                     </InfoCard>
-                    <InfoCard key={2} caption={"History"} colSpan="col-span-1 lg:col-span-3">
-                        <HistoryChart data={data}></HistoryChart>
+                    <InfoCard key={2} caption={"History"} ratio={props.ratioExplicitName} colSpan="col-span-1 lg:col-span-3">
+                        <HistoryChart data={data} ratioShortName={props.ratioShortName}></HistoryChart>
                     </InfoCard>
                 </div>
             </div>
@@ -186,7 +187,7 @@ function Ratio({ ratio, symbol, exchange }: IRatioProperties): JSX.Element {
         <div className="hero min-h-[60vh] bg-base-200">
             <div className="hero-content flex-col w-full">
                 <h2 className="!mt-0 mb-16 text-3xl font-bold min-h-[1rem] text-center uppercase pb-0">
-                    P/E Forward Multiples
+                    {props.ratioShortName} Forward Multiples
                 </h2>
                 <div className="alert alert-info shadow-lg pb-4">
                     <div>
@@ -204,9 +205,9 @@ function Ratio({ ratio, symbol, exchange }: IRatioProperties): JSX.Element {
                 </div>
                 <div className="h-4"></div>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 !w-full">
-                    <RatioCard caption={"Forward P/E"} key={1}>9.6</RatioCard>
-                    <RatioCard caption={"Forward P/E"} key={2}>9.6</RatioCard>
-                    <RatioCard caption={"Forward P/E"} key={3}>9.6</RatioCard>
+                    <RatioCard caption={`Forward ${props.ratioShortName}`} key={1} symbol={props.symbol}>9.6</RatioCard>
+                    <RatioCard caption={`Forward ${props.ratioShortName}`} key={2} symbol={props.symbol}>9.7</RatioCard>
+                    <RatioCard caption={`Forward ${props.ratioShortName}`} key={3} symbol={props.symbol}>9.8</RatioCard>
                 </div>
             </div>
         </div>

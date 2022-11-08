@@ -11,6 +11,7 @@ import daisyuiColors from "daisyui/src/colors/themes"
 
 interface HistoryChartProperties {
     data: any[]
+    ratioShortName: string
 }
 
 const CustomSymbol = ({ size, color, borderWidth, borderColor }: PointSymbolProps): ReactNode => (
@@ -103,7 +104,7 @@ const CustomPoint = (props: CustomLayerProps): ReactNode | null => {
 
 const { "[data-theme=light]": theme } = daisyuiColors
 
-const HistoryChart = ({ data }: HistoryChartProperties): JSX.Element => (
+const HistoryChart = ({ data, ratioShortName }: HistoryChartProperties): JSX.Element => (
     // Einsatz von Layern
     // https://codesandbox.io/s/fancy-line-chart-3quqe
     // layers = {
@@ -189,7 +190,7 @@ const HistoryChart = ({ data }: HistoryChartProperties): JSX.Element => (
                         <div className="text-center font-bold">{point.data.d}</div>
                         <hr></hr>
                         <div key={point.id} style={{ padding: "3px 0" }}>
-                            EV/S: <div className="float-right">{point.data.yFormatted}</div>
+                            {ratioShortName}: <div className="float-right">{point.data.yFormatted}</div>
                         </div>
                     </div>
                 </>

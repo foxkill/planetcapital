@@ -10,7 +10,7 @@ import { RatioProperties } from "@/types/ratio";
 const valuations: Record<string, RatioProperties>[] = [
     { "p/e": "priceEarningsRatio" },
     { "peg": "priceEarningsToGrowthRatio" },
-    { "p/s": "priceSalesRatio" },
+    { "p/s": "priceToSalesRatio" },
     { "p/b": "priceToBookRatio" },
     { "p/ocf": "priceToOperatingCashFlowsRatio" },
     { "p/fcf": "priceToFreeCashFlowsRatio" },
