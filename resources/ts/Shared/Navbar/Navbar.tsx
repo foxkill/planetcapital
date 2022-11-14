@@ -1,18 +1,25 @@
 import React from "react";
-import { Link } from "@inertiajs/inertia-react"
+import { Link, InertiaLink, usePage } from "@inertiajs/inertia-react"
+// import { useSecurity } from "../SecurityContext/SecurityContext";
 
 export function Navbar(): JSX.Element {
+    // const { symbol, exchange } = useSecurity().context
+    const symbol = "tkr"
+    const exchange = "nyse"
+    const enabled = Boolean(symbol && exchange)
+    console.log(usePage().props)
+
     return <div className="navbar bg-base-100">
         <div className="navbar-start w-24">
             <div className="dropdown lg:hidden md:hidden">
                 <label tabIndex={0} className="btn btn-ghost btn-circle">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
                 </label>
-                <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                {/* <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
                     <li><Link href="/">Home</Link></li>
-                    <li><Link href="/relative-valuation">Relative Valuation</Link></li>
+                    <li><InertiaLink href={exchange + "/" + symbol + "/relative-valuation"}>Relative Valuation</InertiaLink></li>
                     <li><Link href="/dashboard">Dashboard</Link></li>
-                </ul>
+                </ul> */}
             </div>
             <a className="btn btn-ghost btn-circle">
                 <img src="/images/logo.png" alt="Planet Capital Logo" className="h-5 w-5" />
@@ -21,7 +28,8 @@ export function Navbar(): JSX.Element {
         <div className="flex-1">
             <ul className="menu menu-horizontal">
                 <li><Link href="/">Home</Link></li>
-                <li><Link href="/relative-valuation">Relative Valuation</Link></li>
+                {/* <li><InertiaLink href={"security/" + exchange + "/" + symbol + "/relative-valuation"}>Relative Valuation</InertiaLink></li> */}
+                <li><InertiaLink href={route("security.relative.valuation", { symbol, exchange })}>Relative Valuation</InertiaLink></li>
                 <li><Link href="/dashboard">Dashboard</Link></li>
             </ul>
         </div>

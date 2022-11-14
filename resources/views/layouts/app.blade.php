@@ -18,6 +18,7 @@
    @vite(['resources/css/app.css', 'resources/ts/app.tsx'])
 
    @inertiaHead
+   @routes
    <!-- <script src="//cdn.webix.com/edge/webix.js" type="text/javascript"></script> -->
    <!--Favicon-->
    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">

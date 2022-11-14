@@ -28,7 +28,7 @@ Route::get('/security/{exchange}/{symbol}/relative-valuation/', function (Reques
         'symbol' => $req->symbol,
         'exchange' => $req->exchange,
     ]);
-});
+})->name("security.relative.valuation");
 
 Route::get('/security/{exchange}/{symbol}/relative-valuation/ratio/{ratio}', [RatiosController::class, 'index'])
     ->name('ratios');
