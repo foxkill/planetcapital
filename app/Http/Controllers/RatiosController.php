@@ -13,14 +13,14 @@ class RatiosController extends Controller
         return inertia(
             'RelativeValuation/Ratio/Index', 
             [
-                'ratio' => $this->ratioToExplicitName($req->ratio),
-                'ratioShortName' => $this->ratioToShortName($req->ratio),
                 'ratioCamelCaseName' => $this->ratioToCamelCaseName($req->ratio),
-                'ratioDefinition' => $this->ratioDefinition($req->ratio),
-                'ratioFormula' => $this->ratioFormula($req->ratio),
                 'ratioExplicitName' => $this->ratioToExplicitName($req->ratio),
-                'symbol' => $req->symbol,
+                'ratioDefinition' => $this->ratioDefinition($req->ratio),
+                'ratioShortName' => $this->ratioToShortName($req->ratio),
+                'ratioFormula' => $this->ratioFormula($req->ratio),
                 'exchange' => $req->exchange,
+                'symbol' => $req->symbol,
+                'ratio' => $this->ratioToExplicitName($req->ratio),
             ]
         );
     }
