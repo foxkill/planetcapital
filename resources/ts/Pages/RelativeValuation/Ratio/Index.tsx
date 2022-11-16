@@ -121,7 +121,7 @@ function Ratio(props: IRatioProperties): JSX.Element {
                 {
                     valuations.map((value) => {
                         const [key] = Object.entries(value)[0]
-                        return <RatioCard caption={key + " " + props.ratioShortName} key={key}>9.9</RatioCard>
+                        return <RatioCard caption={key + " " + props.ratioShortName} key={key} symbol={props.symbol}>9.9</RatioCard>
                     })
                 }
             </div>
