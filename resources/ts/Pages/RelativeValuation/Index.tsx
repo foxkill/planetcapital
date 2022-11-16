@@ -21,12 +21,6 @@ interface IRelativeValuationProperties {
 // <Hero useColumnLayout={true} height={60}><TickerSearch></TickerSearch></Hero>
 
 function RelativeValuation({ exchange, symbol }: IRelativeValuationProperties): JSX.Element {
-    // const ctx = useSecurity()
-    // if (ctx) {
-    //     if (!ctx.context.symbol) {
-    //         ctx.setContext({...ctx.context, symbol, exchange})
-    //     }
-    // } 
     return (
         <>
             <Hero height={30}><CompanyInfo /></Hero>
