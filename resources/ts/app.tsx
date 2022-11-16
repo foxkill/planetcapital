@@ -8,7 +8,10 @@ import { QueryClientProvider } from "react-query";
 import qc from "@/planetapi/queryclient"
 // import { ReactQueryDevtools } from "react-query/devtools";
 
+const appName = window.document.getElementsByName("title")[0]?.innerText || "Planet Captial"
+
 createInertiaApp({
+    title: (title) => `${title} - ${appName}`,
     resolve: (name) => import(/* @vite-ignore */ `./Pages/${name}`),
     setup({ el, App, props }) {
         ReactDom.createRoot(el).render(
