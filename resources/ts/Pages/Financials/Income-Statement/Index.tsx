@@ -5,15 +5,40 @@
 // Closed Source
 //
 import React from "react"
-import CompanyInfo from "@/Shared/CompanyInfo"
 import Hero from "@/Shared/Hero"
 import Layout from "@/Shared/Layout"
+import HugeHeader from "@/Shared/HugeHeader"
+import { Link } from "@inertiajs/inertia-react"
+import StatementCard from "@/Shared/StatementCard"
 
-const Index: React.FC = () => {
+interface IIncomeStatementProps {
+    symbol: string
+    exchange: string
+}
+
+const Index: React.FC<IIncomeStatementProps> = (props) => {
+    const { exchange, symbol } = props
+
     return (
         <Layout>
-            <Hero height={30}><CompanyInfo /></Hero>
-            <Hero>Income Statement</Hero>
+            <Hero height={20}>
+                <div className="text-sm breadcrumbs">
+                    <ul>
+                        {/* Goes to summary */}
+                        <li><a>{symbol.toUpperCase()}</a></li>
+                        { /* Goes to parent */}
+                        <li><Link href={`/security/${exchange.toLowerCase()}/${symbol.toLowerCase()}/financials`}>Financials</Link></li>
+                        <li>Income Statement</li>
+                    </ul>
+                </div>
+            </Hero>
+            <Hero>
+                <HugeHeader>Income Statement</HugeHeader>
+                <StatementCard caption={"Revenue"}>4.4B</StatementCard>
+                <StatementCard caption={"Gross Profit"}>1.2B</StatementCard>
+                <StatementCard caption={"Operating Income"}></StatementCard>
+                <StatementCard caption={"Net Income"} value={""}>373 M</StatementCard>h
+            </Hero>
         </Layout>
     )
 }
