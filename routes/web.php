@@ -30,6 +30,7 @@ Route::get('/security/{exchange}/{symbol}/relative-valuation/', function (Reques
     ]);
 })->name("security.relative.valuation");
 
+// RelativeValuation - Ratios
 Route::get('/security/{exchange}/{symbol}/relative-valuation/ratio/{ratio}', [RatiosController::class, 'index'])
     ->name('ratios');
 
@@ -37,3 +38,13 @@ Route::get('/dashboard', function () {
     Inertia::setRootView('layouts.app');
     return inertia('Dashboard/Index');
 })->name('dashboard');
+
+
+// Financials - Income Statement
+Route::get('/security/{exchange}/{symbol}/financials/income-statement', function (Request $req) {
+    Inertia::setRootView('layouts.app');
+    return inertia('Financials/Income-Statement/Index', [
+        'symbol' => $req->symbol,
+        'exchange' => $req->exchange,
+    ]);
+})->name("security.financials.incomestatement");

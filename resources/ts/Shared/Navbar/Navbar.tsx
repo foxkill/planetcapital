@@ -30,6 +30,7 @@ export function Navbar(): JSX.Element {
                 <li><Link href="/">Home</Link></li>
                 {/* <li><InertiaLink href={"security/" + exchange + "/" + symbol + "/relative-valuation"}>Relative Valuation</InertiaLink></li> */}
                 <li><InertiaLink href={route("security.relative.valuation", { symbol, exchange })}>Relative Valuation</InertiaLink></li>
+                <li><InertiaLink href={route("security.financials.incomestatement", { symbol, exchange })}>Income Statement</InertiaLink></li>
                 <li><Link href="/dashboard">Dashboard</Link></li>
             </ul>
         </div>
