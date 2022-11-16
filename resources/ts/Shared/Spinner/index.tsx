@@ -5,4 +5,4 @@
 // Closed Source
 //
 
-export {default} from './Spinner'
+export {default} from "./Spinner"
