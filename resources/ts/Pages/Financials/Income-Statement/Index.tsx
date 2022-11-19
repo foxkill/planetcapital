@@ -34,10 +34,12 @@ const Index: React.FC<IIncomeStatementProps> = (props) => {
             </Hero>
             <Hero>
                 <HugeHeader>Income Statement</HugeHeader>
-                <StatementCard caption={"Revenue"}>4.4B</StatementCard>
-                <StatementCard caption={"Gross Profit"}>1.2B</StatementCard>
-                <StatementCard caption={"Operating Income"}></StatementCard>
-                <StatementCard caption={"Net Income"} value={""}>373 M</StatementCard>h
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 w-full">
+                    <StatementCard caption={"Revenue"}>4.4B</StatementCard>
+                    <StatementCard caption={"Gross Profit"}>1.2B</StatementCard>
+                    <StatementCard caption={"Operating Income"}>435 M</StatementCard>
+                    <StatementCard caption={"Net Income"}>373 M</StatementCard>
+                </div>
             </Hero>
         </Layout>
     )
