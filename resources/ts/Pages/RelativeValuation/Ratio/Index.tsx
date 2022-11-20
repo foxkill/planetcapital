@@ -133,7 +133,7 @@ function Ratio(props: IRatioProperties): JSX.Element {
                     {props.ratioShortName} History
                 </h2>
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 !w-full">
-                    <InfoCard key={1} caption={"Statistics"} ratio={props.ratioExplicitName} colSpan="col-span-1 lg:col-span-2">
+                    <InfoCard key={1} caption={"Statistics"} subheader={props.ratioExplicitName} colSpan="col-span-1 lg:col-span-2">
                         <div className="overflow-x-auto">
                             <table className="table w-full">
                                 <thead>
@@ -177,7 +177,7 @@ function Ratio(props: IRatioProperties): JSX.Element {
                             </table>
                         </div>
                     </InfoCard>
-                    <InfoCard key={2} caption={"History"} ratio={props.ratioExplicitName} colSpan="col-span-1 lg:col-span-3">
+                    <InfoCard key={2} caption={"History"} subheader={props.ratioExplicitName} colSpan="col-span-1 lg:col-span-3">
                         <HistoryChart data={data} ratioShortName={props.ratioShortName}></HistoryChart>
                     </InfoCard>
                 </div>

@@ -10,17 +10,18 @@ import IIncomeStatement from "@/types/income-statement"
 import moneyformat from "@/utils/moneyformat"
 
 interface IIncomeStatementProps {
+    primaryColor: string
     data: IIncomeStatement[]
 }
 
 const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
-    const { data } = props
+    const { data, primaryColor } = props
     const incomestatement = data[0]
     const idata = {
         "nodes": [
             {
                 id: "Revenue",
-                nodeColor: "blue",
+                nodeColor: primaryColor,
                 fixedValue: incomestatement.revenue,
                 value: incomestatement.revenue
             },

@@ -47,7 +47,6 @@ const StatementCard: React.FC<IStatementCardProperties> = (props): JSX.Element =
 
     // last FY, QTR or TTM
     const value = data[0][children as string]
-    console.log(children, value);
     
     return (
         <div className="card bg-base-100 hover:shadow-xl p-4">

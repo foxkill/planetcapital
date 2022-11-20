@@ -5,25 +5,26 @@
 // Closed Source
 //
 
-function moneyformat(n: Number): string {
+function moneyformat(n: number): string {
     if (n === undefined) {
-        return ""
+        return "N/A"
     }
 
     if (Number.isNaN(n)) {
-        return "0"
+        return "N/A"
     }
 
     if (n < 1e3) {
         return n.toLocaleString()
     }
+
     // Alter numbers larger than 1k
     const units = ["k", "M", "B", "T"];
 
     const order = Math.floor(Math.log(n.valueOf()) / Math.log(1000));
 
     const unitname = units[(order - 1)];
-    const num = Math.floor(n.valueOf() / 1000 ** order);
+    const num = (n.valueOf() / 1000 ** order).toFixed(1)
 
     // output number remainder + unitname
     return num + " " + unitname

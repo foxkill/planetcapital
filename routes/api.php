@@ -1,10 +1,14 @@
 <?php
+
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use App\Models\Ticker;
+use Predis\Protocol\Text\Handler\ErrorResponse;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -49,7 +53,7 @@ Route::get('/security/{exchange}/{security}/relative-valuation/{period}/limit/{l
             // TODO: check valid period.
             strtolower($request->period),
             strtolower($request->security),
-            $request->limit ?? 1, 
+            $request->limit ?? 1,
         ]
     );
 
@@ -66,9 +70,9 @@ Route::get('/security/{exchange}/{security}/relative-valuation/{period}/limit/{l
 
     // Build the endpoint.
     $endpoint = sprintf(
-        $periodsUrl[$period], 
-        strtoupper($request->security), 
-        $request->limit ?? 1, 
+        $periodsUrl[$period],
+        strtoupper($request->security),
+        $request->limit ?? 1,
         env('FMP_API_KEY')
     );
 
@@ -97,14 +101,7 @@ Route::get('/security/{exchange}/{security}/relative-valuation/{period}/limit/{l
 // Profile
 // 
 Route::get('/security/{exchange}/{security}/profile', function (Request $request) {
-    $key = join(
-        '_',
-        [
-            'security',
-            'profile',
-            strtolower($request->security)
-        ]
-    );
+    $key = join( '_', [ 'security', 'profile', strtolower($request->security)]);
 
     $cachedSecurity = Redis::get($key);
 
@@ -174,4 +171,65 @@ Route::get('/security/{exchange}/{security}/income-statement/period/{period}/lim
     }
 
     $response->throw()->json();
+});
+
+//
+// Image
+//
+Route::get('/security/{exchange}/{security}/image', function (Request $request) {
+   $key = join('_', ['security', 'profile', strtolower($request->security)]);
+
+    $imageUrl = '';
+    $cachedSecurity = Cache::get($key);
+
+    // We have a stored Profile.
+    if (isset($cachedSecurity)) {
+        $data = json_decode($cachedSecurity);
+        $imageUrl = $data["image"];
+
+        $key = join('_', ['security', 'image', strtolower($request->security)]);
+
+        $imageData = Cache::get($key);
+        if ($imageData) {
+            // data:image/png;base64,imagedatabase64
+            list($baseHeader, $image) = explode(",", $imageData);
+            list($imageHeader) = explode(";", $baseHeader);
+            $contentType = str_replace("data:", "", $imageHeader);
+            return response(base64_decode($image), 200, ['Content-Type', 'image/png']);
+        }
+
+        // Get the image
+        $response = Http::get($imageUrl);
+        if ($response->ok()) {
+            Cache::put($key, base64_encode($response->body()));
+            response($response->body(), 200)->header('Content-Type', 'image/png');
+        }
+    }
+
+    // We have no profile yet. Get it.
+    $endpoint = sprintf(FMP_PROFILE, $request->security, env('FMP_API_KEY'));
+    $response = Http::get($endpoint);
+
+    if (!$response->ok()) {
+        $response->throw()->json();
+        return;
+    }
+
+    $profile = $response->json();
+    if (!$profile) {
+        // TODO: throw an error.
+    }
+
+
+    $imageUrl = $profile[0]["image"];
+
+    $response = Http::get($imageUrl);
+    if (!$response->ok()) {
+        // TODO: throw an error.
+    }
+
+    // Cache::put($key, base64_encode($response->body()));
+
+
+    return response($response->body(), 200)->header('Content-Type', 'image/png');
 });
