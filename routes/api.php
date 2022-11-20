@@ -23,6 +23,7 @@ const FMP_RATIOS_FY = 'https://financialmodelingprep.com/api/v3/ratios/%s?limit=
 const FMP_RATIOS_TTM = 'https://financialmodelingprep.com/api/v3/ratios-ttm/%s?limit=%s&apikey=%s';
 const FMP_RATIOS_QTR = 'https://financialmodelingprep.com/api/v3/ratios/%s?limit=%s&apikey=%s&period=quarter';
 const FMP_PROFILE = 'https://financialmodelingprep.com/api/v3/profile/%s?apikey=%s';
+const FMP_INCOME_STATEMENT = 'https://financialmodelingprep.com/api/v3/income-statement/%s?apikey=%s&limit=%s';
 
 Route::get('/tickers', function (Request $request) {
     return response()->json(
@@ -71,6 +72,7 @@ Route::get('/security/{exchange}/{security}/relative-valuation/{period}/limit/{l
         env('FMP_API_KEY')
     );
 
+
     $response = Http::acceptJson()->get($endpoint);
 
     if ($response->ok()) {
@@ -89,7 +91,6 @@ Route::get('/security/{exchange}/{security}/relative-valuation/{period}/limit/{l
     }
 
     $response->throw()->json();
-    // return response()->json(['status' => 'error'], 418);
 });
 
 //
@@ -128,5 +129,49 @@ Route::get('/security/{exchange}/{security}/profile', function (Request $request
     }
 
     $response->throw()->json();
-    // return response()->json(['status' => 'error'], 418);
+});
+
+//
+// Income Statement
+// 
+Route::get('/security/{exchange}/{security}/income-statement/period/{period}/limit/{limit}', function (Request $request) {
+    $key = join(
+        '_',
+        [
+            'security',
+            'income_statement',
+            strtolower($request->period),
+            strtolower($request->security),
+            $request->limit ?? 1
+        ]
+    );
+
+    $cachedSecurity = Redis::get($key);
+
+    if (isset($cachedSecurity)) {
+        return response()->json(json_decode($cachedSecurity), Response::HTTP_OK);
+    }
+
+    $endpoint = sprintf(
+        FMP_INCOME_STATEMENT,
+        strtoupper($request->security),
+        env('FMP_API_KEY'),
+        $request->limit ?? 1
+    );
+
+    if (isset($request->period) && strlen($request->period)) {
+        $endpoint .= "&period=" . $request->period;
+    }
+
+    $response = Http::acceptJson()->get($endpoint);
+
+    if ($response->ok()) {
+        $data = $response->json();
+        if (count($data)) {
+            Redis::set($key, json_encode($data));
+            return response()->json($data, Response::HTTP_CREATED);
+        }
+    }
+
+    $response->throw()->json();
 });

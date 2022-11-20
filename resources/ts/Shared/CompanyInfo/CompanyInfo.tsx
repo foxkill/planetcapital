@@ -23,7 +23,7 @@ function CompanyInfo(): JSX.Element {
     const { isLoading } = useQuery<IProfile>(
         [
             ["profile", symbol, exchange].join("-"),
-            { symbol: symbol, exchange: exchange}
+            {symbol: symbol, exchange: exchange}
         ],
         fetchProfile,
         {

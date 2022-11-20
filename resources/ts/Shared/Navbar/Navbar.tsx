@@ -1,13 +1,11 @@
 import React from "react";
 import { Link, InertiaLink, usePage } from "@inertiajs/inertia-react"
+import { useSecurity } from "../SecurityContext/SecurityContext";
 // import { useSecurity } from "../SecurityContext/SecurityContext";
 
 export function Navbar(): JSX.Element {
-    // const { symbol, exchange } = useSecurity().context
-    const symbol = "tkr"
-    const exchange = "nyse"
+    const { symbol, exchange } = useSecurity().context
     const enabled = Boolean(symbol && exchange)
-    console.log(usePage().props)
 
     return <div className="navbar bg-base-100">
         <div className="navbar-start w-24">

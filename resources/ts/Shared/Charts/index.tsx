@@ -6,3 +6,4 @@
 //
 
 export { default } from "./HistoryChart"
+export {IncomeStatementChart} from "./IncomeStatementChart"
