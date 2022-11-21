@@ -19,6 +19,8 @@ import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
 import { IProfile } from "@/types/profile"
 import fetchProfile from "@/planetapi/fetch.profile"
 import Vibrant from "node-vibrant/dist/vibrant"
+import { usePalette } from "react-palette"
+import moneyformat from "@/utils/moneyformat"
 
 interface IIncomeStatementProps {
     symbol: string
@@ -31,7 +33,9 @@ const Index: React.FC<IIncomeStatementProps> = (props) => {
     const [color, setColor] = useState("#fff")
 
     const limit = 4
-    const period = "TTM"
+    const period = "FY"
+
+    const { data, loading, error } = usePalette(`/api/security/${exchange}/${symbol}/image`)
 
     const profileQuery = useQuery<IProfile>(
         [
@@ -43,17 +47,17 @@ const Index: React.FC<IIncomeStatementProps> = (props) => {
             enabled: Boolean(symbol && exchange),
             retry: false,
             onSuccess() {
-                const img = new Image();
-                img.crossOrigin = "Anonymous"
-                // img.setAttribute("crossOrigin", "Anonymous")
-                img.setAttribute("alt", "Company Logo")
-                img.addEventListener("load", function() {
-                    const vibrant = new Vibrant(img)
-                    vibrant.getPalette().then((p:any) => {
-                        setColor(p.Vibrant.getHex())
-                    });
-                })
-                img.src = `/api/security/${exchange}/${symbol}/image`
+                // const img = new Image();
+                // img.crossOrigin = "Anonymous"
+                // // img.setAttribute("crossOrigin", "Anonymous")
+                // img.setAttribute("alt", "Company Logo")
+                // img.addEventListener("load", function() {
+                //     const vibrant = new Vibrant(img)
+                //     vibrant.getPalette().then((p:any) => {
+                //         setColor(p.Vibrant.getHex())
+                //     });
+                // })
+                // img.src = `/api/security/${exchange}/${symbol}/image`
             }
         }
     )
@@ -66,19 +70,6 @@ const Index: React.FC<IIncomeStatementProps> = (props) => {
             retry: false,
         }
     )
-
-    useEffect(() => {
-        // console.log("im mounted");
-        // if (!profileQuery.data) {
-        //     return;
-        // }
-
-        // const img = new Image();
-        // img.crossOrigin = "Anonymous"
-        // img.src = profileQuery.data.image
-
-        // Vibrant.from(img).getPalette().then((p) => console.log(p))
-    }, [])
 
     return (
         <Layout>
@@ -103,14 +94,50 @@ const Index: React.FC<IIncomeStatementProps> = (props) => {
                         <StatementCard caption={"Net Income"} data={incomeStatementQuery.data}>netIncome</StatementCard>
                     </div>)
                 }
-                <div className="grid grid-cols-1 gap-8 w-full h-[32rem]">
+                <div className="grid grid-cols-1 gap-8 w-full h-[36rem]">
                     {!incomeStatementQuery.isError && incomeStatementQuery.data &&
                         <InfoCard
                             colSpan={"col-span-1 lg:col-span-3"}
                             caption={"Earnings Sankey Graph"}
                             subheader={profileQuery.data?.companyName || ""}
                             image={profileQuery.data?.image || undefined}>
-                            <IncomeStatementChart primaryColor={color} data={incomeStatementQuery.data}></IncomeStatementChart>
+                            <div><IncomeStatementChart primaryColor={data.vibrant ?? "#00f"} data={incomeStatementQuery.data} /></div>
+                            <div className="pl-2 verflow-x-auto w-full">
+                                <table className="table w-full text-slate-500">
+                                    <tbody>
+                                        <tr className="hover">
+                                            <th className="hover">Revenue</th>
+                                            <td className="text-right">{moneyformat(incomeStatementQuery.data[0]["revenue"])}</td>
+                                        </tr>
+                                        <tr className="hover">
+                                            <th className="font-thin indent-8">Cost of Revenue</th>
+                                            <td className="text-right">{moneyformat(incomeStatementQuery.data[0]["costOfRevenue"])}</td>
+                                        </tr>
+                                        <tr className="hover">
+                                            <th>Gross Profit</th>
+                                            <td className="text-right">{moneyformat(incomeStatementQuery.data[0]["grossProfit"])}</td>
+                                        </tr>
+                                        <tr className="hover">
+                                            <th className="font-thin indent-8">Operating Expenses</th>
+                                            <td className="text-right">{moneyformat(incomeStatementQuery.data[0]["operatingExpenses"])}</td>
+                                        </tr>
+                                        <tr className="hover">
+                                            <th>Operating Income</th>
+                                            <td className="text-right">{moneyformat(incomeStatementQuery.data[0]["operatingIncome"])}</td>
+                                        </tr>
+                                        <tr className="hover">
+                                            <th className="font-thin indent-8">Other Expenses</th>
+                                            <td className="text-right">{
+                                                moneyformat(incomeStatementQuery.data[0]["operatingIncome"]-incomeStatementQuery.data[0]["netIncome"])
+                                            }</td>
+                                        </tr>
+                                        <tr>
+                                            <th className="bg-slate-300 rounded-none">Net Income</th>
+                                            <td className="bg-slate-300 text-right rounded-none">{moneyformat(incomeStatementQuery.data[0]["netIncome"])}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </InfoCard>
                     }
                 </div>
