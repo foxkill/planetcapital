@@ -4,9 +4,9 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-import IIncomeStatement from "@/types/income-statement"
-import moneyformat from "@/utils/moneyformat"
 import React from "react"
+import moneyformat from "@/utils/moneyformat"
+import IIncomeStatement from "@/types/income-statement"
 import ValueIndicator from "../ValueIndicator/ValueIndicator"
 
 interface IStatementCardProperties {

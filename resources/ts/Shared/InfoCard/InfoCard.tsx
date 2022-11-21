@@ -18,7 +18,7 @@ interface InfoCardProperties {
 
 function InfoCard({children, colSpan, caption, subheader, icon, image }: InfoCardProperties): JSX.Element {
     return (
-        <div className={`card card-bordered bg-base-100 pl-1 pr-1 ${colSpan}`}>
+        <div className={`card card-bordered bg-base-100 pl-1 pr-4 ${colSpan}`}>
             <figure className="p-1">
                 <div className="align-middle w-12 text-center pl-2 pr-2">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" fill="#323B47" width={30} height={30}>
@@ -37,7 +37,7 @@ function InfoCard({children, colSpan, caption, subheader, icon, image }: InfoCar
                 }
             </figure>
             <hr className="mt-1"></hr>
-            <div className="card-body">
+            <div className="card-body flex-row">
                 {children}
             </div>
         </div>
