@@ -5,7 +5,7 @@
 // Closed Source
 //
 import React from "react"
-import { ResponsiveSankey } from "@nivo/sankey"
+import { Sankey } from "@nivo/sankey"
 import IIncomeStatement from "@/types/income-statement"
 import moneyformat from "@/utils/moneyformat"
 
@@ -39,7 +39,6 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
             },
             {
                 id: "Operating Income",
-                label: "Stefan",
                 nodeColor: "#2BA02B",
             },
             {
@@ -48,7 +47,6 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
             },
             {
                 id: "Net Income",
-                label: "NI",
                 nodeColor: "green",
             },
         ],
@@ -76,7 +74,9 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
             {
                 source: "Operating Income",
                 target: "Other Expenses",
-                value: incomestatement.otherExpenses
+                // value: incomestatement.otherExpenses
+                // value: incomestatement.costAndExpenses
+                value: incomestatement.operatingIncome - incomestatement.netIncome
             },
             {
                 source: "Operating Income",
@@ -87,7 +87,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
     }
 
     const c = idata.nodes.map((n) => n.nodeColor)
-    return <ResponsiveSankey
+    return <Sankey
         nodeTooltip={(nd): JSX.Element => {
             const { node } = nd
             const fmt = moneyformat(node.value)
@@ -102,7 +102,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
                     </div>
                 </>
             )
-        }}
+        } }
         // valueFormat={"$,"}
         linkTooltip={(nd): JSX.Element => {
             const { source, target } = nd.link
@@ -115,12 +115,12 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
                     </div>
                 </div>
             </>
-        }}
+        } }
         // label={(d) => d.id + " (" + moneyformat(d.value) + ")"}
         // colorsBy={node => {console.log(node); return node.color}}
         data={idata}
         animate
-        margin={{ top: 5, right: 0, bottom: 5, left: 0}}
+        margin={{ top: 5, right: 0, bottom: 5, left: 0 }}
         align="justify"
         colors={c}
         nodeOpacity={1}
@@ -130,15 +130,15 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
         nodeBorderWidth={1}
         nodeBorderRadius={2}
         sort="auto"
-        // nodeBorderColor={{
-        //     from: "color",
-        //     modifiers: [
-        //         [
-        //             "darker",
-        //             0.8
-        //         ]
-        //     ]
-        // }}
+        nodeBorderColor={{
+            from: "color",
+            modifiers: [
+                [
+                    "darker",
+                    0.8
+                ]
+            ]
+        }}
         // nodeBorderRadius={1}
         linkOpacity={0.5}
         linkHoverOthersOpacity={0.1}
@@ -155,8 +155,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
                     1
                 ]
             ]
-        }}
-    ></ResponsiveSankey>
+        }} height={400} width={500}    ></Sankey>
 }
 
 export { IncomeStatementChart }
