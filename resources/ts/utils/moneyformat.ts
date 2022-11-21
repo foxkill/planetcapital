@@ -5,7 +5,7 @@
 // Closed Source
 //
 
-function moneyformat(n: number): string {
+function moneyformat(n: number, fractionDigits: number = 1): string {
     if (n === undefined) {
         return "N/A"
     }
@@ -24,10 +24,10 @@ function moneyformat(n: number): string {
     const order = Math.floor(Math.log(n.valueOf()) / Math.log(1000));
 
     const unitname = units[(order - 1)];
-    const num = (n.valueOf() / 1000 ** order).toFixed(1)
+    const num = (n.valueOf() / 1000 ** order).toFixed(fractionDigits)
 
     // output number remainder + unitname
-    return num + " " + unitname
+    return num + "" + unitname
 }
 
 export default moneyformat

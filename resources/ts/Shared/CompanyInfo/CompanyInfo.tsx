@@ -56,7 +56,7 @@ function CompanyInfo(): JSX.Element {
                 <div className="stat-figure text-secondary">
                     <div className="avatar">
                         <div className="w-24 rounded-full ring-1 ring-slate-400 ring-offset-base-100 ring-offset-4">
-                            { isLoading ? <Spinner height={24} width={24}></Spinner> : <img src={image} /> }
+                            { isLoading ? <Spinner height={24} width={24}></Spinner> : <img src={image} width="60" height="60" /> }
                         </div>
                     </div>
                 </div>

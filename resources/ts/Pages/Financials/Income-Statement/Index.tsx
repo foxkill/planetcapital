@@ -107,7 +107,7 @@ const Index: React.FC<IIncomeStatementProps> = (props) => {
                     {!incomeStatementQuery.isError && incomeStatementQuery.data &&
                         <InfoCard
                             colSpan={"col-span-1 lg:col-span-3"}
-                            caption={"Earnings Waterfall"}
+                            caption={"Earnings Sankey Graph"}
                             subheader={profileQuery.data?.companyName || ""}
                             image={profileQuery.data?.image || undefined}>
                             <IncomeStatementChart primaryColor={color} data={incomeStatementQuery.data}></IncomeStatementChart>

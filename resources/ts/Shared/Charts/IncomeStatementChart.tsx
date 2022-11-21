@@ -17,21 +17,21 @@ interface IIncomeStatementProps {
 const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
     const { data, primaryColor } = props
     const incomestatement = data[0]
+    
     const idata = {
         "nodes": [
             {
                 id: "Revenue",
                 nodeColor: primaryColor,
                 fixedValue: incomestatement.revenue,
-                value: incomestatement.revenue
             },
             {
                 id: "Cost of Revenue",
-                nodeColor: "red",
+                nodeColor: "#F14336",
             },
             {
                 id: "Gross Profit",
-                nodeColor: "rgb(58, 153, 58)",
+                nodeColor: "#28B446",
             },
             {
                 id: "Operating Expenses",
@@ -39,7 +39,8 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
             },
             {
                 id: "Operating Income",
-                nodeColor: "green",
+                label: "Stefan",
+                nodeColor: "#2BA02B",
             },
             {
                 id: "Other Expenses",
@@ -47,6 +48,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
             },
             {
                 id: "Net Income",
+                label: "NI",
                 nodeColor: "green",
             },
         ],
@@ -101,31 +103,32 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
                 </>
             )
         }}
-        valueFormat={"$,"}
+        // valueFormat={"$,"}
         linkTooltip={(nd): JSX.Element => {
             const { source, target } = nd.link
-            // const fmt = moneyformat(node.value)
             return <>
                 <div className="w-60 rounded" style={{ background: "white", padding: "9px 12px", border: "1px solid #ccc" }}>
                     <div className="text-center font-bold">{source.label + " - " + target.label}</div>
                     <hr></hr>
-                    <div key={nd.link.id} style={{ padding: "3px 0" }}>
+                    <div key={source.id} style={{ padding: "3px 0" }}>
                         <div className="text-center">{moneyformat(target.value)}</div>
                     </div>
                 </div>
             </>
         }}
+        // label={(d) => d.id + " (" + moneyformat(d.value) + ")"}
         // colorsBy={node => {console.log(node); return node.color}}
         data={idata}
         animate
-        margin={{ top: 10, right: 20, bottom: 10, left: 20 }}
+        margin={{ top: 5, right: 0, bottom: 5, left: 0}}
         align="justify"
         colors={c}
         nodeOpacity={1}
         nodeHoverOthersOpacity={0.35}
         nodeThickness={18}
         nodeSpacing={12}
-        nodeBorderWidth={0}
+        nodeBorderWidth={1}
+        nodeBorderRadius={2}
         sort="auto"
         // nodeBorderColor={{
         //     from: "color",
@@ -143,7 +146,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
         enableLinkGradient={true}
         // labelPosition="outside"
         // labelOrientation="vertical"
-        labelPadding={16}
+        labelPadding={10}
         labelTextColor={{
             from: "color",
             modifiers: [
