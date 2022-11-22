@@ -35,6 +35,7 @@ module.exports = {
                 "search-field": "#f1f2f3",
                 primary: "#ff0043",
                 light: "#999",
+                "ics-red": "#F14336",
             },
         },
     },
