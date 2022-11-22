@@ -18,9 +18,9 @@ import IIncomeStatement from "@/types/income-statement"
 import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
 import { IProfile } from "@/types/profile"
 import fetchProfile from "@/planetapi/fetch.profile"
-import Vibrant from "node-vibrant/dist/vibrant"
 import { usePalette } from "react-palette"
-import moneyformat from "@/utils/moneyformat"
+import WaterfallImage from "@/Shared/Images/WaterfallImage"
+import { StatementTable } from "@/Shared/IncomeStatement"
 
 interface IIncomeStatementProps {
     symbol: string
@@ -100,44 +100,10 @@ const Index: React.FC<IIncomeStatementProps> = (props) => {
                             colSpan={"col-span-1 lg:col-span-3"}
                             caption={"Earnings Sankey Graph"}
                             subheader={profileQuery.data?.companyName || ""}
-                            image={profileQuery.data?.image || undefined}>
-                            <div><IncomeStatementChart primaryColor={data.vibrant ?? "#00f"} data={incomeStatementQuery.data} /></div>
-                            <div className="pl-2 verflow-x-auto w-full">
-                                <table className="table w-full text-slate-500">
-                                    <tbody>
-                                        <tr className="hover">
-                                            <th className="hover">Revenue</th>
-                                            <td className="text-right">{moneyformat(incomeStatementQuery.data[0]["revenue"])}</td>
-                                        </tr>
-                                        <tr className="hover">
-                                            <th className="font-thin indent-8">Cost of Revenue</th>
-                                            <td className="text-right">{moneyformat(incomeStatementQuery.data[0]["costOfRevenue"])}</td>
-                                        </tr>
-                                        <tr className="hover">
-                                            <th>Gross Profit</th>
-                                            <td className="text-right">{moneyformat(incomeStatementQuery.data[0]["grossProfit"])}</td>
-                                        </tr>
-                                        <tr className="hover">
-                                            <th className="font-thin indent-8">Operating Expenses</th>
-                                            <td className="text-right">{moneyformat(incomeStatementQuery.data[0]["operatingExpenses"])}</td>
-                                        </tr>
-                                        <tr className="hover">
-                                            <th>Operating Income</th>
-                                            <td className="text-right">{moneyformat(incomeStatementQuery.data[0]["operatingIncome"])}</td>
-                                        </tr>
-                                        <tr className="hover">
-                                            <th className="font-thin indent-8">Other Expenses</th>
-                                            <td className="text-right">{
-                                                moneyformat(incomeStatementQuery.data[0]["operatingIncome"]-incomeStatementQuery.data[0]["netIncome"])
-                                            }</td>
-                                        </tr>
-                                        <tr>
-                                            <th className="bg-slate-300 rounded-none">Net Income</th>
-                                            <td className="bg-slate-300 text-right rounded-none">{moneyformat(incomeStatementQuery.data[0]["netIncome"])}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            image={profileQuery.data?.image || undefined}
+                            icon={<WaterfallImage width={30} height={30}/>}>
+                            <IncomeStatementChart primaryColor={data.vibrant ?? "#00f"} data={incomeStatementQuery.data} />
+                            <StatementTable incomeStatements={incomeStatementQuery.data} />
                         </InfoCard>
                     }
                 </div>
