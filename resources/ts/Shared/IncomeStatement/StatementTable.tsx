@@ -13,8 +13,9 @@ interface IStatementTableProps {
 }
 
 const StatementTable: React.FC<IStatementTableProps> = (props) => {
-
     const incomeStatement = props.incomeStatements[0]
+
+    // console.log(incomeStatement.otherExpenses);
 
     return (
         <div className="pl-2 verflow-x-auto w-full">
@@ -26,7 +27,7 @@ const StatementTable: React.FC<IStatementTableProps> = (props) => {
                     </tr>
                     <tr className="hover">
                         <th className="font-thin indent-8 text-ics-red">Cost of Revenue</th>
-                        <td className="text-right text-ics-red">-{moneyformat(incomeStatement.costOfRevenue)}</td>
+                        <td className="text-right text-ics-red">{moneyformat(incomeStatement.costOfRevenue, true)}</td>
                     </tr>
                     <tr className="hover">
                         <th>Gross Profit</th>
@@ -34,16 +35,18 @@ const StatementTable: React.FC<IStatementTableProps> = (props) => {
                     </tr>
                     <tr className="hover">
                         <th className="font-thin indent-8 text-ics-red">Operating Expenses</th>
-                        <td className="text-right text-ics-red">-{moneyformat(incomeStatement.operatingExpenses)}</td>
+                        <td className="text-right text-ics-red">{moneyformat(incomeStatement.operatingExpenses, true)}</td>
                     </tr>
                     <tr className="hover">
                         <th>Operating Income</th>
-                        <td className="text-right font-bold">-{moneyformat(incomeStatement.operatingIncome)}</td>
+                        <td className="text-right font-bold">{moneyformat(incomeStatement.operatingIncome)}</td>
                     </tr>
                     <tr className="hover">
                         <th className="font-thin indent-8 text-ics-red">Other Expenses</th>
-                        <td className="text-right text-ics-red">-{
-                            moneyformat(incomeStatement.operatingIncome - incomeStatement.netIncome)
+                        <td className="text-right text-ics-red">{
+                            
+                            // moneyformat(incomeStatement.operatingIncome - incomeStatement.netIncome)
+                            moneyformat(incomeStatement.otherExpenses, true)
                         }</td>
                     </tr>
                     <tr>
