@@ -18,7 +18,7 @@ interface InfoCardProperties {
 
 function InfoCard({children, colSpan, caption, subheader, icon, image }: InfoCardProperties): JSX.Element {
     return (
-        <div className={`card card-bordered bg-base-100 pl-1 pr-4 ${colSpan}`}>
+        <div className={`card card-bordered bg-base-100 pl-1 pt-1 pr-2 ${colSpan}`}>
             <figure className="p-1">
                 {icon &&
                 <div className="align-middle w-12 text-center pl-2 pr-2">
