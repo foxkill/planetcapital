@@ -18,8 +18,6 @@ interface IRelativeValuationProperties {
     symbol: string
 }
 
-// <Hero useColumnLayout={true} height={60}><TickerSearch></TickerSearch></Hero>
-
 function RelativeValuation({ exchange, symbol }: IRelativeValuationProperties): JSX.Element {
     return (
         <>
