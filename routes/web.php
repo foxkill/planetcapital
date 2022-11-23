@@ -48,3 +48,12 @@ Route::get('/security/{exchange}/{symbol}/financials/income-statement', function
         'exchange' => $req->exchange,
     ]);
 })->name("security.financials.incomestatement");
+
+Route::get('/security/{exchange}/{symbol}/financials/income-statement/{lineitem}', function (Request $req) {
+    Inertia::setRootView('layouts.app');
+    return inertia('Financials/Income-Statement/LineItem/Index', [
+        'symbol' => $req->symbol,
+        'exchange' => $req->exchange,
+        'lineitem' => $req->lineitem,
+    ]);
+})->name("security.financials.incomestatement.lineitem");
