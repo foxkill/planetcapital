@@ -5,7 +5,7 @@
 // Closed Source
 //
 
-function moneyformat(n: number, fractionDigits: number = 1): string {
+function moneyformat(n: number, invert: boolean = false, fractionDigits: number = 1): string {
     if (n === undefined) {
         return "N/A"
     }
@@ -14,20 +14,31 @@ function moneyformat(n: number, fractionDigits: number = 1): string {
         return "N/A"
     }
 
-    if (n < 1e3) {
+    const isNegativeNumber = n < 0
+
+    const num = Math.abs(n)
+
+    if (num < 1e3) {
         return n.toLocaleString()
     }
 
     // Alter numbers larger than 1k
     const units = ["k", "M", "B", "T"];
 
-    const order = Math.floor(Math.log(n.valueOf()) / Math.log(1000));
+    const order = Math.floor(Math.log(num) / Math.log(1000));
 
     const unitname = units[(order - 1)];
-    const num = (n.valueOf() / 1000 ** order).toFixed(fractionDigits)
+    let result = (num / 1000 ** order)
 
-    // output number remainder + unitname
-    return num + "" + unitname
+    if (isNegativeNumber) {
+        result = -result 
+    }
+
+    if (invert) {
+        result = -result
+    }
+
+    return result.toFixed(fractionDigits) + unitname
 }
 
 export default moneyformat
