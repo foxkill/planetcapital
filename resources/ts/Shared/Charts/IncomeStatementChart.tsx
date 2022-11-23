@@ -74,9 +74,9 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
             {
                 source: "Operating Income",
                 target: "Other Expenses",
-                // value: incomestatement.otherExpenses
+                value: incomestatement.otherExpenses
                 // value: incomestatement.costAndExpenses
-                value: incomestatement.operatingIncome - incomestatement.netIncome
+                // value: incomestatement.operatingIncome - incomestatement.netIncome
             },
             {
                 source: "Operating Income",
@@ -87,6 +87,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
     }
 
     const c = idata.nodes.map((n) => n.nodeColor)
+    
     return <Sankey
         nodeTooltip={(nd): JSX.Element => {
             const { node } = nd
@@ -155,7 +156,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
                     1
                 ]
             ]
-        }} height={400} width={500}    ></Sankey>
+        }} height={400} width={500}></Sankey>
 }
 
 export { IncomeStatementChart }
