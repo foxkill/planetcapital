@@ -1,11 +1,9 @@
 import React from "react";
 import { Link, InertiaLink, usePage } from "@inertiajs/inertia-react"
 import { useSecurity } from "../SecurityContext/SecurityContext";
-// import { useSecurity } from "../SecurityContext/SecurityContext";
 
 export function Navbar(): JSX.Element {
-    const { symbol, exchange } = useSecurity().context
-    const enabled = Boolean(symbol && exchange)
+    const { symbol, exchange } = usePage().props
 
     return <div className="navbar bg-base-100">
         <div className="navbar-start w-24">
@@ -28,7 +26,7 @@ export function Navbar(): JSX.Element {
                 <li><Link href="/">Home</Link></li>
                 {/* <li><InertiaLink href={"security/" + exchange + "/" + symbol + "/relative-valuation"}>Relative Valuation</InertiaLink></li> */}
                 <li><InertiaLink href={route("security.relative.valuation", { symbol, exchange })}>Relative Valuation</InertiaLink></li>
-                <li><InertiaLink href={route("security.financials.incomestatement", { symbol, exchange })}>Income Statement</InertiaLink></li>
+                <li><Link href={route("security.financials.incomestatement", { symbol, exchange })}>Income Statement</Link></li>
                 <li><Link href="/dashboard">Dashboard</Link></li>
             </ul>
         </div>
