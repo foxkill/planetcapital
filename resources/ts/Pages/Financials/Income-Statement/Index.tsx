@@ -4,21 +4,21 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import Hero from "@/Shared/Hero"
 import Layout from "@/Shared/Layout"
+import Spinner from "@/Shared/Spinner"
+import { useQuery } from "react-query"
+import InfoCard from "@/Shared/InfoCard"
+import { usePalette } from "react-palette"
+import { IProfile } from "@/types/profile"
 import HugeHeader from "@/Shared/HugeHeader"
 import { Link } from "@inertiajs/inertia-react"
 import StatementCard from "@/Shared/StatementCard"
-import InfoCard from "@/Shared/InfoCard"
-import { IncomeStatementChart } from "@/Shared/Charts"
-import { useQuery } from "react-query"
-import fetchIncomeStatement from "@/planetapi/fetch.income-statement"
-import IIncomeStatement from "@/types/income-statement"
-import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
-import { IProfile } from "@/types/profile"
 import fetchProfile from "@/planetapi/fetch.profile"
-import { usePalette } from "react-palette"
+import { IncomeStatementChart } from "@/Shared/Charts"
+import IIncomeStatement from "@/types/income-statement"
+import fetchIncomeStatement from "@/planetapi/fetch.income-statement"
 import WaterfallImage from "@/Shared/Images/WaterfallImage"
 import { StatementTable } from "@/Shared/IncomeStatement"
 
@@ -29,7 +29,6 @@ interface IIncomeStatementProps {
 
 const Index: React.FC<IIncomeStatementProps> = (props) => {
     const { exchange, symbol } = props
-    const { companyName } = useSecurity().context
     const [color, setColor] = useState("#fff")
 
     const limit = 4
@@ -79,34 +78,43 @@ const Index: React.FC<IIncomeStatementProps> = (props) => {
                         {/* Goes to summary */}
                         <li><a>{symbol.toUpperCase()}</a></li>
                         { /* Goes to parent */}
-                        <li><Link href={`/security/${exchange.toLowerCase()}/${symbol.toLowerCase()}/financials`}>Financials</Link></li>
+                        <li><Link href={route("security.financials.incomestatement", {exchange, symbol })}>Financials</Link></li>
                         <li>Income Statement</li>
                     </ul>
                 </div>
             </Hero>
             <Hero>
                 <HugeHeader>Income Statement</HugeHeader>
-                {incomeStatementQuery.data &&
-                    (<div className="grid grid-cols-1 lg:grid-cols-4 gap-8 w-full">
-                        <StatementCard caption={"Revenue"} data={incomeStatementQuery.data}>revenue</StatementCard>
-                        <StatementCard caption={"Gross Profit"} data={incomeStatementQuery.data}>grossProfit</StatementCard>
-                        <StatementCard caption={"Operating Income"} data={incomeStatementQuery.data}>operatingIncome</StatementCard>
-                        <StatementCard caption={"Net Income"} data={incomeStatementQuery.data}>netIncome</StatementCard>
-                    </div>)
+                {
+                    incomeStatementQuery.isLoading ? (
+                        <div className="text-center w-full lg:col-span-4 md:col-span-3">
+                            <Spinner height={24} width={24}></Spinner>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 w-full">
+                                <StatementCard caption={"Revenue"} data={incomeStatementQuery.data!}>revenue</StatementCard>
+                                <StatementCard caption={"Gross Profit"} data={incomeStatementQuery.data!}>grossProfit</StatementCard>
+                                <StatementCard caption={"Operating Income"} data={incomeStatementQuery.data!}>operatingIncome</StatementCard>
+                                <StatementCard caption={"Net Income"} data={incomeStatementQuery.data!}>netIncome</StatementCard>
+                            </div>
+                            <div className="grid grid-cols-1 gap-8 w-full h-[36rem]">
+                                {
+                                    !incomeStatementQuery.isError && incomeStatementQuery.data &&
+                                    <InfoCard
+                                        colSpan={"col-span-1 lg:col-span-3"}
+                                        caption={"Earnings Sankey Graph"}
+                                        subheader={profileQuery.data?.companyName || ""}
+                                        image={profileQuery.data?.image || undefined}
+                                        icon={<WaterfallImage width={30} height={30} />}>
+                                        <IncomeStatementChart primaryColor={data.vibrant ?? "#00f"} data={incomeStatementQuery.data} />
+                                        <StatementTable incomeStatements={incomeStatementQuery.data} />
+                                    </InfoCard>
+                                }
+                            </div>
+                        </>
+                    )
                 }
-                <div className="grid grid-cols-1 gap-8 w-full h-[36rem]">
-                    {!incomeStatementQuery.isError && incomeStatementQuery.data &&
-                        <InfoCard
-                            colSpan={"col-span-1 lg:col-span-3"}
-                            caption={"Earnings Sankey Graph"}
-                            subheader={profileQuery.data?.companyName || ""}
-                            image={profileQuery.data?.image || undefined}
-                            icon={<WaterfallImage width={30} height={30}/>}>
-                            <IncomeStatementChart primaryColor={data.vibrant ?? "#00f"} data={incomeStatementQuery.data} />
-                            <StatementTable incomeStatements={incomeStatementQuery.data} />
-                        </InfoCard>
-                    }
-                </div>
             </Hero>
         </Layout>
     )
