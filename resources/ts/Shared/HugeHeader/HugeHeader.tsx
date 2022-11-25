@@ -7,10 +7,21 @@
 
 import React from "react"
 
-function HugeHeader({ children }: { children: React.ReactNode }): JSX.Element {
+interface IHugeHeaderProperties {
+    bold?: boolean
+    padding?: number    
+    color?: string
+    children: React.ReactNode
+}
+// function HugeHeader({ props }: { children: React.ReactNode }): JSX.Element {
+
+const HugeHeader: React.FC<IHugeHeaderProperties> = (props) => {
+    const padding = props.padding ?? 4
+    const bold = props.bold ?? true
+    const color = props.color ?? ""
     return (
-        <div className="pb-6 text-center">
-            <h1 className="uppercase text-4xl font-bold">{children}</h1>
+        <div className={`pb-${padding} text-center`}>
+            <h1 className={`uppercase text-4xl ${bold ? "font-bold" : ""}${color ? " " + color : ""}`}>{props.children}</h1>
         </div>
     )
 }
