@@ -12,7 +12,8 @@ import { useSecurity } from "../SecurityContext/SecurityContext"
 import Spinner from "../Spinner"
 
 function CompanyInfo(): JSX.Element {
-    const { symbol, exchange } = useSecurity().context
+    const ctx = useSecurity()
+    const { symbol, exchange } = ctx.context
 
     const [companyName, setCompanyName] = useState("")
     const [price, setPrice] = useState(0.0) 
@@ -35,6 +36,8 @@ function CompanyInfo(): JSX.Element {
                 setChanges(data.changes)
                 setImage(data.image)
                 setCurrency(data.currency)
+                
+                ctx.setContext({ ...ctx.context, companyName })
             }
         }
     )
