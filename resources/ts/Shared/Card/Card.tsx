@@ -46,6 +46,7 @@ const Card = (props: CardProps): JSX.Element | null => {
                 <h2 className="leading-8 pt-2 text-4xl text-center">{value}</h2>
                 <p className="pt-1 pb-1 text-sm text-center leading-4 uppercase">{props.children}</p>
                 <button className="btn btn-square btn-xs absolute right-3 top-[15%] transform-50">
+                    {/* // TODO: use route() function */}
                     <Link href={`/security/${context.exchange.toLowerCase()}/${context.symbol.toLowerCase()}/relative-valuation/ratio/${detailUrl}`}>
                         <ExternalLinkImage />
                     </Link>
