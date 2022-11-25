@@ -159,4 +159,4 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
         }} height={400} width={500}></Sankey>
 }
 
-export { IncomeStatementChart }
+export default IncomeStatementChart 

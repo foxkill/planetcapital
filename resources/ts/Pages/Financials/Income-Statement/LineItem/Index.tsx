@@ -17,6 +17,8 @@ import { useQuery } from "react-query"
 import IIncomeStatement from "@/types/income-statement"
 import fetchIncomeStatement from "@/planetapi/fetch.income-statement"
 import Spinner from "@/Shared/Spinner"
+import { IProfile } from "@/types/profile"
+import fetchProfile from "@/planetapi/fetch.profile"
 /*
 import { FunctionComponent, PropsWithChildren } from 'react';
 
@@ -69,7 +71,19 @@ const LineItem: IPage<ILineItemProps> = (props) => {
             retry: false,
         }
     )
-    
+
+    const profileQuery = useQuery<IProfile>(
+        [
+            ["profile", symbol, exchange].join("-"),
+            { symbol, exchange }
+        ],
+        fetchProfile,
+        {
+            enabled: Boolean(symbol && exchange),
+            retry: false,
+        }
+    )
+
     return (
         <>
             <Hero height={20}>
@@ -96,7 +110,7 @@ const LineItem: IPage<ILineItemProps> = (props) => {
                     {incomeStatementQuery.isLoading ?
                         (
                             <div className="text-center w-full lg:col-span-4 md:colspan-3">
-                                <Spinner></Spinner>
+                                <Spinner width={24} height={24}></Spinner>
                             </div>
                         ) :
                         (incomeStatementQuery.isFetched &&
@@ -113,8 +127,16 @@ const LineItem: IPage<ILineItemProps> = (props) => {
                                     lineitem="revenue"
                                     data={incomeStatementQuery.data!}
                                     mode={LineItemAverageKind.THREE_YEARS_AVG_VALUE} />
-                            </>)
+                                {/* <InfoCard
+                                    colSpan={"col-span-1 lg:col-span-3"}
+                                    caption={""}
+                                    subheader={profileQuery.data?.companyName || ""}
+                                    image={profileQuery.data?.image || undefined}>
+                                </InfoCard> */}
+                            </>
+                        )
                     }
+
                 </div>
             </Hero>
         </>
