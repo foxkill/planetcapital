@@ -57,21 +57,7 @@ class IncomeStatements extends Controller
             $data = $response->json();
             if (count($data)) {
                 if ($isTTMRequest) {
-                    $ttm = []; 
-                    $current = [];
-                    for ($i = 0, $year = (int) $data[0]["calendarYear"]; $i < $limit; $i++) { 
-                        // $currentYear = (int) $data[$i]["calendarYear"];
-                        if ($i % 4 == 0) {
-                            if (count($current)) {
-                                $ttm[] = $current;
-                            }
-                            $current = $this->createIncomeStatementTTM();
-                        }
-
-                        $current["period"] = "TTM";
-                        $current["revenue"] += $data[$i]["revenue"];
-                        $current["costOfRevenue"] += $data[$i]["costOfRevenue"];
-                    }
+                    $data = $this->calculateIncomeStatementTTM($data, $limit);
                 }
                 Cache::put($key, json_encode($data));
                 return response()->json($data, Response::HTTP_CREATED);
@@ -129,7 +115,7 @@ class IncomeStatements extends Controller
     /**
      * Get the cache key.
      */
-    private function getCacheKey(Request $request) 
+    private function getCacheKey(Request $request)
     {
         return join(
             '_',
@@ -187,5 +173,26 @@ class IncomeStatements extends Controller
         ];
 
         return $ic;
+    }
+
+    private function calculateIncomeStatementTTM($data, $limit)
+    {
+        $ttm = [];
+        $current = [];
+        for ($i = 0, $year = (int) $data[0]["calendarYear"]; $i < $limit; $i++) {
+            // $currentYear = (int) $data[$i]["calendarYear"];
+            if ($i % 4 == 0) {
+                if (count($current)) {
+                    $ttm[] = $current;
+                }
+                $current = $this->createIncomeStatementTTM();
+            }
+
+            $current["period"] = "TTM";
+            $current["revenue"] += $data[$i]["revenue"];
+            $current["costOfRevenue"] += $data[$i]["costOfRevenue"];
+        }
+
+        return $ttm;
     }
 }
