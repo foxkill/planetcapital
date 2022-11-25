@@ -61,7 +61,7 @@ const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.
         switch (mode) {
             case LineItemAverageKind.LAST_YEARS_VALUE:
                 threeYearPerf = moneyformat(data[0][lineitem], false, 0) + " " + data[0]["reportedCurrency"]
-                caption = `Last ${growthTypeMap[periodType]} Growth`
+                caption = `Last ${growthTypeMap[periodType]} Value`
                 break
             case LineItemAverageKind.THREE_YEARS_CAGR_VALUE:
                 value = calculateCagr(data, lineitem, 3)
