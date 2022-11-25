@@ -15,8 +15,6 @@ interface IStatementTableProps {
 const StatementTable: React.FC<IStatementTableProps> = (props) => {
     const incomeStatement = props.incomeStatements[0]
 
-    // console.log(incomeStatement.otherExpenses);
-
     return (
         <div className="pl-2 verflow-x-auto w-full">
             <table className="table w-full text-slate-500">
@@ -44,8 +42,6 @@ const StatementTable: React.FC<IStatementTableProps> = (props) => {
                     <tr className="hover">
                         <th className="font-thin indent-8 text-ics-red">Other Expenses</th>
                         <td className="text-right text-ics-red">{
-                            
-                            // moneyformat(incomeStatement.operatingIncome - incomeStatement.netIncome)
                             moneyformat(incomeStatement.otherExpenses, true)
                         }</td>
                     </tr>
