@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\IncomeStatements;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -7,7 +8,6 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use App\Models\Ticker;
-use Predis\Protocol\Text\Handler\ErrorResponse;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +35,9 @@ Route::get('/tickers', function (Request $request) {
     );
 });
 
-
+//
+// Relative Valuation
+//
 Route::get('/security/{exchange}/{security}/relative-valuation/{period}/limit/{limit}', function (Request $request) {
     $periodsUrl = [
         'fy' => FMP_RATIOS_FY,
@@ -131,47 +133,7 @@ Route::get('/security/{exchange}/{security}/profile', function (Request $request
 //
 // Income Statement
 // 
-Route::get('/security/{exchange}/{security}/income-statement/period/{period}/limit/{limit}', function (Request $request) {
-    $key = join(
-        '_',
-        [
-            'security',
-            'income_statement',
-            strtolower($request->period),
-            strtolower($request->security),
-            $request->limit ?? 1
-        ]
-    );
-
-    $cachedSecurity = Redis::get($key);
-
-    if (isset($cachedSecurity)) {
-        return response()->json(json_decode($cachedSecurity), Response::HTTP_OK);
-    }
-
-    $endpoint = sprintf(
-        FMP_INCOME_STATEMENT,
-        strtoupper($request->security),
-        env('FMP_API_KEY'),
-        $request->limit ?? 1
-    );
-
-    if (isset($request->period) && strlen($request->period)) {
-        $endpoint .= "&period=" . $request->period;
-    }
-
-    $response = Http::acceptJson()->get($endpoint);
-
-    if ($response->ok()) {
-        $data = $response->json();
-        if (count($data)) {
-            Redis::set($key, json_encode($data));
-            return response()->json($data, Response::HTTP_CREATED);
-        }
-    }
-
-    $response->throw()->json();
-});
+Route::get('/security/{exchange}/{security}/income-statement/period/{period}/limit/{limit}', [IncomeStatements::class, 'index']);
 
 //
 // Image
@@ -219,7 +181,6 @@ Route::get('/security/{exchange}/{security}/image', function (Request $request) 
     if (!$profile) {
         // TODO: throw an error.
     }
-
 
     $imageUrl = $profile[0]["image"];
 
