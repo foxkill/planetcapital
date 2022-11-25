@@ -6,12 +6,12 @@ module.exports = {
         "./resources/**/*.{js,jsx,ts,tsx}",
     ],
     theme: {
-    // screens: {
-    //   sm: "480px",
-    //   md: "768px",
-    //   lg: "976px",
-    //   xl: "1440px"
-    // },
+        // screens: {
+        //   sm: "480px",
+        //   md: "768px",
+        //   lg: "976px",
+        //   xl: "1440px"
+        // },
         screens: {
             xs: "480px",
             sm: "640px",
@@ -36,6 +36,7 @@ module.exports = {
                 primary: "#ff0043",
                 light: "#999",
                 "ics-red": "#F14336",
+                "ics-green": "#079A82"
             },
         },
     },
