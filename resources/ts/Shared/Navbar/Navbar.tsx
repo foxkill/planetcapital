@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, InertiaLink, usePage } from "@inertiajs/inertia-react"
 import { useSecurity } from "../SecurityContext/SecurityContext";
 
 export function Navbar(): JSX.Element {
-    const { symbol, exchange } = usePage().props
+    const ctx = useSecurity()
+    const { symbol, exchange } = ctx.context
+    
 
     return <div className="navbar bg-base-100">
         <div className="navbar-start w-24">
@@ -24,9 +26,12 @@ export function Navbar(): JSX.Element {
         <div className="flex-1">
             <ul className="menu menu-horizontal">
                 <li><Link href="/">Home</Link></li>
-                {/* <li><InertiaLink href={"security/" + exchange + "/" + symbol + "/relative-valuation"}>Relative Valuation</InertiaLink></li> */}
-                <li><InertiaLink href={route("security.relative.valuation", { symbol, exchange })}>Relative Valuation</InertiaLink></li>
-                <li><Link href={route("security.financials.incomestatement", { symbol, exchange })}>Income Statement</Link></li>
+                {Boolean(symbol && exchange) && (
+                    <>
+                        <li><Link href={route("security.relative.valuation", { symbol, exchange })}>Relative Valuation</Link></li>
+                        <li><Link href={route("security.financials.incomestatement", { symbol, exchange })}>Income Statement</Link></li>
+                    </>)
+                }
                 <li><Link href="/dashboard">Dashboard</Link></li>
             </ul>
         </div>
