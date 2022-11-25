@@ -5,5 +5,6 @@
 // Closed Source
 //
 
-export { default } from "./HistoryChart"
-export {IncomeStatementChart} from "./IncomeStatementChart"
+export { default as HistoryChart } from "./HistoryChart"
+export { default as IncomeStatementChart} from "./IncomeStatementChart"
+export { default as LineItemChart } from "./LineItemChart"
