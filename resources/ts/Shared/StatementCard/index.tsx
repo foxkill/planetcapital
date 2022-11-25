@@ -4,4 +4,6 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-export {default} from "./StatementCard"
+export {default as StatementCard} from "./StatementCard"
+export {default as StatementCardAverage} from "./StatementCardAverage"
+export {LineItemAverageKind} from "./lineitem.enum"
