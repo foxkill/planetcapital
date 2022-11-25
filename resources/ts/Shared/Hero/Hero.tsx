@@ -13,9 +13,10 @@ interface IHeroProperties {
     useColumnLayout?: boolean
     height?: number
     contextAware?: boolean
+    onTop?: boolean
 }
 
-export function Hero({ children, useColumnLayout, height, contextAware }: IHeroProperties): JSX.Element | null {
+export function Hero({ children, useColumnLayout, height, contextAware, onTop }: IHeroProperties): JSX.Element | null {
     const ctx = useSecurity()
 
     if (contextAware) {
@@ -25,9 +26,10 @@ export function Hero({ children, useColumnLayout, height, contextAware }: IHeroP
     }
 
     const h = !height ? "min-h-screen" : `min-h-[${height}vh]`
+    const align = onTop ? "items-start" : ""
     return (
         <>
-            <div className={"hero bg-base-200 " + h}>
+            <div className={`hero bg-base-200 ${h} ${align}`}>
                 <div className={`hero-content ${useColumnLayout ? "flex-col lg:flex-row-reverse lg:gap-16" : "flex-col"}`}>
                     {children}
                 </div>
