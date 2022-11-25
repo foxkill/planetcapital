@@ -33,6 +33,7 @@ class IncomeStatements extends Controller
         if (strtolower($period) == "ttm") {
             $isTTMRequest = true;
             $limit *= 4;
+            $limit += 4;
         }
 
         $endpoint = sprintf(
@@ -129,6 +130,9 @@ class IncomeStatements extends Controller
         );
     }
 
+    /**
+     * Create an empty income statement.
+     */
     private function createIncomeStatementTTM()
     {
         $ic = [
@@ -178,9 +182,9 @@ class IncomeStatements extends Controller
     private function calculateIncomeStatementTTM($data, $limit)
     {
         $ttm = [];
+        // Start with empty income statement.
         $current = [];
-        for ($i = 0, $year = (int) $data[0]["calendarYear"]; $i < $limit; $i++) {
-            // $currentYear = (int) $data[$i]["calendarYear"];
+        for ($i = 0; $i < $limit; $i++) {
             if ($i % 4 == 0) {
                 if (count($current)) {
                     $ttm[] = $current;
@@ -188,9 +192,45 @@ class IncomeStatements extends Controller
                 $current = $this->createIncomeStatementTTM();
             }
 
+            $current["date"] = $data[$i]["date"];
+            $current["symbol"] = $data[$i]["symbol"];
+            $current["reportedCurrency"] = $data[$i]["reportedCurrency"];
+            $current["cik"] = $data[$i]["cik"];
+            $current["fillingDate"] = $data[$i]["fillingDate"];
+            $current["acceptedDate"] = $data[$i]["acceptedDate"];
+            $current["calendarYear"] = $data[$i]["calendarYear"];
             $current["period"] = "TTM";
+            $current["grossProfitRatio"] = $data[$i]["grossProfitRatio"];
+            $current["ebitdaratio"] = $data[$i]["ebitdaratio"];
+            $current["operatingIncomeRatio"] = $data[$i]["operatingIncomeRatio"];
+            $current["netIncomeRatio"] = $data[$i]["netIncomeRatio"];
+
+            $current["link"] = $data[$i]["link"];
+            $current["finalLink"] = $data[$i]["finalLink"];
+
             $current["revenue"] += $data[$i]["revenue"];
             $current["costOfRevenue"] += $data[$i]["costOfRevenue"];
+            $current["grossProfit"] += $data[$i]["grossProfit"];
+            $current["researchAndDevelopmentExpenses"] += $data[$i]["researchAndDevelopmentExpenses"];
+            $current["generalAndAdministrativeExpenses"] += $data[$i]["generalAndAdministrativeExpenses"];
+            $current["sellingAndMarketingExpenses"] += $data[$i]["sellingAndMarketingExpenses"];
+            $current["sellingGeneralAndAdministrativeExpenses"] += $data[$i]["sellingGeneralAndAdministrativeExpenses"];
+            $current["otherExpenses"] += $data[$i]["otherExpenses"];
+            $current["operatingExpenses"] += $data[$i]["operatingExpenses"];
+            $current["interestIncome"] += $data[$i]["interestIncome"];
+            $current["interestExpense"] += $data[$i]["interestExpense"];
+            $current["depreciationAndAmortization"] += $data[$i]["depreciationAndAmortization"];
+            $current["ebitda"] += $data[$i]["ebitda"];
+            $current["operatingIncome"] += $data[$i]["operatingIncome"];
+            $current["totalOtherIncomeExpensesNet"] += $data[$i]["totalOtherIncomeExpensesNet"];
+            $current["incomeBeforeTax"] += $data[$i]["incomeBeforeTax"];
+            $current["incomeBeforeTaxRatio"] += $data[$i]["incomeBeforeTaxRatio"];
+            $current["incomeTaxExpense"] += $data[$i]["incomeTaxExpense"];
+            $current["netIncome"] += $data[$i]["netIncome"];
+            $current["eps"] += $data[$i]["eps"];
+            $current["epsdiluted"] += $data[$i]["epsdiluted"];
+            $current["weightedAverageShsOut"] += $data[$i]["weightedAverageShsOut"];
+            $current["weightedAverageShsOutDil"] += $data[$i]["weightedAverageShsOutDil"];
         }
 
         return $ttm;
