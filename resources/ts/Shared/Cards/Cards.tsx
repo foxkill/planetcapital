@@ -83,9 +83,6 @@ export function Cards(props: ICardsProperties): JSX.Element | null {
         }
     )
 
-
-    // const { data, error, loading } = context.information
-
     return (
         <>
             <HugeHeader>{props.children}</HugeHeader>
