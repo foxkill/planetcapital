@@ -4,7 +4,7 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-import React, { useState } from "react"
+import React from "react"
 import Hero from "@/Shared/Hero"
 import Layout from "@/Shared/Layout"
 import Spinner from "@/Shared/Spinner"
@@ -14,25 +14,28 @@ import { usePalette } from "react-palette"
 import { IProfile } from "@/types/profile"
 import HugeHeader from "@/Shared/HugeHeader"
 import { Link } from "@inertiajs/inertia-react"
-import StatementCard from "@/Shared/StatementCard"
+import {StatementCard} from "@/Shared/StatementCard"
 import fetchProfile from "@/planetapi/fetch.profile"
 import { IncomeStatementChart } from "@/Shared/Charts"
 import IIncomeStatement from "@/types/income-statement"
 import fetchIncomeStatement from "@/planetapi/fetch.income-statement"
 import WaterfallImage from "@/Shared/Images/WaterfallImage"
 import { StatementTable } from "@/Shared/IncomeStatement"
+import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
 
 interface IIncomeStatementProps {
     symbol: string
     exchange: string
 }
 
-const Index: React.FC<IIncomeStatementProps> = (props) => {
-    const { exchange, symbol } = props
-    const [color, setColor] = useState("#fff")
+//
+// Income Statement Page
+//
+const Index: React.FC<IIncomeStatementProps> = () => {
+    const { exchange, symbol, periodType } = useSecurity().context
 
-    const limit = 4
-    const period = "FY"
+    const limit = 10
+    const period = periodType.toLocaleLowerCase()
 
     const { data, loading, error } = usePalette(`/api/security/${exchange}/${symbol}/image`)
 
@@ -45,19 +48,6 @@ const Index: React.FC<IIncomeStatementProps> = (props) => {
         {
             enabled: Boolean(symbol && exchange),
             retry: false,
-            onSuccess() {
-                // const img = new Image();
-                // img.crossOrigin = "Anonymous"
-                // // img.setAttribute("crossOrigin", "Anonymous")
-                // img.setAttribute("alt", "Company Logo")
-                // img.addEventListener("load", function() {
-                //     const vibrant = new Vibrant(img)
-                //     vibrant.getPalette().then((p:any) => {
-                //         setColor(p.Vibrant.getHex())
-                //     });
-                // })
-                // img.src = `/api/security/${exchange}/${symbol}/image`
-            }
         }
     )
 
