@@ -10,6 +10,7 @@ import IIncomeStatement from "@/types/income-statement"
 import cagr from "@/utils/cagr"
 import { LineItemAverageKind } from "./lineitem.enum"
 import { useSecurity } from "../SecurityContext/SecurityContext"
+import get_period_type_map from "@/utils/periodtypemap"
 
 /* eslint-disable indent */
 
@@ -37,11 +38,7 @@ function calculateCagr(data: IIncomeStatement[], dataKey: string, length: number
     return r.percentage
 }
 
-const growthTypeMap = {
-    "FY": "Annual",
-    "TTM": "TTM",
-    "QTR": "Quarterly"
-}
+
 
 const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.Element | null => {
     const { periodType } = useSecurity().context
@@ -53,6 +50,8 @@ const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.
         return <></>
     }
 
+    const periodTypeMap = get_period_type_map() 
+
     let threeYearPerf = ""
     let caption = ""
     let value = 0
@@ -61,7 +60,7 @@ const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.
         switch (mode) {
             case LineItemAverageKind.LAST_YEARS_VALUE:
                 threeYearPerf = moneyformat(data[0][lineitem], false, 0) + " " + data[0]["reportedCurrency"]
-                caption = `Last ${growthTypeMap[periodType]} Value`
+                caption = `Last ${periodTypeMap[periodType]} Value`
                 break
             case LineItemAverageKind.THREE_YEARS_CAGR_VALUE:
                 value = calculateCagr(data, lineitem, 3)

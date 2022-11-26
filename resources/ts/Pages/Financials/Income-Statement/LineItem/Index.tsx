@@ -4,21 +4,25 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-import React from "react"
-import Hero from "@/Shared/Hero"
-import Layout from "@/Shared/Layout"
-import HugeHeader from "@/Shared/HugeHeader"
-import CompanyInfo from "@/Shared/CompanyInfo"
-import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod"
-import { Link } from "@inertiajs/inertia-react"
-import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
-import { LineItemAverageKind, StatementCardAverage } from "@/Shared/StatementCard"
-import { useQuery } from "react-query"
-import IIncomeStatement from "@/types/income-statement"
 import fetchIncomeStatement from "@/planetapi/fetch.income-statement"
-import Spinner from "@/Shared/Spinner"
-import { IProfile } from "@/types/profile"
 import fetchProfile from "@/planetapi/fetch.profile"
+import { LineItemChart } from "@/Shared/Charts"
+import CompanyInfo from "@/Shared/CompanyInfo"
+import Hero from "@/Shared/Hero"
+import HugeHeader from "@/Shared/HugeHeader"
+import InfoCard from "@/Shared/InfoCard"
+import Layout from "@/Shared/Layout"
+import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
+import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod"
+import Spinner from "@/Shared/Spinner"
+import { LineItemAverageKind, StatementCardAverage } from "@/Shared/StatementCard"
+import IIncomeStatement from "@/types/income-statement"
+import { IProfile } from "@/types/profile"
+import get_period_type_map from "@/utils/periodtypemap"
+import { Link } from "@inertiajs/inertia-react"
+import React from "react"
+import { usePalette } from "react-palette"
+import { useQuery } from "react-query"
 /*
 import { FunctionComponent, PropsWithChildren } from 'react';
 
@@ -45,6 +49,14 @@ function toLineItem(lineitem: string): string {
     return lineitem.split("-").map((item) => item.toLocaleUpperCase()).join(" ")
 }
 
+function toDataKey(lineitem: string): string {
+    const li = lineitem.split("-").map((item) => {
+        return item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
+    }).join("")
+
+    return li.charAt(0).toLowerCase() + li.slice(1)
+}
+
 interface ILineItemProps {
     symbol: string
     exchange: string
@@ -59,9 +71,14 @@ const LineItem: IPage<ILineItemProps> = (props) => {
     // eslint-disable-next-line react/prop-types
     const { symbol, exchange, lineitem } = props
 
-    const companyName = useSecurity().context.companyName
+    // const companyName = useSecurity().context.companyName
     const period = useSecurity().context.periodType
-    const limit = 10
+    const dataKey = toDataKey(lineitem)
+    let limit = (period === "QTR") ? 40 : 10
+
+    const { data } = usePalette(`/api/security/${exchange}/${symbol}/image`)
+
+    const periodTypeMap = get_period_type_map() 
 
     const incomeStatementQuery = useQuery<IIncomeStatement[]>(
         [[symbol, exchange, period, limit].join("-"), { exchange, symbol, period, limit }],
@@ -95,14 +112,13 @@ const LineItem: IPage<ILineItemProps> = (props) => {
                             symbol.toUpperCase()
                         }</a></li>
                         { /* Goes to parent */}
-                        {/* <li><Link href={route("security.financials.incomestatement", { exchange, symbol })}>Financials</Link></li> */}
                         <li><Link href={route("security.financials.incomestatement", { exchange, symbol })}>Income Statement</Link></li>
                         <li>{toLineItem(lineitem)}</li>
                     </ul>
                 </div>
             </Hero>
             <Hero onTop>
-                <HugeHeader color="text-slate-500" bold={false} padding={0}>{companyName}</HugeHeader>
+                <HugeHeader color="text-slate-500" bold={false} padding={0}>{profileQuery.data?.companyName}</HugeHeader>
                 <HugeHeader>{toLineItem(lineitem)}</HugeHeader>
                 <CompanyInfo />
                 <SelectPeriod />
@@ -116,23 +132,29 @@ const LineItem: IPage<ILineItemProps> = (props) => {
                         (incomeStatementQuery.isFetched &&
                             <>
                                 <StatementCardAverage
-                                    lineitem="revenue"
+                                    lineitem={dataKey}
                                     data={incomeStatementQuery.data!}
                                     mode={LineItemAverageKind.LAST_YEARS_VALUE} />
                                 <StatementCardAverage
-                                    lineitem="revenue"
+                                    lineitem={dataKey}
                                     data={incomeStatementQuery.data!}
                                     mode={LineItemAverageKind.THREE_YEARS_CAGR_VALUE} />
                                 <StatementCardAverage
-                                    lineitem="revenue"
+                                    lineitem={dataKey}
                                     data={incomeStatementQuery.data!}
                                     mode={LineItemAverageKind.THREE_YEARS_AVG_VALUE} />
-                                {/* <InfoCard
+                                <InfoCard
                                     colSpan={"col-span-1 lg:col-span-3"}
-                                    caption={""}
+                                    caption={toLineItem(lineitem) + " (" + periodTypeMap[period] + ")"}
                                     subheader={profileQuery.data?.companyName || ""}
                                     image={profileQuery.data?.image || undefined}>
-                                </InfoCard> */}
+                                    <LineItemChart
+                                        periodType={period}
+                                        incomeStatements={incomeStatementQuery.data!} 
+                                        lineitem={dataKey} 
+                                        palette={data}
+                                    >{toLineItem(lineitem)}</LineItemChart>
+                                </InfoCard>
                             </>
                         )
                     }

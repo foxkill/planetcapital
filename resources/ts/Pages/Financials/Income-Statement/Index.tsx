@@ -14,7 +14,7 @@ import { usePalette } from "react-palette"
 import { IProfile } from "@/types/profile"
 import HugeHeader from "@/Shared/HugeHeader"
 import { Link } from "@inertiajs/inertia-react"
-import {StatementCard} from "@/Shared/StatementCard"
+import { StatementCard } from "@/Shared/StatementCard"
 import fetchProfile from "@/planetapi/fetch.profile"
 import { IncomeStatementChart } from "@/Shared/Charts"
 import IIncomeStatement from "@/types/income-statement"
@@ -34,10 +34,15 @@ interface IIncomeStatementProps {
 const Index: React.FC<IIncomeStatementProps> = () => {
     const { exchange, symbol, periodType } = useSecurity().context
 
-    const limit = 10
     const period = periodType.toLocaleLowerCase()
 
-    const { data, loading, error } = usePalette(`/api/security/${exchange}/${symbol}/image`)
+    const { data } = usePalette(`/api/security/${exchange}/${symbol}/image`)
+
+    let limit = 10
+
+    if (period === "QTR") {
+        limit *= 2
+    }
 
     const profileQuery = useQuery<IProfile>(
         [
@@ -68,7 +73,7 @@ const Index: React.FC<IIncomeStatementProps> = () => {
                         {/* Goes to summary */}
                         <li><a>{symbol.toUpperCase()}</a></li>
                         { /* Goes to parent */}
-                        <li><Link href={route("security.financials.incomestatement", {exchange, symbol })}>Financials</Link></li>
+                        <li><Link href={route("security.financials.incomestatement", { exchange, symbol })}>Financials</Link></li>
                         <li>Income Statement</li>
                     </ul>
                 </div>
@@ -88,7 +93,7 @@ const Index: React.FC<IIncomeStatementProps> = () => {
                                 <StatementCard caption={"Operating Income"} data={incomeStatementQuery.data!}>operatingIncome</StatementCard>
                                 <StatementCard caption={"Net Income"} data={incomeStatementQuery.data!}>netIncome</StatementCard>
                             </div>
-                            <div className="grid grid-cols-1 gap-8 w-full h-[36rem]">
+                            <div className="grid grid-cols-1 gap-8 w-full h-[40rem]">
                                 {
                                     !incomeStatementQuery.isError && incomeStatementQuery.data &&
                                     <InfoCard
