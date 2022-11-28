@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\IncomeStatements;
+use App\Http\Controllers\Api\CompanyImage;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -103,7 +104,7 @@ Route::get('/security/{exchange}/{security}/relative-valuation/{period}/limit/{l
 // Profile
 // 
 Route::get('/security/{exchange}/{security}/profile', function (Request $request) {
-    $key = join( '_', [ 'security', 'profile', strtolower($request->security)]);
+    $key = join('_', ['security', 'profile', strtolower($request->security)]);
 
     $cachedSecurity = Redis::get($key);
 
@@ -138,59 +139,4 @@ Route::get('/security/{exchange}/{security}/income-statement/period/{period}/lim
 //
 // Image
 //
-Route::get('/security/{exchange}/{security}/image', function (Request $request) {
-   $key = join('_', ['security', 'profile', strtolower($request->security)]);
-
-    $imageUrl = '';
-    $cachedSecurity = Cache::get($key);
-
-    // We have a stored Profile.
-    if (isset($cachedSecurity)) {
-        $data = json_decode($cachedSecurity);
-        $imageUrl = $data["image"];
-
-        $key = join('_', ['security', 'image', strtolower($request->security)]);
-
-        $imageData = Cache::get($key);
-        if ($imageData) {
-            // data:image/png;base64,imagedatabase64
-            list($baseHeader, $image) = explode(",", $imageData);
-            list($imageHeader) = explode(";", $baseHeader);
-            $contentType = str_replace("data:", "", $imageHeader);
-            return response(base64_decode($image), 200, ['Content-Type', 'image/png']);
-        }
-
-        // Get the image
-        $response = Http::get($imageUrl);
-        if ($response->ok()) {
-            Cache::put($key, base64_encode($response->body()));
-            response($response->body(), 200)->header('Content-Type', 'image/png');
-        }
-    }
-
-    // We have no profile yet. Get it.
-    $endpoint = sprintf(FMP_PROFILE, $request->security, env('FMP_API_KEY'));
-    $response = Http::get($endpoint);
-
-    if (!$response->ok()) {
-        $response->throw()->json();
-        return;
-    }
-
-    $profile = $response->json();
-    if (!$profile) {
-        // TODO: throw an error.
-    }
-
-    $imageUrl = $profile[0]["image"];
-
-    $response = Http::get($imageUrl);
-    if (!$response->ok()) {
-        // TODO: throw an error.
-    }
-
-    // Cache::put($key, base64_encode($response->body()));
-
-
-    return response($response->body(), 200)->header('Content-Type', 'image/png');
-});
+Route::get('/security/{exchange}/{security}/image', [CompanyImage::class, 'index']);
