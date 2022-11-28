@@ -147,7 +147,7 @@ const LineItem: IPage<ILineItemProps> = (props) => {
                                     colSpan={"col-span-1 lg:col-span-3"}
                                     caption={toLineItem(lineitem) + " (" + periodTypeMap[period] + ")"}
                                     subheader={profileQuery.data?.companyName || ""}
-                                    image={profileQuery.data?.image || undefined}>
+                                    image={`/api/security/${profileQuery.data?.exchangeShortName.toLowerCase()}/${profileQuery.data?.symbol.toLowerCase()}/image`}>
                                     <LineItemChart
                                         periodType={period}
                                         incomeStatements={incomeStatementQuery.data!} 

@@ -100,7 +100,8 @@ const Index: React.FC<IIncomeStatementProps> = () => {
                                         colSpan={"col-span-1 lg:col-span-3"}
                                         caption={"Earnings Sankey Graph"}
                                         subheader={profileQuery.data?.companyName || ""}
-                                        image={profileQuery.data?.image || undefined}
+                                        // image={profileQuery.data?.image || undefined}
+                                        image={`/api/security/${profileQuery.data?.exchangeShortName.toLowerCase()}/${profileQuery.data?.symbol.toLowerCase()}/image`}
                                         icon={<WaterfallImage width={30} height={30} />}>
                                         <IncomeStatementChart primaryColor={data.vibrant ?? "#00f"} data={incomeStatementQuery.data} />
                                         <StatementTable incomeStatements={incomeStatementQuery.data} />
