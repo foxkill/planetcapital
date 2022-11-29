@@ -145,7 +145,7 @@ const LineItem: IPage<ILineItemProps> = (props) => {
                                     mode={LineItemAverageKind.THREE_YEARS_AVG_VALUE} />
                                 <InfoCard
                                     colSpan={"col-span-1 lg:col-span-3"}
-                                    caption={toLineItem(lineitem) + " (" + periodTypeMap[period] + ")"}
+                                    header={toLineItem(lineitem) + " (" + periodTypeMap[period] + ")"}
                                     subheader={profileQuery.data?.companyName || ""}
                                     image={`/api/security/${profileQuery.data?.exchangeShortName.toLowerCase()}/${profileQuery.data?.symbol.toLowerCase()}/image`}>
                                     <LineItemChart

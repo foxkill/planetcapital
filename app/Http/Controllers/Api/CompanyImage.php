@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use RuntimeException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
-use RuntimeException;
 
 class CompanyImage extends Controller
 {

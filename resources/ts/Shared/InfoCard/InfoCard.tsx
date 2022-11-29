@@ -10,13 +10,13 @@ import React from "react"
 interface InfoCardProperties {
     children: React.ReactNode
     colSpan: string
-    caption: string
+    header: string
     subheader: string
     icon?: React.ReactNode
     image?: string | undefined
 }
 
-function InfoCard({children, colSpan, caption, subheader, icon, image }: InfoCardProperties): JSX.Element {
+function InfoCard({children, colSpan, header: caption, subheader, icon, image }: InfoCardProperties): JSX.Element {
     return (
         <div className={`card card-bordered bg-base-100 pl-1 pt-1 pr-2 ${colSpan}`}>
             <figure className="p-1">

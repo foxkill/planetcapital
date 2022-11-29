@@ -98,7 +98,7 @@ const Index: React.FC<IIncomeStatementProps> = () => {
                                     !incomeStatementQuery.isError && incomeStatementQuery.data &&
                                     <InfoCard
                                         colSpan={"col-span-1 lg:col-span-3"}
-                                        caption={"Earnings Sankey Graph"}
+                                        header={"Earnings Sankey Graph"}
                                         subheader={profileQuery.data?.companyName || ""}
                                         // image={profileQuery.data?.image || undefined}
                                         image={`/api/security/${profileQuery.data?.exchangeShortName.toLowerCase()}/${profileQuery.data?.symbol.toLowerCase()}/image`}

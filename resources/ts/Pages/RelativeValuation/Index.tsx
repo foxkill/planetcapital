@@ -21,8 +21,9 @@ interface IRelativeValuationProperties {
 function RelativeValuation({ exchange, symbol }: IRelativeValuationProperties): JSX.Element {
     return (
         <>
-            <Hero height={30}><CompanyInfo />
-                <SelectPeriod></SelectPeriod>
+            <Hero height={30}>
+                <CompanyInfo />
+                <SelectPeriod />
             </Hero>
             <Hero useColumnLayout={false} height={60}>
                 <Cards valuations={valuations}>2. Valuation Multiples</Cards>

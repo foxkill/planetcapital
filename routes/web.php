@@ -34,12 +34,6 @@ Route::get('/security/{exchange}/{symbol}/relative-valuation/', function (Reques
 Route::get('/security/{exchange}/{symbol}/relative-valuation/ratio/{ratio}', [RatiosController::class, 'index'])
     ->name('ratios');
 
-Route::get('/dashboard', function () {
-    Inertia::setRootView('layouts.app');
-    return inertia('Dashboard/Index');
-})->name('dashboard');
-
-
 //
 // Financials - Income Statement
 //
