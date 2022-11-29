@@ -30,6 +30,7 @@ export function Navbar(): JSX.Element {
                     <>
                         <li><Link href={route("security.relative.valuation", { symbol, exchange })}>Relative Valuation</Link></li>
                         <li><Link href={route("security.financials.incomestatement", { symbol, exchange })}>Income Statement</Link></li>
+                        <li><Link href={route("security.profitability", { symbol, exchange })}>Profitablity</Link></li>
                     </>)
                 }
                 <li><Link href="/dashboard">Dashboard</Link></li>

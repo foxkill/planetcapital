@@ -40,7 +40,9 @@ Route::get('/dashboard', function () {
 })->name('dashboard');
 
 
+//
 // Financials - Income Statement
+//
 Route::get('/security/{exchange}/{symbol}/financials/income-statement', function (Request $req) {
     Inertia::setRootView('layouts.app');
     return inertia('Financials/Income-Statement/Index', [
@@ -49,6 +51,9 @@ Route::get('/security/{exchange}/{symbol}/financials/income-statement', function
     ]);
 })->name("security.financials.incomestatement");
 
+//
+// Financials - Income Statement - Line Item
+//
 Route::get('/security/{exchange}/{symbol}/financials/income-statement/{lineitem}', function (Request $req) {
     Inertia::setRootView('layouts.app');
     return inertia('Financials/Income-Statement/LineItem/Index', [
@@ -57,3 +62,12 @@ Route::get('/security/{exchange}/{symbol}/financials/income-statement/{lineitem}
         'lineitem' => $req->lineitem,
     ]);
 })->name("security.financials.incomestatement.lineitem");
+
+
+Route::get('/security/{exchange}/{symbol}/profitability', function (Request $req) {
+    Inertia::setRootView('layouts.app');
+    return inertia('Profitability/Index', [
+        'symbol' => $req->symbol,
+        'exchange' => $req->exchange,
+    ]);
+})->name("security.profitability");

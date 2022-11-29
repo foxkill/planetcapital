@@ -31,8 +31,6 @@ function LastPoint({ points, ...props }: CustomLayerProps): JSX.Element {
     const theme = useTheme()
     const shownPoints = points.slice(-1)
 
-    // console.log(props.lineGenerator([{ x: 1, y: 100 }]))
-
     return (
         <g>
             {shownPoints.map((point) => (
