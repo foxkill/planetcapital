@@ -5,6 +5,8 @@
 // Closed Source
 //
 import fetchKeyMetrics from "@/planetapi/fetch.key-metrics"
+import { HistoryChart, LineItemChart } from "@/Shared/Charts"
+import ExtendedHistoryChart from "@/Shared/Charts/ExtendedHistoryChart"
 import CompanyInfo from "@/Shared/CompanyInfo"
 import Hero from "@/Shared/Hero"
 import HugeHeader from "@/Shared/HugeHeader"
@@ -37,9 +39,6 @@ const Index: IPage<IProfitabilityPageProps> = () => {
     if (periodType === "QTR") {
         limit += 4;
     }
-
-    const key = ["key-metrics", symbol, exchange, periodType, limit].join("-").toLocaleLowerCase()
-    console.log(key);
     
     // const { data } = usePalette(`/api/security/${exchange}/${symbol}/image`)
     const keyMetricsQuery = useQuery<IKeyMetric[]>(
@@ -75,8 +74,12 @@ const Index: IPage<IProfitabilityPageProps> = () => {
                         colSpan={"col-span-1 lg:col-span-3"}
                         header={"ROE"}
                         subheader={companyName}
-                        // subheader="Tesla"
-                        image={`/api/security/${exchange.toLocaleLowerCase()}/${symbol.toLowerCase()}/image`}>ROE
+                        image={`/api/security/${exchange.toLocaleLowerCase()}/${symbol.toLowerCase()}/image`}>
+                        <ExtendedHistoryChart 
+                            metrics={keyMetricsQuery.data!} 
+                            metricKey={"roe"}
+                            periodType={periodType}
+                        >43</ExtendedHistoryChart>
                     </InfoCard>)
                 }
             </Hero>
