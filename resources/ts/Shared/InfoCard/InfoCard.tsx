@@ -36,7 +36,7 @@ function InfoCard({children, colSpan, header: caption, subheader, icon, image }:
                 }
             </figure>
             <hr className="mt-1"></hr>
-            <div className="card-body items-center h-96 flex-row">
+            <div className="card-body items-center flex-row">
                 {children}
             </div>
         </div>

@@ -102,7 +102,7 @@ const CustomPoint = (props: CustomLayerProps): ReactNode | null => {
 
 const { "[data-theme=light]": theme } = daisyuiColors
 
-const HistoryChart = ({ data, ratioShortName }: HistoryChartProperties): JSX.Element => (
+const HistoryChart = ({ data, ratioShortName }: HistoryChartProperties): JSX.Element => {
     // Einsatz von Layern
     // https://codesandbox.io/s/fancy-line-chart-3quqe
     // layers = {
@@ -121,7 +121,9 @@ const HistoryChart = ({ data, ratioShortName }: HistoryChartProperties): JSX.Ele
     //     }
 
     
-    <ResponsiveLine
+    console.log(data);
+    
+    return (<ResponsiveLine
         data={data}
         curve={"monotoneX"}
         // colors={{ scheme: "spectral" }}
@@ -153,15 +155,6 @@ const HistoryChart = ({ data, ratioShortName }: HistoryChartProperties): JSX.Ele
             reverse: false,
         }}
         axisBottom={{
-            // tickValues: [
-            //     2016,
-            //     2017,
-            //     2018,
-            //     2019,
-            //     2020,
-            //     2021,
-            //     2022,
-            // ],
             tickValues: "every year",
             tickSize: 0,
             tickPadding: 20,
@@ -194,7 +187,7 @@ const HistoryChart = ({ data, ratioShortName }: HistoryChartProperties): JSX.Ele
                 </>
             )
         }}
-    />
-)
+    />)
+}
 
 export default HistoryChart

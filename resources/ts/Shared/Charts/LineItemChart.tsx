@@ -18,6 +18,7 @@ type LineItemChartProps = {
     lineitem: string
     palette: PaletteColors
 }
+
 interface IAxisData {
     period: string
     calendarYear: string
@@ -46,6 +47,7 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
         colors={props.palette.vibrant}
         animate={true}
         enableLabel={false}
+        enableGridY={false}
         axisTop={null}
         axisRight={null}
         borderRadius={props.periodType === "QTR" ? 4 : 2}
@@ -60,7 +62,6 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
                 return v.calendarYear + " " + v.period
             }
         }}
-        enableGridY={false}
         // label={(d): number => {
         //     console.log(d);
         //     return d.value

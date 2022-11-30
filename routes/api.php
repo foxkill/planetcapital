@@ -157,7 +157,6 @@ Route::get('/security/{exchange}/{security}/profitability/period/{period}/limit/
         return response()->json(json_decode($cachedKeyMetrics), Response::HTTP_OK);
     }
 
-    //'https://financialmodelingprep.com/api/v3/key-metrics%s/%s?apikey=%s&limit=%s&period=%s';
     $endpoint = sprintf(
         FMP_KEY_METRICS,
         $request->period === 'ttm' ? '-ttm' : '',
