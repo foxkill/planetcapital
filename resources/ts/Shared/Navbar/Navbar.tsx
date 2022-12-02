@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, InertiaLink, usePage } from "@inertiajs/inertia-react"
+import React from "react";
+import { Link } from "@inertiajs/inertia-react"
 import { useSecurity } from "../SecurityContext/SecurityContext";
 
 export function Navbar(): JSX.Element {
@@ -31,6 +31,7 @@ export function Navbar(): JSX.Element {
                         <li><Link href={route("security.relative.valuation", { symbol, exchange })}>Relative Valuation</Link></li>
                         <li><Link href={route("security.financials.incomestatement", { symbol, exchange })}>Income Statement</Link></li>
                         <li><Link href={route("security.profitability", { symbol, exchange })}>Profitablity</Link></li>
+                        <li><Link href={route("security.heatmap", { symbol, exchange })}>Heatmap</Link></li>
                     </>)
                 }
                 <li><Link href="/dashboard">Dashboard</Link></li>

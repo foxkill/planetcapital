@@ -8,16 +8,17 @@
 import React, { Fragment, useMemo } from "react"
 import { ResponsiveBar, BarDatum } from "@nivo/bar"
 import { IKeyMetric } from "@/types/key-metric"
-import { line } from "d3-shape";
 import { Bar } from "@nivo/bar";
 import { timeFormat, timeParse } from "d3-time-format"
-import { BADRESP } from "dns";
+import { BADQUERY, BADRESP } from "dns";
+import { PaletteColors } from "react-palette";
 
-type ExtendedHistoryChartProps = {
+interface ExtendedHistoryChartProps {
     children: React.ReactNode
     metrics: IKeyMetric[]
     metricKey: string
     periodType: string
+    colors: PaletteColors
 }
 
 const Circle = ({ bar: { x, y, width, height, color } }) => {
@@ -62,17 +63,17 @@ const Line = ({ bars, xScale, yScale }): JSX.Element => {
                 style={{ pointerEvents: "none" }}
             /> */}
             {bars.map((bar) => {
-                console.log(bar, bar.y);
+                const signed = bar.data.value < 0.0 ? bar.absY-bar.y : bar.y
+                // console.log(bar, signed);
                 
                 return <circle
                     key={bar.key}
                     cx={bar.x + bar.width/2}
-                    // cy={yScale(bar.data.data.roe)}
-                    cy={bar.y-4}
+                    cy={signed}
                     r={4}
                     fill={bar.color}
                     stroke={bar.color}
-                    // style={{ pointerEvents: "none" }}
+                    style={{ pointerEvents: "auto" }}
                 />
             })}
         </Fragment>
@@ -85,7 +86,7 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
         <>
             <div className="text-center w-96">
                 <div className="text-4xl pb-8">{props.children}%</div>
-                <div className="h-32 border-solid border-2 border-sky-500">
+                <div className="h-32 border-solid border-0 border-sky-500">
                     <ResponsiveBar
                         data={props.metrics as unknown as BarDatum[]}
                         indexBy="date"
@@ -100,7 +101,7 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
                         axisRight={null}
                         animate
                         padding={0.9}
-                        colors={{ scheme: "nivo" }}
+                        colors={[props.colors.vibrant!]}
                         borderRadius={2}
                         layers={["grid", "axes", "bars", Line, "markers", "legends"]}
                     // innerPadding={4}

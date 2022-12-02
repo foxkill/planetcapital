@@ -57,7 +57,9 @@ Route::get('/security/{exchange}/{symbol}/financials/income-statement/{lineitem}
     ]);
 })->name("security.financials.incomestatement.lineitem");
 
-
+//
+// Profitablity
+//
 Route::get('/security/{exchange}/{symbol}/profitability', function (Request $req) {
     Inertia::setRootView('layouts.app');
     return inertia('Profitability/Index', [
@@ -65,3 +67,14 @@ Route::get('/security/{exchange}/{symbol}/profitability', function (Request $req
         'exchange' => $req->exchange,
     ]);
 })->name("security.profitability");
+
+//
+// 
+//
+Route::get('/security/{exchange}/{symbol}/heatmap', function (Request $req) {
+    Inertia::setRootView('layouts.app');
+    return inertia('Heatmap/Index', [
+        'symbol' => $req->symbol,
+        'exchange' => $req->exchange,
+    ]);
+})->name("security.heatmap");

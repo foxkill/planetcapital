@@ -18,6 +18,7 @@ import Spinner from "@/Shared/Spinner"
 import { IKeyMetric } from "@/types/key-metric"
 import { Link } from "@inertiajs/inertia-react"
 import React from "react"
+import { usePalette } from "react-palette"
 import { useQuery } from "react-query"
 
 interface IProfitabilityPageProps {
@@ -32,15 +33,18 @@ interface IPage<P extends IProfitabilityPageProps> extends React.FC<P> {
 // Profitability Page
 //
 const Index: IPage<IProfitabilityPageProps> = () => {
-    const { exchange, symbol, periodType, companyName } = useSecurity().context
+    const ctx = useSecurity()
 
-    let limit = 10
+    const { exchange, symbol, periodType, companyName } = ctx.context
+
+    let limit = 11
 
     if (periodType === "QTR") {
         limit += 4;
     }
-    
-    // const { data } = usePalette(`/api/security/${exchange}/${symbol}/image`)
+
+    const { data } = usePalette(`/api/security/${exchange}/${symbol}/image`)
+
     const keyMetricsQuery = useQuery<IKeyMetric[]>(
         [
             ["key-metrics", symbol, exchange, periodType, limit].join("-").toLowerCase(),
@@ -70,17 +74,46 @@ const Index: IPage<IProfitabilityPageProps> = () => {
                 <CompanyInfo />
                 <SelectPeriod />
                 {keyMetricsQuery.isLoading ? (<Spinner />) :
-                    (<InfoCard
-                        colSpan={"col-span-1 lg:col-span-3"}
-                        header={"ROE"}
-                        subheader={companyName}
-                        image={`/api/security/${exchange.toLocaleLowerCase()}/${symbol.toLowerCase()}/image`}>
-                        <ExtendedHistoryChart 
-                            metrics={keyMetricsQuery.data!} 
-                            metricKey={"roe"}
-                            periodType={periodType}
-                        >43</ExtendedHistoryChart>
-                    </InfoCard>)
+                    (
+                        <>
+                            <InfoCard
+                                colSpan={"col-span-1 lg:col-span-3"}
+                                header={"ROE"}
+                                subheader={companyName}
+                                image={`/api/security/${exchange.toLocaleLowerCase()}/${symbol.toLowerCase()}/image`}>
+                                <ExtendedHistoryChart
+                                    metrics={keyMetricsQuery.data!}
+                                    metricKey={"roe"}
+                                    periodType={periodType}
+                                    colors={data}
+                                >43</ExtendedHistoryChart>
+                            </InfoCard>
+                            <InfoCard
+                                colSpan={"col-span-1 lg:col-span-3"}
+                                header={"ROIC"}
+                                subheader={companyName}
+                                image={`/api/security/${exchange.toLocaleLowerCase()}/${symbol.toLowerCase()}/image`}>
+                                <ExtendedHistoryChart
+                                    metrics={keyMetricsQuery.data!}
+                                    metricKey={"roic"}
+                                    periodType={periodType}
+                                    colors={data}
+                                >9</ExtendedHistoryChart>
+                            </InfoCard>
+                            <InfoCard
+                                colSpan={"col-span-1 lg:col-span-3"}
+                                header={"P/S"}
+                                subheader={companyName}
+                                image={`/api/security/${exchange.toLocaleLowerCase()}/${symbol.toLowerCase()}/image`}>
+                                <ExtendedHistoryChart
+                                    metrics={keyMetricsQuery.data!}
+                                    metricKey={"priceToSalesRatio"}
+                                    periodType={periodType}
+                                    colors={data}
+                                >3.9</ExtendedHistoryChart>
+                            </InfoCard>
+                        </>
+                    )
                 }
             </Hero>
         </>

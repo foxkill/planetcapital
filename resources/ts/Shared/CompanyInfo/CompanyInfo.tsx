@@ -43,7 +43,7 @@ function CompanyInfo(props: CompanyInfoProps): JSX.Element {
                 setImage(`/api/security/${data.exchangeShortName.toLowerCase()}/${data.symbol.toLowerCase()}/image`)
                 setCurrency(data.currency)
 
-                ctx.setContext({ ...ctx.context, companyName })
+                ctx.context.companyName = data.companyName
             }
         }
     )
