@@ -18,6 +18,8 @@ import fetchFinancialRatios from "@/planetapi/fetch.financialratios"
 import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
 import IIncomeStatement from "@/types/income-statement"
 import fetchIncomeStatement from "@/planetapi/fetch.income-statement"
+import Spinner from "@/Shared/Spinner"
+import fetchBalanceSheetStatement from "@/planetapi/fetch.balance-sheet-statement"
 
 type HeatmapPageProps = {
     symbol: string
@@ -29,14 +31,22 @@ const Index: React.FC<HeatmapPageProps> = (props) => {
     const { symbol, exchange } = props
 
     const { periodType } = useSecurity().context
-    const limit = 10
+    const limit = 10 + 1
 
     const queryKeyRatio = ["ratios", props.exchange, props.symbol, periodType].join("-").toLocaleLowerCase()
     const queryKeyIncome = ["income", props.exchange, props.symbol, periodType].join("-").toLocaleLowerCase()
+    const queryKeyBalanceSheet = ["balance", props.exchange, props.symbol, periodType].join("-").toLocaleLowerCase()
 
-    function buildHeatMapFromRatioData(data: IRatio[] | undefined | null,
-        income: IIncomeStatement[] | undefined | null): IHeatmapData[] {
-        if (!data) { return [] }
+    function percentage(data: object[], index: number, key: string): number {
+        return (index == data.length - 1) ? 0 : (data[index][key] - data[index + 1][key]) / data[index + 1][key]
+    }
+
+    function buildHeatmapFromRatioData(
+        ratio: IRatio[] | undefined | null,
+        income: IIncomeStatement[] | undefined | null,
+        balance: IBalanceSheetStatement[] | undefined | null): IHeatmapData[] {
+        if (!ratio || ratio.length === 0 || !ratio.map) { return [] }
+        if (!income) { return [] }
 
         const hm = getHeatMap();
 
@@ -44,8 +54,6 @@ const Index: React.FC<HeatmapPageProps> = (props) => {
         const freeCashFlow = hm[1]
         const shsWeightedOut = hm[2]
         const cashAndShortTermInvestments = hm[3]
-        // (Current Period Revenue – Previous Period Revenue) / Previous Period Revenue
-        //  https://financialmodelingprep.com/api/v3/income-statement-growth/AAPL?apikey=9ef6523fd6e3c14ad46caf2464984c05 
         const revenueGrowth = hm[4]
         const grossProfit = hm[5]
         const costOfRevenue = hm[6]
@@ -59,40 +67,125 @@ const Index: React.FC<HeatmapPageProps> = (props) => {
         const totalNonCurrentAssets = hm[14]
         const totalCurrentAssets = hm[15]
 
-        data.map((value) => {
-            netProfitMargin.data.push({ x: value.date, y: value.netProfitMargin })
-            debtToEquity.data.push({ x: value.date, y: value.debtEquityRatio })
-            freeCashFlow.data.push({ x: value.date, y: value.freeCashFlowPerShare })
+        ratio.map((value, index) => {
+            netProfitMargin.data.push({ x: value.date, y: value.netProfitMargin, val: value.netProfitMargin })
+            debtToEquity.data.push(
+                {
+                    x: value.date,
+                    y: percentage(ratio, index, "debtEquityRatio"),
+                    val: value.debtEquityRatio
+                })
+            freeCashFlow.data.push({
+                x: value.date,
+                y: percentage(ratio, index, "freeCashFlowPerShare"),
+                val: value.freeCashFlowPerShare
+            })
         })
 
         if (!income) { return hm }
 
-        income.map((value) => {
-            ebitda.data.push({ x: value.date, y: value.ebitda })
-            grossProfit.data.push({ x: value.date, y: value.grossProfit })
-            costOfRevenue.data.push({ x: value.date, y: value.costOfRevenue })
-            revenue.data.push({ x: value.date, y: value.revenue })
-            operatingIncome.data.push({ x: value.date, y: value.operatingIncome })
-            netIncome.data.push({ x: value.date, y: value.netIncome })
-            shsWeightedOut.data.push({ x: value.date, y: value.weightedAverageShsOut })
+        income.map((value, index) => {
+            revenueGrowth.data.push({
+                x: value.date,
+                y: percentage(income, index, "revenue"),
+                val: value.revenue
+            })
 
-            cashAndShortTermInvestments.data.push({ x: value.date, y: 0 })
-            totalNonCurrentLiabilities.data.push({ x: value.date, y: 0 })
-            totalCurrentLiabilities.data.push({ x: value.date, y: 0 })
-            totalNonCurrentAssets.data.push({ x: value.date, y: 0})
-            totalCurrentAssets.data.push({ x: value.date, y: 0 })
+            grossProfit.data.push({
+                x: value.date,
+                y: percentage(income, index, "grossProfit"),
+                val: value.grossProfit
+            })
+
+            costOfRevenue.data.push({
+                x: value.date,
+                y: percentage(income, index, "costOfRevenue"),
+                val: value.costOfRevenue
+            })
+
+            revenue.data.push({
+                x: value.date,
+                y: percentage(income, index, "revenue"),
+                val: value.revenue
+            })
+
+            ebitda.data.push({
+                x: value.date,
+                y: percentage(income, index, "ebitda"),
+                val: value.ebitda
+            })
+
+            operatingIncome.data.push({
+                x: value.date,
+                y: percentage(income, index, "operatingIncome"),
+                val: value.operatingIncome
+            })
+
+            netIncome.data.push({
+                x: value.date,
+                y: percentage(income, index, "netIncome"),
+                val: value.netIncome
+            })
+
+            shsWeightedOut.data.push({
+                x: value.date,
+                y: percentage(income, index, "weightedAverageShsOut"),
+                val: value.weightedAverageShsOut
+            })
         })
 
-        // Calculate revenue growth
-        income.map((v, i, t) => {
-            const revenueGrowthPercentage =
-                (i == t.length - 1)
-                    ? 0
-                    : (v.revenue - t[i + 1].revenue) / t[i + 1].revenue
-            revenueGrowth.data.push({ x: v.date, y: revenueGrowthPercentage*100 })
+        if (!balance) {
+            return hm
+        }
+
+        balance.map((value, index) => {
+            cashAndShortTermInvestments.data.push(
+                {
+                    x: value.date,
+                    y: percentage(balance, index, "cashAndShortTermInvestments"),
+                    val: value.cashAndShortTermInvestments
+                }
+            )
+
+            totalNonCurrentLiabilities.data.push(
+                {
+                    x: value.date,
+                    y: percentage(balance, index, "totalNonCurrentLiabilities"),
+                    val: value.totalNonCurrentLiabilities
+                }
+            )
+
+            totalCurrentLiabilities.data.push(
+                {
+                    x: value.date,
+                    y: percentage(balance, index, "totalCurrentLiabilities"),
+                    val: value.totalCurrentLiabilities
+                }
+            )
+
+            totalNonCurrentAssets.data.push(
+                {
+                    x: value.date,
+                    y: percentage(balance, index, "totalNonCurrentAssets"),
+                    val: value.totalNonCurrentAssets
+                }
+            )
+
+            totalCurrentAssets.data.push(
+                {
+                    x: value.date,
+                    y: percentage(balance, index, "totalCurrentAssets"),
+                    val: value.totalCurrentAssets
+                }
+            )
         })
 
-        return hm;
+        // Remove the last entry, because it only served
+        // for the calculation of the last value.
+        return hm.map((value) => {
+            value.data.pop()
+            return value
+        })
     }
 
     const ratioQuery = useQuery<IRatio[]>(
@@ -111,6 +204,7 @@ const Index: React.FC<HeatmapPageProps> = (props) => {
             retry: false,
         }
     )
+
     const incomeStatementQuery = useQuery<IIncomeStatement[]>(
         [
             queryKeyIncome,
@@ -118,14 +212,27 @@ const Index: React.FC<HeatmapPageProps> = (props) => {
         ],
         fetchIncomeStatement as any,
         {
-            enabled: Boolean(symbol && exchange),
+            enabled: Boolean(ratioQuery.isFetched),
             retry: false,
         }
     )
 
-    const heatmap = useMemo(
-        () => buildHeatMapFromRatioData(ratioQuery.data, incomeStatementQuery.data), 
-        [periodType]
+    const balanceSheetQuery = useQuery<IBalanceSheetStatement[]>(
+        [
+            queryKeyBalanceSheet,
+            { exchange, symbol, periodType, limit }
+        ],
+        fetchBalanceSheetStatement as any,
+        {
+            enabled: Boolean(incomeStatementQuery.isFetched),
+            retry: false
+        }
+    )
+
+    const heatmap = buildHeatmapFromRatioData(
+        ratioQuery.data,
+        incomeStatementQuery.data,
+        balanceSheetQuery.data
     )
 
     console.log(heatmap);
@@ -146,8 +253,11 @@ const Index: React.FC<HeatmapPageProps> = (props) => {
             <SelectPeriod></SelectPeriod>
             {/* <HugeHeader padding={0} bold={false}>{exchange}:{symbol}</HugeHeader> */}
             <HugeHeader>Heatmap</HugeHeader>
-            <div className="lg:w-[80vh] lg:h-[80vh] min-w-full min-h-full h-96 w-96 border-2 border-sky-500 border-solid">
-                <HeatmapChart heatmap={heatmap} />
+            <div className="lg:w-[80vh] lg:h-[80vh] min-w-full min-h-full text-center h-96 w-[100rem]">
+                {(ratioQuery.isLoading || incomeStatementQuery.isLoading) ?
+                    (<Spinner width={24} height={24} />) :
+                    (<HeatmapChart heatmap={heatmap} />)
+                }
             </div>
         </Hero>
     </>

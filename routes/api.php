@@ -30,6 +30,7 @@ const FMP_RATIOS_QTR = 'https://financialmodelingprep.com/api/v3/ratios/%s?limit
 const FMP_PROFILE = 'https://financialmodelingprep.com/api/v3/profile/%s?apikey=%s';
 const FMP_INCOME_STATEMENT = 'https://financialmodelingprep.com/api/v3/income-statement/%s?apikey=%s&limit=%s';
 const FMP_KEY_METRICS = 'https://financialmodelingprep.com/api/v3/key-metrics%s/%s?apikey=%s&limit=%s';
+const FMP_BALANCE_SHEET = 'https://financialmodelingprep.com/api/v3/balance-sheet-statement/%s?apikey=%s&limit=%s';
 
 Route::get('/tickers', function (Request $request) {
     return response()->json(
@@ -176,6 +177,56 @@ Route::get('/security/{exchange}/{security}/profitability/period/{period}/limit/
     }
 
     $data = $response->json();
+    if (count($data) === 0) {
+       return response()->json(['error' => 'Resource not found'], Response::HTTP_NOT_FOUND);
+    }
+
+    Cache::put($key, json_encode($data));
+
+    return response()->json($data, Response::HTTP_CREATED);
+});
+
+
+//
+// Balance sheet (for heatmap)
+//
+// https://financialmodelingprep.com/api/v3/balance-sheet-statement/AAPL?apikey=YOUR_API_KEY&limit=120'
+Route::get('/security/{exchange}/{security}/balance-sheet/period/{period}/limit/{limit}', function(Request $request) {
+    $key = join(
+        '_', [
+        'security', 
+        'balance-sheet', 
+        strtolower($request->exchange),
+        strtolower($request->security),
+        strtolower($request->period),
+        $request->limit ?? 1
+    ]);
+
+    $cachedBalanceSheet = Cache::get($key);
+
+    if (isset($cachedBalanceSheet)) {
+        return response()->json(json_decode($cachedBalanceSheet), Response::HTTP_OK);
+    }
+
+    $endpoint = sprintf(
+        FMP_BALANCE_SHEET,
+        strtoupper($request->security),
+        env('FMP_API_KEY'),
+        $request->limit ?? 1
+    );
+
+    if (strtolower($request->period) === "qtr") {
+        $endpoint .= "&period=quarter";
+    }
+
+    $response = Http::acceptJson()->get($endpoint);
+
+    if (!$response->ok()) {
+        return $response->throw()->json();
+    }
+
+    $data = $response->json();
+
     if (count($data) === 0) {
        return response()->json(['error' => 'Resource not found'], Response::HTTP_NOT_FOUND);
     }

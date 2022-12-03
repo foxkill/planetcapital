@@ -21,7 +21,7 @@ function getHeatMap(): IHeatmapData[] {
         },
         {
             // 2
-            id: "Shares (Basic, Weighted)",
+            id: "Shares Outstanding",
             data: [],
             format: "m"
         },
@@ -87,7 +87,7 @@ function getHeatMap(): IHeatmapData[] {
         },
         {
             // 13
-            id: "Total current Liabilities",
+            id: "Total current liabilities",
             data: [],
             format: "m"
         },

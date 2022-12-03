@@ -10,7 +10,6 @@ import { ResponsiveBar, BarDatum } from "@nivo/bar"
 import { IKeyMetric } from "@/types/key-metric"
 import { Bar } from "@nivo/bar";
 import { timeFormat, timeParse } from "d3-time-format"
-import { BADQUERY, BADRESP } from "dns";
 import { PaletteColors } from "react-palette";
 
 interface ExtendedHistoryChartProps {
