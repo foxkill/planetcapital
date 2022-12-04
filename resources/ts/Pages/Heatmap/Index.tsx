@@ -13,7 +13,7 @@ import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod"
 import HeatmapChart from "@/Shared/Charts/HeatmapChart"
 import getHeatMap from "@/utils/heatmap"
 import IRatio from "@/types/ratio"
-import { useQueries, UseQueryResult } from "react-query"
+import { useQueries } from "react-query"
 import fetchFinancialRatios from "@/planetapi/fetch.financialratios"
 import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
 import IIncomeStatement from "@/types/income-statement"
@@ -40,11 +40,9 @@ function buildHeatmapFromRatioData(
     income: IIncomeStatement[] | undefined | null,
     balance: IBalanceSheetStatement[] | undefined | null): IHeatmapData[] {
 
-    console.log(ratio, income, balance);
-
-
     if (!ratio || ratio.length === 0 || !ratio.map) { return [] }
     if (!income) { return [] }
+    if (!balance ) { return [] }
 
     const hm = getHeatMap();
 
@@ -65,6 +63,8 @@ function buildHeatmapFromRatioData(
     const totalNonCurrentAssets = hm[14]
     const totalCurrentAssets = hm[15]
 
+    console.count("Sorry, doing a recalculation...");
+    
     ratio.map((value, index) => {
         netProfitMargin.data.push({ x: value.date, y: value.netProfitMargin, val: value.netProfitMargin })
         debtToEquity.data.push(
@@ -79,8 +79,6 @@ function buildHeatmapFromRatioData(
             val: value.freeCashFlowPerShare
         })
     })
-
-    if (!income) { return hm }
 
     income.map((value, index) => {
         revenueGrowth.data.push({
@@ -132,10 +130,6 @@ function buildHeatmapFromRatioData(
         })
     })
 
-    if (!balance) {
-        return hm
-    }
-
     balance.map((value, index) => {
         cashAndShortTermInvestments.data.push(
             {
@@ -186,43 +180,51 @@ function buildHeatmapFromRatioData(
     })
 }
 
-const useHeatmap = (exchange: string, symbol: string, periodType: string): { 
+const useHeatmap = (exchange: string, symbol: string, periodType: string): {
     isLoading: boolean,
     error: boolean,
-    results: UseQueryResult[] } => {
+    heatmap: IHeatmapData[]
+} => {
     const queryKeyRatio = ["ratios", exchange, symbol, periodType].join("-").toLocaleLowerCase()
     const queryKeyIncome = ["income", exchange, symbol, periodType].join("-").toLocaleLowerCase()
     const queryKeyBalanceSheet = ["balance", exchange, symbol, periodType].join("-").toLocaleLowerCase()
+    const limit = 10 + 1
+    const params = { symbol, exchange, periodType, limit }
 
     const queries = useQueries(
         [
             {
-                queryKey: [queryKeyRatio],
+                queryKey: [queryKeyRatio, params],
                 queryFn: fetchFinancialRatios,
-                retry: false
             },
             {
-                queryKey: [queryKeyIncome],
+                queryKey: [queryKeyIncome, params],
                 queryFn: fetchIncomeStatement,
-                retry: false
             },
             {
-                queryKey: [queryKeyBalanceSheet],
+                queryKey: [queryKeyBalanceSheet, params],
                 queryFn: fetchBalanceSheetStatement,
-                retry: false
             },
         ],
     );
-    
-    const results = useMemo(() => { return queries }, [queries])
+
+    const heatmap = useMemo(() => { 
+        return buildHeatmapFromRatioData(
+            queries[0].data as IRatio[],
+            queries[1].data as IIncomeStatement[],
+            queries[2].data as IBalanceSheetStatement[],
+        )
+    }, [queries])
+
+    // allDone = queries.every(q => q.isSuccess)
     const isLoading = !!queries.find(q => q.isFetching)
     const error = !!queries.find(q => q.isError)
 
-    return {results, error, isLoading}
+    return { heatmap, error, isLoading }
 }
 
 const Index: IPage<IHeatmapPageProps> = () => {
-    const [heatmap, setHeatmap] = useState<IHeatmapData[]>([])
+    // const [heatmap, setHeatmap] = useState<IHeatmapData[]>([])
     const ctx = useSecurity()
     const { exchange, symbol, periodType, companyName } = ctx.context
 
@@ -231,6 +233,8 @@ const Index: IPage<IHeatmapPageProps> = () => {
         symbol,
         periodType
     )
+
+    const heatmap = result.heatmap
 
     return (<>
         <Hero height={20}>
@@ -251,8 +255,8 @@ const Index: IPage<IHeatmapPageProps> = () => {
             {/* <HugeHeader padding={0} bold={false}>{exchange}:{symbol}</HugeHeader> */}
             <div className="lg:w-[80vh] lg:h-[80vh] min-w-full min-h-full text-center h-96 w-[100rem]">
                 {
-                    (result.error) ? 
-                        (<div>Es ist ein Fehler aufgetreten</div>) : 
+                    (result.error) ?
+                        (<div>Es ist ein Fehler aufgetreten</div>) :
                         ((result.isLoading) ? (<Spinner width={24} height={24} />) : (<HeatmapChart heatmap={heatmap} />))
                 }
             </div>

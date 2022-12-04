@@ -9,7 +9,7 @@ import IIncomeStatement from "@/types/income-statement";
 import { AxiosResponse } from "axios";
 import { get } from "./axios.get";
 
-function fetchIncomeStatement({queryKey}): Promise<IIncomeStatement> {
+function fetchIncomeStatement({queryKey}): Promise<IIncomeStatement[]> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, { symbol, exchange, periodType, limit }] = queryKey
 
@@ -19,8 +19,8 @@ function fetchIncomeStatement({queryKey}): Promise<IIncomeStatement> {
 
     const endpoint = `/api/security/${exchange.toLowerCase()}/${symbol.toLowerCase()}/income-statement/period/${periodType.toLowerCase()}/limit/${limit}`
 
-    return get<IIncomeStatement>(endpoint)
-        .then((response: AxiosResponse<IIncomeStatement>) => response.data)
+    return get<IIncomeStatement[]>(endpoint)
+        .then((response: AxiosResponse<IIncomeStatement[]>) => response.data)
         .catch((err) => {
             throw err
         })
