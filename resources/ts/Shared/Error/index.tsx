@@ -4,4 +4,5 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-export { default } from "./Footer"
+
+export { default } from "./Error"

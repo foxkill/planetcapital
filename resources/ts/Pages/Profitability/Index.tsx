@@ -5,7 +5,6 @@
 // Closed Source
 //
 import fetchKeyMetrics from "@/planetapi/fetch.key-metrics"
-import { HistoryChart, LineItemChart } from "@/Shared/Charts"
 import ExtendedHistoryChart from "@/Shared/Charts/ExtendedHistoryChart"
 import CompanyInfo from "@/Shared/CompanyInfo"
 import Hero from "@/Shared/Hero"

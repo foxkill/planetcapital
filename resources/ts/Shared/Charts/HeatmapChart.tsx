@@ -12,11 +12,17 @@ type HeatmapChartData = {
     heatmap: IHeatmapData[]
 }
 
-const HeatmapChart: React.FC<HeatmapChartData> = (props): JSX.Element => {
+const HeatmapChart: React.FC<HeatmapChartData> = (props): JSX.Element | null => {
+    if (!props.heatmap || props.heatmap.length === 0) {
+        return null
+    }
+
     return (<>
         <ResponsiveHeatMap data={props.heatmap}
             // cellComponent="circle"
-            tooltip={(tt): JSX.Element|null => {
+            borderRadius={1}
+            xOuterPadding={0.2}
+            tooltip={(tt): JSX.Element | null => {
                 if (!tt) {
                     return null;
                 }
@@ -25,10 +31,10 @@ const HeatmapChart: React.FC<HeatmapChartData> = (props): JSX.Element => {
                     <>
                         <div className="alert shadow-lg">
                             <div>
-                                <div className="w-4 h-4" style={{backgroundColor:tt.cell.color, border: "1px solid " + tt.cell.borderColor}}></div>
+                                <div className="w-4 h-4" style={{ backgroundColor: tt.cell.color, border: "1px solid " + tt.cell.borderColor }}></div>
                                 {/* <svg xmlns="http://www.w3.org/2000/svg" fill={tt.cell.color} viewBox="0 0 24 24" className="stroke-info flex-shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> */}
                                 <div>
-                                    {tt.cell.serieId}: 
+                                    {tt.cell.serieId}:
                                 </div>
                                 <div className="font-bold">
                                     {moneyformat(tt.cell.data.val, false, 3) + " "}
@@ -72,7 +78,7 @@ const HeatmapChart: React.FC<HeatmapChartData> = (props): JSX.Element => {
                     case "Total current assets":
                         // console.log(d, d.serieId)
                         let value = (d.value ?? 0) * 100
-                        return ((value < 0) ? "(" + (-1*value).toFixed(2)  + "%)" : value.toFixed(2)+"%")
+                        return ((value < 0) ? "(" + (-1 * value).toFixed(2) + "%)" : value.toFixed(2) + "%")
                         return ((d.value ?? 0) * 100).toFixed(2) + "%"
                     default:
                         return moneyformat(d.value, false, 0)
@@ -104,28 +110,30 @@ const HeatmapChart: React.FC<HeatmapChartData> = (props): JSX.Element => {
             }}
             colors={{
                 type: "diverging",
+                // type: "quantize",
                 scheme: "red_yellow_green",
-                divergeAt: 0.6,
+                divergeAt: 0.33,
+                steps: 12
                 // minValue: -100,
                 // maxValue: 100,
             }}
             emptyColor="#555555"
-            // legends={[{
-            //     anchor: "bottom",
-            //     translateX: 0,
-            //     translateY: 30,
-            //     length: 400,
-            //     thickness: 8,
-            //     direction: "row",
-            //     tickPosition: "after",
-            //     tickSize: 3,
-            //     tickSpacing: 4,
-            //     tickOverlap: false,
-            //     tickFormat: ">-.2s",
-            //     title: "Value →",
-            //     titleAlign: "start",
-            //     titleOffset: 4
-            // }]}
+        // legends={[{
+        //     anchor: "bottom",
+        //     translateX: 0,
+        //     translateY: 30,
+        //     length: 400,
+        //     thickness: 8,
+        //     direction: "row",
+        //     tickPosition: "after",
+        //     tickSize: 3,
+        //     tickSpacing: 4,
+        //     tickOverlap: false,
+        //     tickFormat: ">-.2s",
+        //     title: "Value →",
+        //     titleAlign: "start",
+        //     titleOffset: 4
+        // }]}
         //     labelTextColor={{
         //         from: "color",
         //         modifiers: [
