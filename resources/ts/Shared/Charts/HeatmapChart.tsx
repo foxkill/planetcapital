@@ -7,6 +7,7 @@
 import React from "react"
 import { ResponsiveHeatMap } from "@nivo/heatmap"
 import moneyformat from "@/utils/moneyformat"
+import { IHeatmapData } from "@/types/iheatmapdata"
 
 type HeatmapChartData = {
     heatmap: IHeatmapData[]
@@ -18,7 +19,8 @@ const HeatmapChart: React.FC<HeatmapChartData> = (props): JSX.Element | null => 
     }
 
     return (<>
-        <ResponsiveHeatMap data={props.heatmap}
+        <ResponsiveHeatMap
+            data={props.heatmap}
             // cellComponent="circle"
             borderRadius={1}
             xOuterPadding={0.2}
@@ -30,16 +32,18 @@ const HeatmapChart: React.FC<HeatmapChartData> = (props): JSX.Element | null => 
                 return (
                     <>
                         <div className="alert shadow-lg">
-                            <div>
-                                <div className="w-4 h-4" style={{ backgroundColor: tt.cell.color, border: "1px solid " + tt.cell.borderColor }}></div>
-                                {/* <svg xmlns="http://www.w3.org/2000/svg" fill={tt.cell.color} viewBox="0 0 24 24" className="stroke-info flex-shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> */}
+                            <div className="flex items-center gap-2">
                                 <div>
-                                    {tt.cell.serieId}:
-                                </div>
-                                <div className="font-bold">
-                                    {moneyformat(tt.cell.data.val, false, 3) + " "}
-                                </div>
-                                <div>
+                                    <div className="min-w-full pb-1">
+                                        <div className="align-middle inline-block w-4 h-4" style={{ backgroundColor: tt.cell.color, border: "1px solid " + tt.cell.borderColor }}>
+                                        </div>
+                                        <div className="inline-block leading-4 align-middle indent-2">{tt.cell.data.x}</div>
+                                    </div>
+                                    <hr className="border-1 border-slate-300 pb-1"></hr>
+                                    <div className="text-xs">{tt.cell.serieId}</div>
+                                    <div className="font-bold">
+                                        {moneyformat(tt.cell.data.value, false, 3) + " "}
+                                    </div>
                                     {tt.cell.label}
                                 </div>
                             </div>
@@ -47,42 +51,20 @@ const HeatmapChart: React.FC<HeatmapChartData> = (props): JSX.Element | null => 
                     </>
                 )
             }}
-            cellBorderWidth={2}
-            cellBorderColor={{ from: "color", modifiers: [["darker", 0.5]] }}
+            // cellBorderWidth={2}
+            // cellBorderColor={{ from: "color", modifiers: [["darker", 0.5]] }}
             forceSquare={false}
             hoverTarget="rowColumn"
             motionConfig="wobbly"
-            motionStiffness={80}
-            motionDamping={9}
-            cellHoverOthersOpacity={0.25}
+            // motionStiffness={80}
+            // motionDamping={9}
+            // cellHoverOthersOpacity={0.25}
             margin={{ top: 90, right: 10, bottom: 10, left: 130 }}
             // valueFormat=">-.2s"
+            labelTextColor={{ from: "color", modifiers: [["darker", 4]] }}
             label={(d): string => {
-                // console.log(d)
-                switch (d.serieId) {
-                    case "Debt/Equity":
-                    case "Shares Outstanding":
-                    case "Revenue Growth":
-                    case "Net Profit Margin":
-                    case "Free Cash Flow":
-                    case "Cash & Short Term Investments":
-                    case "Gross Profit":
-                    case "Cost of Revenue":
-                    case "Revenue":
-                    case "EBITDA":
-                    case "Operating Income":
-                    case "Net Income":
-                    case "Total non-current liabilities":
-                    case "Total current liabilities":
-                    case "Total non-current assets":
-                    case "Total current assets":
-                        // console.log(d, d.serieId)
-                        let value = (d.value ?? 0) * 100
-                        return ((value < 0) ? "(" + (-1 * value).toFixed(2) + "%)" : value.toFixed(2) + "%")
-                        return ((d.value ?? 0) * 100).toFixed(2) + "%"
-                    default:
-                        return moneyformat(d.value, false, 0)
-                }
+                let value = (d.value ?? 0) * 100
+                return ((value < 0) ? "(" + (-1 * value).toFixed(2) + "%)" : value.toFixed(2) + "%")
             }}
             axisTop={{
                 tickSize: 5,
