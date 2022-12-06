@@ -4,4 +4,4 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //	
-export { default } from './CompanyInfo'
+export { default } from "./CompanyInfo"
