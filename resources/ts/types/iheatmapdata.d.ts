@@ -5,8 +5,15 @@
 // Closed Source
 //
 
-declare interface IHeatmapData {
-    id: string,
-    data: object[]
-    format: string
+import { HeatMapDatum, HeatMapSerie } from "@nivo/heatmap";
+
+interface PlanetHeatMapDatum extends HeatMapDatum {
+    value: number
+}
+
+interface PlanetHeatMapExtraProps {
+    key: string
+}
+
+declare interface IHeatmapData extends HeatMapSerie<PlanetHeatMapDatum, PlanetHeatMapExtraProps> {
 }

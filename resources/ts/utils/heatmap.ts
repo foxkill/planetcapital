@@ -5,103 +5,111 @@
 // Closed Source
 //
 
+import { IHeatmapData } from "@/types/iheatmapdata"
+
+
+/**
+ * Return an empty heatmap data array.
+ * 
+ * @returns IHeatmapData[]
+ */
 function getHeatMap(): IHeatmapData[] {
     return [
         {
             // 0
             id: "Net Profit Margin",
             data: [],
-            format: "p"
+            key: "netProfitMargin"
         },
         {
             // 1
             id: "Free Cash Flow",
             data: [],
-            format: "m"
+            key: "freeCashFlowPerShare"
         },
         {
             // 2
             id: "Shares Outstanding",
             data: [],
-            format: "m"
+            key: "weightedAverageShsOut"
         },
         {
             // 3
             id: "Cash & Short Term Investments",
             data: [],
-            format: "m"
+            key: "cashAndShortTermInvestments"
         },
         {
             // 4
             id: "Revenue Growth",
             data: [],
-            format: "p"
+            key: "revenue"
         },
         {
             // 5
             id: "Gross Profit",
             data: [],
-            format: "m"
+            key: "grossProfit"
         },
         {
             // 6
             id: "Cost of Revenue",
             data: [],
-            format: "m"
+            key: "costOfRevenue"
         },
         {
             // 7
             id: "Revenue",
             data: [],
-            format: "m"
+            key: "reneue"
         },
         {
             // 8
             id: "EBITDA",
             data: [],
-            format: "m"
+            key: "ebitda"
         },
         {
             // 9
             id: "Operating Income",
             data: [],
-            format: "m"
+            key: "operatingIncome"
         },
         {
             // 10
             id: "Net Income",
             data: [],
-            format: "m"
+            key: "netIncome"
         },
         {
             // 11
             id: "Debt/Equity",
             data: [],
-            format: "s"
+            key: "debtEquityRatio"
         },
         {
             // 12
             id: "Total non-current liabilities",
             data: [],
-            format: "m"
+            key: "totalNonCurrentLiabilities"
         },
         {
             // 13
             id: "Total current liabilities",
             data: [],
-            format: "m"
+            key: "totalCurrentLiabilities"
         },
         {
             // 14
             id: "Total non-current assets",
             data: [],
-            format: "m"
+            key: "totalNonCurrentAssets"
         },
         {
             // 15
             id: "Total current assets",
             data: [],
-            format: "m"
+            key: "totalCurrentAssets"
         },
     ]
 }

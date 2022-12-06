@@ -8,7 +8,7 @@
 declare interface IRatio {
     id?: number
     symbol: string;
-    date: Date;
+    date: string;
     period: string;
     currentRatio: number;
     quickRatio: number;
