@@ -4,7 +4,7 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-import React, { useMemo, useState } from "react"
+import React from "react"
 import Hero from "@/Shared/Hero"
 import HugeHeader from "@/Shared/HugeHeader"
 import CompanyInfo from "@/Shared/CompanyInfo"
@@ -21,6 +21,7 @@ import fetchIncomeStatement from "@/planetapi/fetch.income-statement"
 import Spinner from "@/Shared/Spinner"
 import fetchBalanceSheetStatement from "@/planetapi/fetch.balance-sheet-statement"
 import Layout from "@/Shared/Layout"
+import { IHeatmapData } from "@/types/iheatmapdata"
 
 interface IHeatmapPageProps {
     symbol: string
@@ -32,20 +33,24 @@ interface IPage<P extends IHeatmapPageProps> extends React.FC<P> {
 }
 
 function percentage(data: object[], index: number, key: string): number {
-    return (index == data.length - 1) ? 0 : (data[index][key] - data[index + 1][key]) / data[index + 1][key]
+    // if(lastyear>0,(thisyear/lastyear-1),((thisyear+abs(lastyear)/abs(lastyear))
+    // if (index == data.length - 1) { return 0 }
+    // const prevValue = data[index + 1][key]
+    // const curValue = data[index][key]
+
+    // if (prevValue > 0) {
+    //     return (curValue/prevValue) - 1
+    // }
+
+    // return curValue + Math.abs(prevValue) / Math.abs(prevValue)
+    return (index == data.length - 1) ? 0 : (data[index][key] - data[index + 1][key]) / Math.abs(data[index + 1][key])
 }
 
-function buildHeatmapFromRatioData(
+function buildHeatmapFromRatioData(hm: IHeatmapData[],
     ratio: IRatio[] | undefined | null,
     income: IIncomeStatement[] | undefined | null,
-    balance: IBalanceSheetStatement[] | undefined | null): IHeatmapData[] {
-
-    if (!ratio || ratio.length === 0 || !ratio.map) { return [] }
-    if (!income) { return [] }
-    if (!balance ) { return [] }
-
-    const hm = getHeatMap();
-
+    balance: IBalanceSheetStatement[] | undefined | null): void {
+    // const hm = getHeatMap();
     const netProfitMargin = hm[0]
     const freeCashFlow = hm[1]
     const shsWeightedOut = hm[2]
@@ -63,121 +68,157 @@ function buildHeatmapFromRatioData(
     const totalNonCurrentAssets = hm[14]
     const totalCurrentAssets = hm[15]
 
-    console.count("Sorry, doing a recalculation...");
-    
-    ratio.map((value, index) => {
-        netProfitMargin.data.push({ x: value.date, y: value.netProfitMargin, val: value.netProfitMargin })
-        debtToEquity.data.push(
-            {
+
+    const ratios = [netProfitMargin, debtToEquity, freeCashFlow]
+
+    // Work on ratio?
+    if (ratio && ratio.length && ratio.map) {
+        ratio.map((value, index) => {
+            netProfitMargin.data.push({
+                x: value.date,
+                y: value.netProfitMargin,
+                value: value.netProfitMargin
+            })
+            debtToEquity.data.push({
                 x: value.date,
                 y: percentage(ratio, index, "debtEquityRatio"),
-                val: value.debtEquityRatio
+                value: value.debtEquityRatio
             })
-        freeCashFlow.data.push({
-            x: value.date,
-            y: percentage(ratio, index, "freeCashFlowPerShare"),
-            val: value.freeCashFlowPerShare
-        })
-    })
-
-    income.map((value, index) => {
-        revenueGrowth.data.push({
-            x: value.date,
-            y: percentage(income, index, "revenue"),
-            val: value.revenue
-        })
-
-        grossProfit.data.push({
-            x: value.date,
-            y: percentage(income, index, "grossProfit"),
-            val: value.grossProfit
-        })
-
-        costOfRevenue.data.push({
-            x: value.date,
-            y: percentage(income, index, "costOfRevenue"),
-            val: value.costOfRevenue
-        })
-
-        revenue.data.push({
-            x: value.date,
-            y: percentage(income, index, "revenue"),
-            val: value.revenue
-        })
-
-        ebitda.data.push({
-            x: value.date,
-            y: percentage(income, index, "ebitda"),
-            val: value.ebitda
-        })
-
-        operatingIncome.data.push({
-            x: value.date,
-            y: percentage(income, index, "operatingIncome"),
-            val: value.operatingIncome
-        })
-
-        netIncome.data.push({
-            x: value.date,
-            y: percentage(income, index, "netIncome"),
-            val: value.netIncome
-        })
-
-        shsWeightedOut.data.push({
-            x: value.date,
-            y: percentage(income, index, "weightedAverageShsOut"),
-            val: value.weightedAverageShsOut
-        })
-    })
-
-    balance.map((value, index) => {
-        cashAndShortTermInvestments.data.push(
-            {
+            freeCashFlow.data.push({
                 x: value.date,
-                y: percentage(balance, index, "cashAndShortTermInvestments"),
-                val: value.cashAndShortTermInvestments
-            }
-        )
+                y: percentage(ratio, index, "freeCashFlowPerShare"),
+                value: value.freeCashFlowPerShare
+            })
+        })
+        ratios.map(v => v.data.pop())
+    }
 
-        totalNonCurrentLiabilities.data.push(
-            {
+    if (income && income.length && income.map) {
+        const incomes = [
+            revenueGrowth,
+            grossProfit,
+            costOfRevenue,
+            revenue,
+            ebitda,
+            operatingIncome,
+            netIncome,
+            shsWeightedOut,
+        ]
+        // console.count("Sorry, doing a recalculation on IIncome");
+        income.map((value, index) => {
+            revenueGrowth.data.push({
                 x: value.date,
-                y: percentage(balance, index, "totalNonCurrentLiabilities"),
-                val: value.totalNonCurrentLiabilities
-            }
-        )
+                y: percentage(income, index, "revenue"),
+                value: value.revenue
+            })
 
-        totalCurrentLiabilities.data.push(
-            {
+            grossProfit.data.push({
                 x: value.date,
-                y: percentage(balance, index, "totalCurrentLiabilities"),
-                val: value.totalCurrentLiabilities
-            }
-        )
+                y: percentage(income, index, "grossProfit"),
+                value: value.grossProfit
+            })
 
-        totalNonCurrentAssets.data.push(
-            {
+            costOfRevenue.data.push({
                 x: value.date,
-                y: percentage(balance, index, "totalNonCurrentAssets"),
-                val: value.totalNonCurrentAssets
-            }
-        )
+                y: percentage(income, index, "costOfRevenue"),
+                value: value.costOfRevenue
+            })
 
-        totalCurrentAssets.data.push(
-            {
+            revenue.data.push({
                 x: value.date,
-                y: percentage(balance, index, "totalCurrentAssets"),
-                val: value.totalCurrentAssets
-            }
-        )
-    })
+                y: percentage(income, index, "revenue"),
+                value: value.revenue
+            })
+
+            ebitda.data.push({
+                x: value.date,
+                y: percentage(income, index, "ebitda"),
+                value: value.ebitda
+            })
+
+            operatingIncome.data.push({
+                x: value.date,
+                y: percentage(income, index, "operatingIncome"),
+                value: value.operatingIncome
+            })
+
+            netIncome.data.push({
+                x: value.date,
+                y: percentage(income, index, "netIncome"),
+                value: value.netIncome
+            })
+
+            shsWeightedOut.data.push({
+                x: value.date,
+                y: percentage(income, index, "weightedAverageShsOut"),
+                value: value.weightedAverageShsOut
+            })
+        })
+
+        incomes.map(v => v.data.pop())
+    }
+
+    if (balance && balance.length && balance.map) {
+        console.count("Sorry, doing a recalculation on IBalance");
+        const balances = [
+            cashAndShortTermInvestments, 
+            totalNonCurrentLiabilities, 
+            totalCurrentLiabilities,
+            totalNonCurrentAssets,
+            totalCurrentAssets
+        ]
+
+        balance.map((value, index) => {
+            cashAndShortTermInvestments.data.push(
+                {
+                    x: value.date,
+                    y: percentage(balance, index, "cashAndShortTermInvestments"),
+                    value: value.cashAndShortTermInvestments
+                }
+            )
+
+            totalNonCurrentLiabilities.data.push(
+                {
+                    x: value.date,
+                    y: percentage(balance, index, "totalNonCurrentLiabilities"),
+                    value: value.totalNonCurrentLiabilities
+                }
+            )
+
+            totalCurrentLiabilities.data.push(
+                {
+                    x: value.date,
+                    y: percentage(balance, index, "totalCurrentLiabilities"),
+                    value: value.totalCurrentLiabilities
+                }
+            )
+
+            totalNonCurrentAssets.data.push(
+                {
+                    x: value.date,
+                    y: percentage(balance, index, "totalNonCurrentAssets"),
+                    value: value.totalNonCurrentAssets
+                }
+            )
+
+            totalCurrentAssets.data.push(
+                {
+                    x: value.date,
+                    y: percentage(balance, index, "totalCurrentAssets"),
+                    value: value.totalCurrentAssets
+                }
+            )
+        })
+
+        balances.map(v => v.data.pop())
+    }
 
     // Remove the last entry, because it only served
     // for the calculation of the last value.
-    return hm.map((value) => {
-        value.data.pop()
-        return value
-    })
+    // return hm.map((value) => {
+    //     value.data.pop()
+    //     return value
+    // })
 }
 
 const useHeatmap = (exchange: string, symbol: string, periodType: string): {
@@ -191,36 +232,36 @@ const useHeatmap = (exchange: string, symbol: string, periodType: string): {
     const limit = 10 + 1
     const params = { symbol, exchange, periodType, limit }
 
+    let hm = getHeatMap()
+
     const queries = useQueries(
         [
             {
                 queryKey: [queryKeyRatio, params],
+                select: (data: IRatio[]) => buildHeatmapFromRatioData(hm, data, null, null),
+                enabled: Boolean(symbol && exchange),
                 queryFn: fetchFinancialRatios,
             },
             {
                 queryKey: [queryKeyIncome, params],
+                select: (data: IIncomeStatement[]) => buildHeatmapFromRatioData(hm, null, data, null),
+                enabled: Boolean(symbol && exchange),
                 queryFn: fetchIncomeStatement,
             },
             {
                 queryKey: [queryKeyBalanceSheet, params],
+                select: (data: IBalanceSheetStatement[]) => buildHeatmapFromRatioData(hm, null, null, data),
+                enabled: Boolean(symbol && exchange),
                 queryFn: fetchBalanceSheetStatement,
             },
         ],
     );
 
-    const heatmap = useMemo(() => { 
-        return buildHeatmapFromRatioData(
-            queries[0].data as IRatio[],
-            queries[1].data as IIncomeStatement[],
-            queries[2].data as IBalanceSheetStatement[],
-        )
-    }, [queries])
-
     // allDone = queries.every(q => q.isSuccess)
     const isLoading = !!queries.find(q => q.isFetching)
     const error = !!queries.find(q => q.isError)
 
-    return { heatmap, error, isLoading }
+    return { heatmap: hm, error, isLoading }
 }
 
 const Index: IPage<IHeatmapPageProps> = () => {
