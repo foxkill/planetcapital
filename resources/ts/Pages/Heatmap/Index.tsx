@@ -86,8 +86,8 @@ function buildHeatmapFromRatioData(hm: IHeatmapData[],
             })
             freeCashFlow.data.push({
                 x: value.date,
-                y: percentage(ratio, index, "freeCashFlowPerShare"),
-                value: value.freeCashFlowPerShare
+                y: percentage(ratio, index, "priceToFreeCashFlowsRatio"),
+                value: value.priceToFreeCashFlowsRatio
             })
         })
         ratios.map(v => v.data.pop())
@@ -159,7 +159,6 @@ function buildHeatmapFromRatioData(hm: IHeatmapData[],
     }
 
     if (balance && balance.length && balance.map) {
-        console.count("Sorry, doing a recalculation on IBalance");
         const balances = [
             cashAndShortTermInvestments, 
             totalNonCurrentLiabilities, 
@@ -212,13 +211,6 @@ function buildHeatmapFromRatioData(hm: IHeatmapData[],
 
         balances.map(v => v.data.pop())
     }
-
-    // Remove the last entry, because it only served
-    // for the calculation of the last value.
-    // return hm.map((value) => {
-    //     value.data.pop()
-    //     return value
-    // })
 }
 
 const useHeatmap = (exchange: string, symbol: string, periodType: string): {

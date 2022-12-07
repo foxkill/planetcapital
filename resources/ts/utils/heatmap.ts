@@ -7,7 +7,6 @@
 
 import { IHeatmapData } from "@/types/iheatmapdata"
 
-
 /**
  * Return an empty heatmap data array.
  * 
@@ -23,9 +22,9 @@ function getHeatMap(): IHeatmapData[] {
         },
         {
             // 1
-            id: "Free Cash Flow",
+            id: "Price to Free Cash Flow Ratio",
             data: [],
-            key: "freeCashFlowPerShare"
+            key: "priceToFreeCashFlowsRatio"
         },
         {
             // 2
