@@ -10,7 +10,7 @@ import { QueryClient } from "react-query"
 export default new QueryClient({
     defaultOptions: {
         queries: {
-            //other query settings
+            // Other query settings.
             refetchOnWindowFocus: false,
         },
     },

@@ -78,10 +78,11 @@ const LineItem: IPage<ILineItemProps> = (props) => {
 
     const { data } = usePalette(`/api/security/${exchange}/${symbol}/image`)
 
-    const periodTypeMap = get_period_type_map() 
+    const periodTypeMap = get_period_type_map()
 
+    const incomeStatementQueryKey = [symbol, exchange, period, limit].join("-").toLowerCase()
     const incomeStatementQuery = useQuery<IIncomeStatement[]>(
-        [[symbol, exchange, period, limit].join("-"), { exchange, symbol, period, limit }],
+        [incomeStatementQueryKey, { exchange, symbol, periodType: period, limit }],
         fetchIncomeStatement as any,
         {
             enabled: Boolean(symbol && exchange),
@@ -89,9 +90,10 @@ const LineItem: IPage<ILineItemProps> = (props) => {
         }
     )
 
+    const profileQueryKey = ["profile", symbol, exchange].join("-").toLowerCase()
     const profileQuery = useQuery<IProfile>(
         [
-            ["profile", symbol, exchange].join("-"),
+            profileQueryKey,
             { symbol, exchange }
         ],
         fetchProfile,
@@ -148,17 +150,18 @@ const LineItem: IPage<ILineItemProps> = (props) => {
                                     header={toLineItem(lineitem) + " (" + periodTypeMap[period] + ")"}
                                     subheader={profileQuery.data?.companyName || ""}
                                     image={`/api/security/${profileQuery.data?.exchangeShortName.toLowerCase()}/${profileQuery.data?.symbol.toLowerCase()}/image`}>
-                                    <LineItemChart
-                                        periodType={period}
-                                        incomeStatements={incomeStatementQuery.data!} 
-                                        lineitem={dataKey} 
-                                        palette={data}
-                                    >{toLineItem(lineitem)}</LineItemChart>
+                                    <div className="h-96 w-full">
+                                        <LineItemChart
+                                            periodType={period}
+                                            incomeStatements={incomeStatementQuery.data!}
+                                            lineitem={dataKey}
+                                            palette={data}
+                                        >{toLineItem(lineitem)}</LineItemChart>
+                                    </div>
                                 </InfoCard>
                             </>
                         )
                     }
-
                 </div>
             </Hero>
         </>

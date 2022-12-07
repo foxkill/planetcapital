@@ -5,7 +5,7 @@
 // Closed Source
 //
 import React from "react"
-import { Sankey } from "@nivo/sankey"
+import { ResponsiveSankey, Sankey } from "@nivo/sankey"
 import IIncomeStatement from "@/types/income-statement"
 import moneyformat from "@/utils/moneyformat"
 
@@ -88,7 +88,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
 
     const c = idata.nodes.map((n) => n.nodeColor)
     
-    return <Sankey
+    return <ResponsiveSankey
         nodeTooltip={(nd): JSX.Element => {
             const { node } = nd
             const fmt = moneyformat(node.value)
@@ -121,7 +121,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
         // colorsBy={node => {console.log(node); return node.color}}
         data={idata}
         animate
-        margin={{ top: 5, right: 0, bottom: 5, left: 0 }}
+        margin={{ top: 0, right: 0, bottom: 20, left: 0 }}
         align="justify"
         colors={c}
         nodeOpacity={1}
@@ -156,7 +156,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
                     1
                 ]
             ]
-        }} height={400} width={500}></Sankey>
+        }}></ResponsiveSankey>
 }
 
 export default IncomeStatementChart 

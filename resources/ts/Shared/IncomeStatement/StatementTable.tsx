@@ -16,8 +16,8 @@ const StatementTable: React.FC<IStatementTableProps> = (props) => {
     const incomeStatement = props.incomeStatements[0]
 
     return (
-        <div className="pl-2 verflow-x-auto w-full">
-            <table className="table w-full text-slate-500">
+        <div className="pl-2 overflow-x-auto w-full h-full">
+            <table className="table w-full h-full text-slate-500">
                 <tbody>
                     <tr className="hover">
                         <th className="hover rounded-none">Revenue</th>

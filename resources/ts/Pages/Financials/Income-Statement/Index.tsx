@@ -44,9 +44,10 @@ const Index: React.FC<IIncomeStatementProps> = () => {
         limit *= 2
     }
 
+    const profileQueryKey = ["profile", symbol, exchange].join("-").toLocaleLowerCase()
     const profileQuery = useQuery<IProfile>(
         [
-            ["profile", symbol, exchange].join("-"),
+            profileQueryKey,
             { symbol, exchange }
         ],
         fetchProfile,
@@ -56,8 +57,9 @@ const Index: React.FC<IIncomeStatementProps> = () => {
         }
     )
 
+    const incomeStatementQueryKey = [symbol, exchange, period, limit].join("-").toLocaleLowerCase()
     const incomeStatementQuery = useQuery<IIncomeStatement[]>(
-        [[symbol, exchange, period, limit].join("-"), { exchange, symbol, period, limit }],
+        [incomeStatementQueryKey, { exchange, symbol, periodType: period, limit }],
         fetchIncomeStatement as any,
         {
             enabled: Boolean(symbol && exchange),
@@ -71,9 +73,9 @@ const Index: React.FC<IIncomeStatementProps> = () => {
                 <div className="text-sm breadcrumbs">
                     <ul>
                         {/* Goes to summary */}
-                        <li><a>{symbol.toUpperCase()}</a></li>
+                        <li><Link href="/">{symbol.toUpperCase()}</Link></li>
                         { /* Goes to parent */}
-                        <li><Link href={route("security.financials.incomestatement", { exchange, symbol })}>Financials</Link></li>
+                        {/* <li><Link href={route("security.financials.incomestatement", { exchange, symbol })}>Financials</Link></li> */}
                         <li>Income Statement</li>
                     </ul>
                 </div>
@@ -100,7 +102,6 @@ const Index: React.FC<IIncomeStatementProps> = () => {
                                         colSpan={"col-span-1 lg:col-span-3"}
                                         header={"Earnings Sankey Graph"}
                                         subheader={profileQuery.data?.companyName || ""}
-                                        // image={profileQuery.data?.image || undefined}
                                         image={`/api/security/${profileQuery.data?.exchangeShortName.toLowerCase()}/${profileQuery.data?.symbol.toLowerCase()}/image`}
                                         icon={<WaterfallImage width={30} height={30} />}>
                                         <IncomeStatementChart primaryColor={data.vibrant ?? "#00f"} data={incomeStatementQuery.data} />
