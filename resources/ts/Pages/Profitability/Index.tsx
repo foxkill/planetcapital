@@ -44,9 +44,10 @@ const Index: IPage<IProfitabilityPageProps> = () => {
 
     const { data } = usePalette(`/api/security/${exchange}/${symbol}/image`)
 
+    const keyMetricsQueryKey = ["key-metrics", symbol, exchange, periodType, limit].join("-").toLowerCase()
     const keyMetricsQuery = useQuery<IKeyMetric[]>(
         [
-            ["key-metrics", symbol, exchange, periodType, limit].join("-").toLowerCase(),
+            keyMetricsQueryKey,
             { symbol, exchange, periodType, limit }
         ],
         fetchKeyMetrics,
@@ -84,7 +85,7 @@ const Index: IPage<IProfitabilityPageProps> = () => {
                                     metrics={keyMetricsQuery.data!}
                                     metricKey={"roe"}
                                     periodType={periodType}
-                                    colors={data}
+                                    palette={data}
                                 >43</ExtendedHistoryChart>
                             </InfoCard>
                             <InfoCard
@@ -96,20 +97,20 @@ const Index: IPage<IProfitabilityPageProps> = () => {
                                     metrics={keyMetricsQuery.data!}
                                     metricKey={"roic"}
                                     periodType={periodType}
-                                    colors={data}
+                                    palette={data}
                                 >9</ExtendedHistoryChart>
                             </InfoCard>
                             <InfoCard
                                 colSpan={"col-span-1 lg:col-span-3"}
-                                header={"P/S"}
+                                header={"ROCE"}
                                 subheader={companyName}
                                 image={`/api/security/${exchange.toLocaleLowerCase()}/${symbol.toLowerCase()}/image`}>
                                 <ExtendedHistoryChart
                                     metrics={keyMetricsQuery.data!}
-                                    metricKey={"priceToSalesRatio"}
+                                    metricKey={"roa"}
                                     periodType={periodType}
-                                    colors={data}
-                                >3.9</ExtendedHistoryChart>
+                                    palette={data}
+                                >3</ExtendedHistoryChart>
                             </InfoCard>
                         </>
                     )

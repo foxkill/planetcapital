@@ -71,7 +71,7 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
             if (null === timerange) {
                 return <></>
             }
-            const tmr =  formatTime(timerange)
+            const tmr = formatTime(timerange)
             const background = props.palette.darkMuted
             const color = props.palette.lightVibrant
             const delimterColor = props.palette.lightMuted

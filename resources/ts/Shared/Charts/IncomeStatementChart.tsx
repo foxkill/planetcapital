@@ -8,6 +8,7 @@ import React from "react"
 import { ResponsiveSankey, Sankey } from "@nivo/sankey"
 import IIncomeStatement from "@/types/income-statement"
 import moneyformat from "@/utils/moneyformat"
+import { PaletteColors } from "react-palette"
 
 interface IIncomeStatementProps {
     primaryColor: string
@@ -116,7 +117,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
                     </div>
                 </div>
             </>
-        } }
+        }}
         // label={(d) => d.id + " (" + moneyformat(d.value) + ")"}
         // colorsBy={node => {console.log(node); return node.color}}
         data={idata}
