@@ -18,7 +18,7 @@ import Spinner from "@/Shared/Spinner"
 import { LineItemAverageKind, StatementCardAverage } from "@/Shared/StatementCard"
 import IIncomeStatement from "@/types/income-statement"
 import { IProfile } from "@/types/profile"
-import get_period_type_map from "@/utils/periodtypemap"
+import getPeriodTypeMap from "@/utils/periodtypemap"
 import { Link } from "@inertiajs/inertia-react"
 import React from "react"
 import { usePalette } from "react-palette"
@@ -67,6 +67,9 @@ interface IPage<P extends ILineItemProps> extends React.FC<P> {
     layout?: (page: React.ReactNode) => JSX.Element
 }
 
+//
+// Financials - Income-Statement - LineItem
+//
 const LineItem: IPage<ILineItemProps> = (props) => {
     // eslint-disable-next-line react/prop-types
     const { symbol, exchange, lineitem } = props
@@ -78,7 +81,7 @@ const LineItem: IPage<ILineItemProps> = (props) => {
 
     const { data } = usePalette(`/api/security/${exchange}/${symbol}/image`)
 
-    const periodTypeMap = get_period_type_map()
+    const periodTypeMap = getPeriodTypeMap()
 
     const incomeStatementQueryKey = [symbol, exchange, period, limit].join("-").toLowerCase()
     const incomeStatementQuery = useQuery<IIncomeStatement[]>(
