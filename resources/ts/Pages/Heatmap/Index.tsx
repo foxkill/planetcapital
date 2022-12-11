@@ -4,24 +4,24 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-import React from "react"
+import fetchBalanceSheetStatement from "@/planetapi/fetch.balance-sheet-statement"
+import fetchFinancialRatios from "@/planetapi/fetch.financialratios"
+import fetchIncomeStatement from "@/planetapi/fetch.income-statement"
+import HeatmapChart from "@/Shared/Charts/HeatmapChart"
+import CompanyInfo from "@/Shared/CompanyInfo"
 import Hero from "@/Shared/Hero"
 import HugeHeader from "@/Shared/HugeHeader"
-import CompanyInfo from "@/Shared/CompanyInfo"
-import { Link } from "@inertiajs/inertia-react"
-import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod"
-import HeatmapChart from "@/Shared/Charts/HeatmapChart"
-import getHeatMap from "@/utils/heatmap"
-import IRatio from "@/types/ratio"
-import { useQueries } from "react-query"
-import fetchFinancialRatios from "@/planetapi/fetch.financialratios"
-import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
-import IIncomeStatement from "@/types/income-statement"
-import fetchIncomeStatement from "@/planetapi/fetch.income-statement"
-import Spinner from "@/Shared/Spinner"
-import fetchBalanceSheetStatement from "@/planetapi/fetch.balance-sheet-statement"
 import Layout from "@/Shared/Layout"
+import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
+import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod"
+import Spinner from "@/Shared/Spinner"
 import { IHeatmapData } from "@/types/iheatmapdata"
+import IIncomeStatement from "@/types/income-statement"
+import IRatio from "@/types/ratio"
+import getHeatMap from "@/utils/heatmap"
+import { Link } from "@inertiajs/inertia-react"
+import React from "react"
+import { useQueries } from "react-query"
 
 interface IHeatmapPageProps {
     symbol: string
@@ -256,6 +256,9 @@ const useHeatmap = (exchange: string, symbol: string, periodType: string): {
     return { heatmap: hm, error, isLoading }
 }
 
+//
+// Heatmap
+//
 const Index: IPage<IHeatmapPageProps> = () => {
     // const [heatmap, setHeatmap] = useState<IHeatmapData[]>([])
     const ctx = useSecurity()
@@ -279,14 +282,12 @@ const Index: IPage<IHeatmapPageProps> = () => {
                 </ul>
             </div>
         </Hero>
-
         <Hero>
-            <HugeHeader>{companyName}</HugeHeader>
+            <HugeHeader color="text-slate-400" bold={false} padding={0}>{companyName}</HugeHeader>
             <HugeHeader>Heatmap</HugeHeader>
-            <CompanyInfo></CompanyInfo>
-            <SelectPeriod></SelectPeriod>
-            {/* <HugeHeader padding={0} bold={false}>{exchange}:{symbol}</HugeHeader> */}
-            <div className="lg:w-[80vh] lg:h-[80vh] min-w-full min-h-full text-center h-96 w-[100rem]">
+            <CompanyInfo />
+            <SelectPeriod />
+            <div className="lg:w-[100vh] lg:h-[80vh] min-w-full min-h-full text-center h-96 w-96">
                 {
                     (result.error) ?
                         (<div>Es ist ein Fehler aufgetreten</div>) :
