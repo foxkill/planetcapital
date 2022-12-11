@@ -4,21 +4,16 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-import fetchKeyMetrics from "@/planetapi/fetch.key-metrics"
-import ExtendedHistoryChart from "@/Shared/Charts/ExtendedHistoryChart"
 import CompanyInfo from "@/Shared/CompanyInfo"
 import Hero from "@/Shared/Hero"
 import HugeHeader from "@/Shared/HugeHeader"
-import InfoCard from "@/Shared/InfoCard"
 import Layout from "@/Shared/Layout"
+import Margins from "@/Shared/Margins"
 import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
 import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod"
-import Spinner from "@/Shared/Spinner"
-import { IKeyMetric } from "@/types/key-metric"
 import { Link } from "@inertiajs/inertia-react"
 import React from "react"
 import { usePalette } from "react-palette"
-import { useQuery } from "react-query"
 
 interface IProfitabilityPageProps {
     symbol: string
@@ -28,34 +23,44 @@ interface IProfitabilityPageProps {
 interface IPage<P extends IProfitabilityPageProps> extends React.FC<P> {
     layout?: (page: React.ReactNode) => JSX.Element
 }
+
 //
 // Profitability Page
 //
-const Index: IPage<IProfitabilityPageProps> = () => {
+const Index: IPage<IProfitabilityPageProps> = (props) => {
     const ctx = useSecurity()
+    let { exchange, symbol, periodType, companyName } = ctx.context
 
-    const { exchange, symbol, periodType, companyName } = ctx.context
+    if (!symbol) {
+        // eslint-disable-next-line react/prop-types
+        symbol = props.symbol
+    }
 
+    if (!exchange) {
+        // eslint-disable-next-line react/prop-types
+        exchange = props.exchange
+    }
     let limit = 11
 
     if (periodType === "QTR") {
+        // For the TTM calculation.
         limit += 4;
     }
 
+    // ebit / (totalAsset - totalCurrentLiabilities)
     const { data } = usePalette(`/api/security/${exchange}/${symbol}/image`)
 
-    const keyMetricsQueryKey = ["key-metrics", symbol, exchange, periodType, limit].join("-").toLowerCase()
-    const keyMetricsQuery = useQuery<IKeyMetric[]>(
-        [
-            keyMetricsQueryKey,
-            { symbol, exchange, periodType, limit }
-        ],
-        fetchKeyMetrics,
-        {
-            enabled: Boolean(symbol && exchange),
-            retry: false,
-        }
-    )
+    const returns = [
+        { metric: "ROE", metricKey: "returnOnEquity" },
+        { metric: "ROA", metricKey: "returnOnAssets" },
+        { metric: "ROCE", metricKey: "returnOnCapitalEmployed" },
+    ]
+
+    const margins = [
+        { metric: "Gross Profit Margin", metricKey: "grossProfitMargin" },
+        { metric: "Operating Margin", metricKey: "operatingProfitMargin" },
+        { metric: "Net Margin", metricKey: "netProfitMargin" }
+    ]
 
     return (
         <>
@@ -70,51 +75,30 @@ const Index: IPage<IProfitabilityPageProps> = () => {
                 </div>
             </Hero>
             <Hero onTop>
+                <HugeHeader color="text-slate-500" bold={false} padding={0}>{companyName}</HugeHeader>
                 <HugeHeader>Profitability</HugeHeader>
                 <CompanyInfo />
                 <SelectPeriod />
-                {keyMetricsQuery.isLoading ? (<Spinner />) :
-                    (
-                        <>
-                            <InfoCard
-                                colSpan={"col-span-1 lg:col-span-3"}
-                                header={"ROE"}
-                                subheader={companyName}
-                                image={`/api/security/${exchange.toLocaleLowerCase()}/${symbol.toLowerCase()}/image`}>
-                                <ExtendedHistoryChart
-                                    metrics={keyMetricsQuery.data!}
-                                    metricKey={"roe"}
-                                    periodType={periodType}
-                                    palette={data}
-                                >43</ExtendedHistoryChart>
-                            </InfoCard>
-                            <InfoCard
-                                colSpan={"col-span-1 lg:col-span-3"}
-                                header={"ROIC"}
-                                subheader={companyName}
-                                image={`/api/security/${exchange.toLocaleLowerCase()}/${symbol.toLowerCase()}/image`}>
-                                <ExtendedHistoryChart
-                                    metrics={keyMetricsQuery.data!}
-                                    metricKey={"roic"}
-                                    periodType={periodType}
-                                    palette={data}
-                                >9</ExtendedHistoryChart>
-                            </InfoCard>
-                            <InfoCard
-                                colSpan={"col-span-1 lg:col-span-3"}
-                                header={"ROCE"}
-                                subheader={companyName}
-                                image={`/api/security/${exchange.toLocaleLowerCase()}/${symbol.toLowerCase()}/image`}>
-                                <ExtendedHistoryChart
-                                    metrics={keyMetricsQuery.data!}
-                                    metricKey={"roa"}
-                                    periodType={periodType}
-                                    palette={data}
-                                >3</ExtendedHistoryChart>
-                            </InfoCard>
-                        </>
-                    )
-                }
+                <div className="grid grid-cols-1 items-center lg:grid-cols-3 gap-4 w-full">
+                    <Margins
+                        symbol={symbol}
+                        exchange={exchange}
+                        periodType={periodType}
+                        limit={11}
+                        companyName={companyName}
+                        palette={data}
+                        metrics={margins}
+                    />
+                    <Margins
+                        symbol={symbol}
+                        exchange={exchange}
+                        periodType={periodType}
+                        limit={11}
+                        companyName={companyName}
+                        palette={data}
+                        metrics={returns}
+                    />
+                </div>
             </Hero>
         </>
     )
