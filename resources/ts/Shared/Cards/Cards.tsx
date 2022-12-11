@@ -55,7 +55,8 @@ export function Cards(props: ICardsProperties): JSX.Element | null {
                     ) : (
                         props.valuations.map((value) => {
                             const [key, val] = Object.entries(value)[0]
-                            return <Card type={context.periodType} key={key} ikey={val} data={ratioQuery.data as IRatio}>{key}</Card>
+                            const data = ratioQuery.data ? ratioQuery.data[0] : []
+                            return <Card type={context.periodType} key={key} ikey={val} data={data as IRatio}>{key}</Card>
                         })
                     )
                 }
