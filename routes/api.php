@@ -3,6 +3,8 @@
 use App\Http\Controllers\Api\IncomeStatements;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Api\CompanyImage;
+use App\Http\Controllers\Api\RelativeValuations;
+use App\Http\Controllers\RatiosController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache;
@@ -41,66 +43,7 @@ Route::get('/tickers', function (Request $request) {
 //
 // Relative Valuation
 //
-Route::get('/security/{exchange}/{security}/relative-valuation/{period}/limit/{limit}', function (Request $request) {
-    $periodsUrl = [
-        'fy' => FMP_RATIOS_FY,
-        'ttm' => FMP_RATIOS_TTM,
-        'qtr' => FMP_RATIOS_QTR,
-    ];
-
-    $period = strtolower($request->period);
-
-    $key = join(
-        '_',
-        [
-            'security',
-            'ratios',
-            // TODO: check valid period.
-            strtolower($request->period),
-            strtolower($request->security),
-            $request->limit ?? 1,
-        ]
-    );
-
-    $cachedSecurity = Redis::get($key);
-
-    // Use cached entry if available.
-    if (isset($cachedSecurity)) {
-        $data = json_decode($cachedSecurity);
-        if (count($data) == 1) {
-            $data = $data[0];
-        }
-        return response()->json($data, Response::HTTP_OK);
-    }
-
-    // Build the endpoint.
-    $endpoint = sprintf(
-        $periodsUrl[$period],
-        strtoupper($request->security),
-        $request->limit ?? 1,
-        env('FMP_API_KEY')
-    );
-
-
-    $response = Http::acceptJson()->get($endpoint);
-
-    if ($response->ok()) {
-        $data = $response->json();
-        $count = count($data);
-
-        if ($count) {
-            Redis::set($key, json_encode($data));
-
-            if (count($data) == 1) {
-                $data = $data[0];
-            }
-
-            return response()->json($data, Response::HTTP_CREATED);
-        }
-    }
-
-    $response->throw()->json();
-});
+Route::get('/security/{exchange}/{security}/relative-valuation/{period}/limit/{limit}', [RelativeValuations::class, 'index']);
 
 //
 // Profile
@@ -141,16 +84,18 @@ Route::get('/security/{exchange}/{security}/income-statement/period/{period}/lim
 //
 // Profitability
 // 
-Route::get('/security/{exchange}/{security}/profitability/period/{period}/limit/{limit}', function(Request $request) {
+Route::get('/security/{exchange}/{security}/profitability/period/{period}/limit/{limit}', function (Request $request) {
     $key = join(
-        '_', [
-        'security', 
-        'key-metrics', 
-        strtolower($request->exchange),
-        strtolower($request->security),
-        strtolower($request->period),
-        $request->limit ?? 1
-    ]);
+        '_',
+        [
+            'security',
+            'key-metrics',
+            strtolower($request->exchange),
+            strtolower($request->security),
+            strtolower($request->period),
+            $request->limit ?? 1
+        ]
+    );
 
     $cachedKeyMetrics = Cache::get($key);
 
@@ -178,7 +123,7 @@ Route::get('/security/{exchange}/{security}/profitability/period/{period}/limit/
 
     $data = $response->json();
     if (count($data) === 0) {
-       return response()->json(['error' => 'Resource not found'], Response::HTTP_NOT_FOUND);
+        return response()->json(['error' => 'Resource not found'], Response::HTTP_NOT_FOUND);
     }
 
     Cache::put($key, json_encode($data));
@@ -191,16 +136,18 @@ Route::get('/security/{exchange}/{security}/profitability/period/{period}/limit/
 // Balance sheet (for heatmap)
 //
 // https://financialmodelingprep.com/api/v3/balance-sheet-statement/AAPL?apikey=YOUR_API_KEY&limit=120'
-Route::get('/security/{exchange}/{security}/balance-sheet/period/{period}/limit/{limit}', function(Request $request) {
+Route::get('/security/{exchange}/{security}/balance-sheet/period/{period}/limit/{limit}', function (Request $request) {
     $key = join(
-        '_', [
-        'security', 
-        'balance-sheet', 
-        strtolower($request->exchange),
-        strtolower($request->security),
-        strtolower($request->period),
-        $request->limit ?? 1
-    ]);
+        '_',
+        [
+            'security',
+            'balance-sheet',
+            strtolower($request->exchange),
+            strtolower($request->security),
+            strtolower($request->period),
+            $request->limit ?? 1
+        ]
+    );
 
     $cachedBalanceSheet = Cache::get($key);
 
@@ -228,7 +175,7 @@ Route::get('/security/{exchange}/{security}/balance-sheet/period/{period}/limit/
     $data = $response->json();
 
     if (count($data) === 0) {
-       return response()->json(['error' => 'Resource not found'], Response::HTTP_NOT_FOUND);
+        return response()->json(['error' => 'Resource not found'], Response::HTTP_NOT_FOUND);
     }
 
     Cache::put($key, json_encode($data));
