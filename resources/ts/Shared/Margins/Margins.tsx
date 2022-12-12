@@ -40,27 +40,29 @@ const Margins: React.FC<IMarginProps> = (props) => {
         }
     )
 
-    return ratiosQuery.isLoading
-        ? (<div><Spinner width={24} height={24} /></div>)
-        : (<>{
-            metrics.map((value, index) => {
-                return (
-                    <InfoCard
-                        key={index}
-                        header={value.metric}
-                        subheader={companyName}
-                        image={`/api/security/${exchange.toLocaleLowerCase()}/${symbol.toLowerCase()}/image`}>
-                        <ExtendedHistoryChart
-                            metric={value.metric}
-                            metrics={ratiosQuery.data!}
-                            metricKey={value.metricKey}
-                            periodType={periodType}
-                            palette={palette}
-                        ></ExtendedHistoryChart>
-                    </InfoCard>
-                )
-            })
-        }</>)
+    return (<>{
+        metrics.map((value, index) => {
+            return (
+                <InfoCard
+                    key={index}
+                    header={value.metric}
+                    subheader={companyName}
+                    image={`/api/security/${exchange.toLocaleLowerCase()}/${symbol.toLowerCase()}/image`}>
+                    {
+                        ratiosQuery.isLoading
+                            ? (<div className="w-96 h-52 min-w-full text-center pt-12"><Spinner width={24} height={24} /></div>)
+                            : (<ExtendedHistoryChart
+                                metric={value.metric}
+                                metrics={ratiosQuery.data!}
+                                metricKey={value.metricKey}
+                                periodType={periodType}
+                                palette={palette}
+                            />)
+                    }
+                </InfoCard>
+            )
+        })
+    }</>)
 }
 
 export default Margins

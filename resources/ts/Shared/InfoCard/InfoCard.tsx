@@ -14,9 +14,10 @@ interface InfoCardProperties {
     subheader: string
     icon?: React.ReactNode
     image?: string | undefined
+    stacked?: boolean
 }
 
-function InfoCard({ children, colSpan, header: caption, subheader, icon, image }: InfoCardProperties): JSX.Element {
+function InfoCard({ children, colSpan, header: caption, subheader, icon, image, stacked }: InfoCardProperties): JSX.Element {
     const cs = colSpan ?? ""
     return (
         <div className={`card card-bordered bg-base-100 pt-2 pr-2 ${cs}`}>
@@ -32,12 +33,12 @@ function InfoCard({ children, colSpan, header: caption, subheader, icon, image }
                 </h2>
                 {image &&
                     <div>
-                        <img className="" id="company-logo" src={image} width="32" height="32"></img>
+                        <img className="" id="company-logo" src={image} width="48" height="48"></img>
                     </div>
                 }
             </figure>
             <hr className="mt-1"></hr>
-            <div className="card-body items-center">
+            <div className={`card-body items-center ${stacked ? "flex-row" : ""}`}>
                 {children}
             </div>
         </div>

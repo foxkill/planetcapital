@@ -11,19 +11,23 @@ import moneyformat from "@/utils/moneyformat"
 import { PaletteColors } from "react-palette"
 
 interface IIncomeStatementProps {
-    primaryColor: string
+    palette: PaletteColors
     data: IIncomeStatement[]
 }
 
 const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
-    const { data, primaryColor } = props
+    const { data, palette } = props
+
+    if (!data || data.length == 0) {
+        return <></>
+    }
     const incomestatement = data[0]
-    
+
     const idata = {
         "nodes": [
             {
                 id: "Revenue",
-                nodeColor: primaryColor,
+                nodeColor: palette.vibrant,
                 fixedValue: incomestatement.revenue,
             },
             {
@@ -88,7 +92,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
     }
 
     const c = idata.nodes.map((n) => n.nodeColor)
-    
+
     return <ResponsiveSankey
         nodeTooltip={(nd): JSX.Element => {
             const { node } = nd
@@ -104,7 +108,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
                     </div>
                 </>
             )
-        } }
+        }}
         // valueFormat={"$,"}
         linkTooltip={(nd): JSX.Element => {
             const { source, target } = nd.link

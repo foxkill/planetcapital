@@ -18,9 +18,10 @@ import { StatementCard } from "@/Shared/StatementCard"
 import fetchProfile from "@/planetapi/fetch.profile"
 import { IncomeStatementChart } from "@/Shared/Charts"
 import IIncomeStatement from "@/types/income-statement"
-import fetchIncomeStatement from "@/planetapi/fetch.income-statement"
-import WaterfallImage from "@/Shared/Images/WaterfallImage"
 import { StatementTable } from "@/Shared/IncomeStatement"
+import WaterfallImage from "@/Shared/Images/WaterfallImage"
+import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod"
+import fetchIncomeStatement from "@/planetapi/fetch.income-statement"
 import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
 
 interface IIncomeStatementProps {
@@ -81,37 +82,61 @@ const Index: React.FC<IIncomeStatementProps> = () => {
                 </div>
             </Hero>
             <Hero>
+                <HugeHeader color="text-slate-500" bold={false} padding={0}>{profileQuery.data?.companyName}</HugeHeader>
                 <HugeHeader>Income Statement</HugeHeader>
-                {
-                    incomeStatementQuery.isLoading ? (
-                        <div className="text-center w-full lg:col-span-4 md:col-span-3">
-                            <Spinner height={24} width={24}></Spinner>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 w-full">
-                                <StatementCard caption={"Revenue"} data={incomeStatementQuery.data!}>revenue</StatementCard>
-                                <StatementCard caption={"Gross Profit"} data={incomeStatementQuery.data!}>grossProfit</StatementCard>
-                                <StatementCard caption={"Operating Income"} data={incomeStatementQuery.data!}>operatingIncome</StatementCard>
-                                <StatementCard caption={"Net Income"} data={incomeStatementQuery.data!}>netIncome</StatementCard>
-                            </div>
-                            <div className="grid grid-cols-1 gap-8 w-full h-[40rem]">
-                                {
-                                    !incomeStatementQuery.isError && incomeStatementQuery.data &&
-                                    <InfoCard
-                                        colSpan={"col-span-1 lg:col-span-3"}
-                                        header={"Earnings Sankey Graph"}
-                                        subheader={profileQuery.data?.companyName || ""}
-                                        image={`/api/security/${profileQuery.data?.exchangeShortName.toLowerCase()}/${profileQuery.data?.symbol.toLowerCase()}/image`}
-                                        icon={<WaterfallImage width={30} height={30} />}>
-                                        <IncomeStatementChart primaryColor={data.vibrant ?? "#00f"} data={incomeStatementQuery.data} />
-                                        <StatementTable incomeStatements={incomeStatementQuery.data} />
-                                    </InfoCard>
-                                }
-                            </div>
-                        </>
-                    )
-                }
+                <SelectPeriod></SelectPeriod>
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 w-full">
+                    <StatementCard
+                        caption={"Revenue"}
+                        data={incomeStatementQuery.data!}
+                        isLoading={incomeStatementQuery.isLoading}
+                        dataKey="revenue">
+                        <Spinner width={24} height={24}></Spinner>
+                    </StatementCard>
+                    <StatementCard
+                        caption={"Gross Profit"}
+                        data={incomeStatementQuery.data!}
+                        isLoading={incomeStatementQuery.isLoading}
+                        dataKey={"grossProfit"}>
+                        <Spinner></Spinner>
+                    </StatementCard>
+                    <StatementCard
+                        caption={"Operating Income"}
+                        data={incomeStatementQuery.data!}
+                        isLoading={incomeStatementQuery.isLoading}
+                        dataKey={"operatingIncome"}>
+                        <Spinner></Spinner>
+                    </StatementCard>
+                    <StatementCard
+                        caption={"Net Income"}
+                        data={incomeStatementQuery.data!}
+                        isLoading={incomeStatementQuery.isLoading}
+                        dataKey={"netIncome"}>
+                        <Spinner></Spinner>
+                    </StatementCard>
+                </div>
+                <div className="grid grid-cols-1 gap-8 w-full h-full">
+                    <InfoCard
+                        stacked
+                        colSpan={"col-span-1 lg:col-span-3"}
+                        header={"Earnings Sankey Graph"}
+                        subheader={profileQuery.data?.companyName || ""}
+                        image={`/api/security/${profileQuery.data?.exchangeShortName.toLowerCase()}/${profileQuery.data?.symbol.toLowerCase()}/image`}
+                        icon={<WaterfallImage width={30} height={30} />}>
+                        {
+                            incomeStatementQuery.isLoading
+                                ? (<div className="flex w-full h-96 justify-center items-center"><Spinner width={48} height={48}></Spinner></div>)
+                                : (<>
+                                    <div className="w-1/2 h-full">
+                                        <IncomeStatementChart palette={data} data={incomeStatementQuery.data || []} />
+                                    </div>
+                                    <div className="w-1/2 h-full">
+                                        <StatementTable incomeStatements={incomeStatementQuery.data || []} />
+                                    </div></>
+                                )
+                        }
+                    </InfoCard>
+                </div>
             </Hero>
         </Layout>
     )

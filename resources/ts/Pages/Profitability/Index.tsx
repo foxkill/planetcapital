@@ -40,8 +40,8 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
         // eslint-disable-next-line react/prop-types
         exchange = props.exchange
     }
-    let limit = 11
 
+    let limit = 11
     if (periodType === "QTR") {
         // For the TTM calculation.
         limit += 4;
@@ -84,7 +84,7 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         symbol={symbol}
                         exchange={exchange}
                         periodType={periodType}
-                        limit={11}
+                        limit={limit}
                         companyName={companyName}
                         palette={data}
                         metrics={margins}
@@ -93,7 +93,7 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         symbol={symbol}
                         exchange={exchange}
                         periodType={periodType}
-                        limit={11}
+                        limit={limit}
                         companyName={companyName}
                         palette={data}
                         metrics={returns}

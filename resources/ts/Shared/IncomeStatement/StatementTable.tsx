@@ -13,6 +13,10 @@ interface IStatementTableProps {
 }
 
 const StatementTable: React.FC<IStatementTableProps> = (props) => {
+    if (!props.incomeStatements || props.incomeStatements.length == 0) {
+        return <></>
+    }
+
     const incomeStatement = props.incomeStatements[0]
 
     return (
