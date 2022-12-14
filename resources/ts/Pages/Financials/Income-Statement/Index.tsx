@@ -45,7 +45,7 @@ const Index: React.FC<IIncomeStatementProps> = () => {
         limit *= 2
     }
 
-    const profileQueryKey = ["profile", symbol, exchange].join("-").toLocaleLowerCase()
+    const profileQueryKey = ["profile", symbol, exchange, period].join("-").toLocaleLowerCase()
     const profileQuery = useQuery<IProfile>(
         [
             profileQueryKey,
@@ -58,7 +58,7 @@ const Index: React.FC<IIncomeStatementProps> = () => {
         }
     )
 
-    const incomeStatementQueryKey = [symbol, exchange, period, limit].join("-").toLocaleLowerCase()
+    const incomeStatementQueryKey = ["income-statement", symbol, exchange, period, limit].join("-").toLocaleLowerCase()
     const incomeStatementQuery = useQuery<IIncomeStatement[]>(
         [incomeStatementQueryKey, { exchange, symbol, periodType: period, limit }],
         fetchIncomeStatement as any,
@@ -67,6 +67,13 @@ const Index: React.FC<IIncomeStatementProps> = () => {
             retry: false,
         }
     )
+
+    const statements: Record<string, { caption: string }>[] = [
+        { revenue: { caption: "Revenue" } },
+        { grossProfit: { caption: "Gross Profit" } },
+        { operatingIncome: { caption: "Operating Income" } },
+        { netIncome: { caption: "Net Income" } },
+    ]
 
     return (
         <Layout>
@@ -81,39 +88,27 @@ const Index: React.FC<IIncomeStatementProps> = () => {
                     </ul>
                 </div>
             </Hero>
-            <Hero>
+            <Hero onTop>
                 <HugeHeader color="text-slate-500" bold={false} padding={0}>{profileQuery.data?.companyName}</HugeHeader>
                 <HugeHeader>Income Statement</HugeHeader>
                 <SelectPeriod></SelectPeriod>
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 w-full">
-                    <StatementCard
-                        caption={"Revenue"}
-                        data={incomeStatementQuery.data!}
-                        isLoading={incomeStatementQuery.isLoading}
-                        dataKey="revenue">
-                        <Spinner width={24} height={24}></Spinner>
-                    </StatementCard>
-                    <StatementCard
-                        caption={"Gross Profit"}
-                        data={incomeStatementQuery.data!}
-                        isLoading={incomeStatementQuery.isLoading}
-                        dataKey={"grossProfit"}>
-                        <Spinner></Spinner>
-                    </StatementCard>
-                    <StatementCard
-                        caption={"Operating Income"}
-                        data={incomeStatementQuery.data!}
-                        isLoading={incomeStatementQuery.isLoading}
-                        dataKey={"operatingIncome"}>
-                        <Spinner></Spinner>
-                    </StatementCard>
-                    <StatementCard
-                        caption={"Net Income"}
-                        data={incomeStatementQuery.data!}
-                        isLoading={incomeStatementQuery.isLoading}
-                        dataKey={"netIncome"}>
-                        <Spinner></Spinner>
-                    </StatementCard>
+                    {statements.map((value, index) => {
+                        const entries = Object.entries(value)
+                        const caption = entries[0][1].caption
+                        const key = entries[0][0]
+                        return (
+                            <StatementCard
+                                key={index}
+                                caption={caption}
+                                data={incomeStatementQuery.data!}
+                                isLoading={incomeStatementQuery.isLoading}
+                                dataKey={key}>
+                                <Spinner width={24} height={24}></Spinner>
+                            </StatementCard>
+                        )
+                    })
+                    }
                 </div>
                 <div className="grid grid-cols-1 gap-8 w-full h-full">
                     <InfoCard
