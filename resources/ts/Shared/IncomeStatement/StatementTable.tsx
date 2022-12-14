@@ -7,6 +7,7 @@
 import React from "react"
 import IIncomeStatement from "@/types/income-statement";
 import moneyformat from "@/utils/moneyformat";
+import otherExpenses from "@/utils/otherexpenses";
 
 interface IStatementTableProps {
     incomeStatements: IIncomeStatement[]
@@ -18,7 +19,7 @@ const StatementTable: React.FC<IStatementTableProps> = (props) => {
     }
 
     const incomeStatement = props.incomeStatements[0]
-    const other =  incomeStatement.incomeTaxExpense - incomeStatement.totalOtherIncomeExpensesNet
+    const other = otherExpenses(incomeStatement) 
 
     return (
         <div className="pl-2 overflow-x-auto w-full h-full">

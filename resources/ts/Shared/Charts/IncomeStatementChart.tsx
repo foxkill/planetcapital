@@ -5,10 +5,11 @@
 // Closed Source
 //
 import React from "react"
-import { ResponsiveSankey, Sankey } from "@nivo/sankey"
+import { ResponsiveSankey } from "@nivo/sankey"
 import IIncomeStatement from "@/types/income-statement"
 import moneyformat from "@/utils/moneyformat"
 import { PaletteColors } from "react-palette"
+import otherExpenses from "@/utils/otherexpenses"
 
 interface IIncomeStatementProps {
     palette: PaletteColors
@@ -23,9 +24,8 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
     }
 
     const incomestatement = data[0]
-    // TODO: harmonize calculation with sankey chart (code duplication).
-    const other = incomestatement.incomeTaxExpense - incomestatement.totalOtherIncomeExpensesNet
-
+    const other = otherExpenses(incomestatement)
+    
     const idata = {
         "nodes": [
             {
@@ -48,8 +48,10 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
             {
                 id: "Operating Income",
                 nodeColor: "#2BA02B",
+                fixedValue: incomestatement.operatingIncome
             },
             {
+                // TODO: use green color for positive expenses.
                 id: "Other Expenses",
                 nodeColor: "red",
             },
@@ -77,12 +79,13 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
             {
                 source: "Gross Profit",
                 target: "Operating Income",
-                value: incomestatement.operatingIncome
+                value: incomestatement.operatingIncome,
             },
             {
                 source: "Operating Income",
                 target: "Other Expenses",
-                value: other < 0 ? Math.abs(other) : other
+                value: Math.abs(other)
+                // value: other < 0 ? Math.abs(other) : other
                 // value: incomestatement.totalOtherIncomeExpensesNet
                 // value: incomestatement.costAndExpenses
                 // value: incomestatement.operatingIncome - incomestatement.netIncome
@@ -102,6 +105,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
             // TODO: use alert shadow-lg from daisyui
             const { node } = nd
             const fmt = moneyformat(node.value)
+            // console.log(node.value);
             return (
                 <>
                     <div className="w-40 rounded" style={{ background: "white", padding: "9px 12px", border: "1px solid #ccc" }}>
@@ -151,11 +155,11 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
                 ]
             ]
         }}
-        // nodeBorderRadius={1}
         linkOpacity={0.5}
         linkHoverOthersOpacity={0.1}
-        // linkContract={3}
         enableLinkGradient={true}
+        // nodeBorderRadius={1}
+        // linkContract={3}
         // labelPosition="outside"
         // labelOrientation="vertical"
         labelPadding={10}
