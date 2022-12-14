@@ -20,7 +20,7 @@ interface InfoCardProperties {
 function InfoCard({ children, colSpan, header: caption, subheader, icon, image, stacked }: InfoCardProperties): JSX.Element {
     const cs = colSpan ?? ""
     return (
-        <div className={`card card-bordered bg-base-100 pt-2 pr-2 ${cs}`}>
+        <div className={`card card-bordered bg-base-100 pl-2 pt-2 pr-2 ${cs}`}>
             <figure className="">
                 {icon &&
                     <div className="align-middle w-12 text-center pl-2 pr-2">
@@ -33,7 +33,7 @@ function InfoCard({ children, colSpan, header: caption, subheader, icon, image, 
                 </h2>
                 {image &&
                     <div>
-                        <img className="" id="company-logo" src={image} width="48" height="48"></img>
+                        <img className="" id="company-logo" src={image} width="64" height="64"></img>
                     </div>
                 }
             </figure>
