@@ -21,7 +21,10 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
     if (!data || data.length == 0) {
         return <></>
     }
+
     const incomestatement = data[0]
+    // TODO: harmonize calculation with sankey chart (code duplication).
+    const other = incomestatement.incomeTaxExpense - incomestatement.totalOtherIncomeExpensesNet
 
     const idata = {
         "nodes": [
@@ -79,7 +82,8 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
             {
                 source: "Operating Income",
                 target: "Other Expenses",
-                value: incomestatement.otherExpenses
+                value: other < 0 ? Math.abs(other) : other
+                // value: incomestatement.totalOtherIncomeExpensesNet
                 // value: incomestatement.costAndExpenses
                 // value: incomestatement.operatingIncome - incomestatement.netIncome
             },
@@ -95,6 +99,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
 
     return <ResponsiveSankey
         nodeTooltip={(nd): JSX.Element => {
+            // TODO: use alert shadow-lg from daisyui
             const { node } = nd
             const fmt = moneyformat(node.value)
             return (
@@ -111,6 +116,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
         }}
         // valueFormat={"$,"}
         linkTooltip={(nd): JSX.Element => {
+            // TODO: use alert shadow-lg from daisyui
             const { source, target } = nd.link
             return <>
                 <div className="w-60 rounded" style={{ background: "white", padding: "9px 12px", border: "1px solid #ccc" }}>
