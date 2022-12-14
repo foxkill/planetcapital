@@ -37,6 +37,9 @@ function calculateCagr(data: IIncomeStatement[], dataKey: string, length: number
     return r.percentage
 }
 
+//
+// Statement Card.
+//
 const StatementCard: React.FC<IStatementCardProperties> = (props): JSX.Element | null => {
     const { exchange, symbol } = usePage().props
 
@@ -83,12 +86,12 @@ const StatementCard: React.FC<IStatementCardProperties> = (props): JSX.Element |
                     {caption}
                 </div>
                 <div className="card-body p-0">
-                    {isLoading ? children : (
+                    {isLoading ? (<div className="text-center">{children}</div>) : (
                         <div className="overflow-x-auto">
                             <table className="table table-compact w-full text-slate-500">
                                 <tbody>
                                     {/* 1 Year */}
-                                    {(oneYearPerf) &&
+                                    {oneYearPerf &&
                                         <tr className="hover">
                                             <th className="rounded-none">1 Year</th>
                                             <td className="rounded-none text-right border-b-0">
@@ -97,7 +100,7 @@ const StatementCard: React.FC<IStatementCardProperties> = (props): JSX.Element |
                                         </tr>
                                     }
                                     {/* 3 Years */}
-                                    {(threeYearPerf) &&
+                                    {threeYearPerf &&
                                         <tr className="hover">
                                             <th className="rounded-none">3 Years</th>
                                             <td className="rounded-none text-right border-b-0">
@@ -106,7 +109,7 @@ const StatementCard: React.FC<IStatementCardProperties> = (props): JSX.Element |
                                         </tr>
                                     }
                                     {/* 5 Years */}
-                                    {(fiveYearPerf) &&
+                                    {fiveYearPerf &&
                                         <tr className="hover">
                                             <th className="rounded-none">5 Years</th>
                                             <td className="rounded-none text-right border-b-0">
