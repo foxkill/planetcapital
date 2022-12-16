@@ -33,6 +33,10 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
         })
     })
 
+    const tickValues = props.incomeStatements.map((is) => {
+        
+    })
+
     const parseTime = timeParse("%Y-%m-%d")
     const formatTime = timeFormat("%b-%Y")
 
@@ -40,7 +44,7 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
         data={props.incomeStatements}
         keys={[props.lineitem]}
         indexBy="date"
-        margin={{ top: 0, right: 20, bottom: props.periodType === "QTR" ? 60 : 20, left: 0 }}
+        margin={{ top: 0, right: 20, bottom: props.periodType != "FY" ? 60 : 20, left: 0 }}
         padding={0.4}
         valueScale={{ type: "linear" }}
         colors={props.palette.vibrant}
@@ -49,12 +53,14 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
         enableGridY={false}
         axisTop={null}
         axisRight={null}
-        borderRadius={props.periodType === "QTR" ? 4 : 2}
+        borderRadius={props.periodType !== "FY" ? 4 : 2}
         // labelFormat={time:"%Y"}
         axisBottom={{
+            // tickValues: props.periodType == "TTM" ? 4 : "every year",
+            // tickValues: "every 4th year",
             tickSize: 0,
             tickPadding: 10,
-            tickRotation: props.periodType == "QTR" ? 45 : 0,
+            tickRotation: props.periodType !== "FY" ? 45 : 0,
             format: (d: string): string => {
                 const v = map.get(d)
                 if (!v) { return "" }

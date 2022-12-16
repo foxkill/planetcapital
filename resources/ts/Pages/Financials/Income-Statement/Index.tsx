@@ -41,8 +41,8 @@ const Index: React.FC<IIncomeStatementProps> = () => {
 
     let limit = 10
 
-    if (period === "QTR") {
-        limit *= 2
+    if (period != "FY") {
+        limit *= 4
     }
 
     const profileQueryKey = ["profile", symbol, exchange, period].join("-").toLocaleLowerCase()

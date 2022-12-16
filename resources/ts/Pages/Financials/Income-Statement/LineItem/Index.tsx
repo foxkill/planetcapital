@@ -77,7 +77,7 @@ const LineItem: IPage<ILineItemProps> = (props) => {
     // const companyName = useSecurity().context.companyName
     const period = useSecurity().context.periodType
     const dataKey = toDataKey(lineitem)
-    let limit = (period === "QTR") ? 40 : 10
+    let limit = (period != "FY") ? 40 : 10
 
     const { data } = usePalette(`/api/security/${exchange}/${symbol}/image`)
 
