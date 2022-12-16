@@ -31,55 +31,67 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
             {
                 id: "Revenue",
                 nodeColor: palette.vibrant,
-                fixedValue: incomestatement.revenue,
+                fixedValue: Math.abs(incomestatement.revenue),
+                signed: incomestatement.revenue < 0
             },
             {
                 id: "Cost of Revenue",
                 nodeColor: "#F14336",
+                fixedValue: Math.abs(incomestatement.costOfRevenue),
+                signed: incomestatement.costOfRevenue < 0
             },
             {
                 id: "Gross Profit",
                 nodeColor: "#28B446",
+                fixedValue: Math.abs(incomestatement.grossProfit),
+                signed: incomestatement.grossProfit < 0
             },
             {
                 id: "Operating Expenses",
                 nodeColor: "red",
+                fixedValue: Math.abs(incomestatement.operatingExpenses),
+                signed: incomestatement.operatingExpenses < 0
             },
             {
                 id: "Operating Income",
                 nodeColor: "#2BA02B",
-                fixedValue: incomestatement.operatingIncome
+                fixedValue: Math.abs(incomestatement.operatingIncome),
+                signed: incomestatement.operatingIncome < 0
             },
             {
                 // TODO: use green color for positive expenses.
                 id: "Other Expenses",
                 nodeColor: "red",
+                fixedValue: Math.abs(other),
+                signed: other < 0
             },
             {
                 id: "Net Income",
                 nodeColor: "green",
+                fixedValue: Math.abs(incomestatement.netIncome),
+                signed: incomestatement.netIncome < 0
             },
         ],
         "links": [
             {
                 source: "Revenue",
                 target: "Cost of Revenue",
-                value: incomestatement.costOfRevenue
+                value: Math.abs(incomestatement.costOfRevenue)
             },
             {
                 source: "Revenue",
                 target: "Gross Profit",
-                value: incomestatement.grossProfit
+                value: Math.abs(incomestatement.grossProfit)
             },
             {
                 source: "Gross Profit",
                 target: "Operating Expenses",
-                value: incomestatement.operatingExpenses
+                value: Math.abs(incomestatement.operatingExpenses)
             },
             {
                 source: "Gross Profit",
                 target: "Operating Income",
-                value: incomestatement.operatingIncome,
+                value: Math.abs(incomestatement.operatingIncome),
             },
             {
                 source: "Operating Income",
@@ -93,7 +105,8 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
             {
                 source: "Operating Income",
                 target: "Net Income",
-                value: incomestatement.netIncome
+                value: Math.abs(incomestatement.netIncome),
+                signed: incomestatement.netIncome < 0
             },
         ]
     }
@@ -104,8 +117,8 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
         nodeTooltip={(nd): JSX.Element => {
             // TODO: use alert shadow-lg from daisyui
             const { node } = nd
-            const fmt = moneyformat(node.value)
-            // console.log(node.value);
+            const fmt = moneyformat(node.value, node.signed)
+            console.log(node);
             return (
                 <>
                     <div className="w-40 rounded" style={{ background: "white", padding: "9px 12px", border: "1px solid #ccc" }}>
@@ -127,7 +140,7 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
                     <div className="text-center font-bold">{source.label + " - " + target.label}</div>
                     <hr></hr>
                     <div key={source.id} style={{ padding: "3px 0" }}>
-                        <div className="text-center">{moneyformat(target.value)}</div>
+                        <div className="text-center">{moneyformat(target.value, target.signed)}</div>
                     </div>
                 </div>
             </>

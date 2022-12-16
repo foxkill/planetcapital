@@ -31,24 +31,20 @@ function calculateAverage(data: IIncomeStatement[], dataKey: string, length: num
 
 function calculateCagr(data: IIncomeStatement[], dataKey: string, length: number): number {
     const currentValue = data[0][dataKey]
-    const priorValue = data[length][dataKey]
+    const priorValue = data[length - 1][dataKey]
 
     const r = cagr(priorValue, currentValue, length)
 
     return r.percentage
 }
 
-
-
 const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.Element | null => {
     const { periodType } = useSecurity().context
     const { data, mode, lineitem } = props
 
-    if (!data) { return null }
+    if (!data ) { return null }
 
-    if (data.length <= 3) {
-        return <></>
-    }
+    if (data.length <= 3) { return null }
 
     const periodTypeMap = get_period_type_map() 
 
@@ -56,6 +52,8 @@ const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.
     let caption = ""
     let value = 0
 
+    console.log(data.length);
+    
     if (data.length >= 4) {
         switch (mode) {
             case LineItemAverageKind.LAST_YEARS_VALUE:
@@ -63,12 +61,12 @@ const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.
                 caption = `Last ${periodTypeMap[periodType]} Value`
                 break
             case LineItemAverageKind.THREE_YEARS_CAGR_VALUE:
-                value = calculateCagr(data, lineitem, 3)
+                value = calculateCagr(data, lineitem, periodType == "FY" ? 3 : 3*4)
                 threeYearPerf =  value.toFixed(0) + "%"
                 caption = "3-Years Growth (CAGR)"
                 break;
             case LineItemAverageKind.THREE_YEARS_AVG_VALUE:
-                threeYearPerf = moneyformat(calculateAverage(data, lineitem, 3), false, 0) + " " + data[0]["reportedCurrency"]
+                threeYearPerf = moneyformat(calculateAverage(data, lineitem, periodType == "FY" ? 3 : 3*4), false, 0) + " " + data[0]["reportedCurrency"]
                 caption = "3-Years Average"
                 break;
             default:
