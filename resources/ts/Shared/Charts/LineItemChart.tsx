@@ -4,7 +4,7 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-import React from "react"
+import React, { useMemo } from "react"
 import { ResponsiveBar } from "@nivo/bar"
 import IIncomeStatement from "@/types/income-statement"
 import moneyformat from "@/utils/moneyformat"
@@ -24,7 +24,26 @@ interface IAxisData {
     calendarYear: string
 }
 
+function getHighestDates(dates: string[]): string[] {
+    const yearToDates = {};
+
+    const parseTime = timeParse("%Y-%m-%d")
+
+    dates.forEach(date => {
+        const year = date.slice(0, 4);
+        if (!yearToDates[year]) {
+            yearToDates[year] = date;
+        } else {
+            if (parseTime(yearToDates[year])!.valueOf() < parseTime(date)!.valueOf()) {
+                yearToDates[year] = date
+            }
+        }
+    });
+
+    return Object.values(yearToDates);
+}
 const LineItemChart: React.FC<LineItemChartProps> = (props) => {
+    const periodType = props.periodType
     const map = new Map()
     props.incomeStatements.map((is: IIncomeStatement) => {
         map.set(is.date, {
@@ -33,9 +52,16 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
         })
     })
 
-    const tickValues = props.incomeStatements.map((is) => {
-        
-    })
+    let tickValues: string[] = []
+
+    if (props.periodType == "TTM") {
+        tickValues = useMemo(() => getHighestDates(Array.from(map.keys())), [periodType]);
+    } else {
+        tickValues = useMemo(() => Array.from(map.keys()), [periodType])
+    }
+
+    console.log(tickValues);
+    
 
     const parseTime = timeParse("%Y-%m-%d")
     const formatTime = timeFormat("%b-%Y")
@@ -57,7 +83,7 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
         // labelFormat={time:"%Y"}
         axisBottom={{
             // tickValues: props.periodType == "TTM" ? 4 : "every year",
-            // tickValues: "every 4th year",
+            tickValues: tickValues,
             tickSize: 0,
             tickPadding: 10,
             tickRotation: props.periodType !== "FY" ? 45 : 0,
