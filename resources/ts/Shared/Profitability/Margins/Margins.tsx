@@ -10,9 +10,9 @@ import IRatio from "@/types/ratio"
 import React from "react"
 import { PaletteColors } from "react-palette"
 import { useQuery } from "react-query"
-import ExtendedHistoryChart from "../Charts/ExtendedHistoryChart"
-import InfoCard from "../InfoCard"
-import Spinner from "../Spinner"
+import ExtendedHistoryChart from "../../Charts/ExtendedHistoryChart"
+import InfoCard from "../../InfoCard"
+import Spinner from "../../Spinner"
 
 interface IMarginProps {
     symbol: string
