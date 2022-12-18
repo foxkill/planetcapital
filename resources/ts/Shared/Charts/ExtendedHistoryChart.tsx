@@ -11,12 +11,14 @@ import { IKeyMetric } from "@/types/key-metric"
 import { timeFormat, timeParse } from "d3-time-format"
 import { PaletteColors } from "react-palette";
 import IRatio from "@/types/ratio";
+import moneyformat from "@/utils/moneyformat";
 
 interface ExtendedHistoryChartProps {
     children?: React.ReactNode
     metric: string
     metrics: IKeyMetric[] | IRatio[]
     metricKey: string
+    metricKind: string
     periodType: string
     palette: PaletteColors
 }
@@ -98,7 +100,8 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
 
     return (
         <>
-            <div className="text-4xl pb-6">{(lastValue * 100).toFixed(1)}%</div>
+            <div className="text-4xl pb-6">{props.metricKind !== "INCOME" ? ((lastValue * 100).toFixed(1) + "%") : moneyformat(lastValue, false, 1)}
+            </div>
             <div className="h-32 w-96 min-w-full">
                 <ResponsiveBar
                     data={props.metrics as unknown as BarDatum[]}
@@ -159,7 +162,9 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
                                             <hr className="border-1 border-slate-300 pb-1"></hr>
                                             <div className="font-bold">
                                                 {/* TODO: prevent -0% values */}
-                                                {(dataPoint.value * 100).toFixed(1)}%
+                                                {props.metricKind === "INCOME"
+                                                    ? moneyformat(dataPoint.value, false, 0)
+                                                    : (dataPoint.value * 100).toFixed(1) + "%"}
                                             </div>
                                             <span className="uppercase">{props.metric}</span>
                                         </div>
