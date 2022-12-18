@@ -4,11 +4,13 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
+import descriptions from "@/models/descriptions.model"
 import CompanyInfo from "@/Shared/CompanyInfo"
+import Description from "@/Shared/Description"
 import Hero from "@/Shared/Hero"
 import HugeHeader from "@/Shared/HugeHeader"
 import Layout from "@/Shared/Layout"
-import Margins from "@/Shared/Profitability/Margins"
+import ProfitablityOverview from "@/Shared/Profitability/ProfitabilityOverview"
 import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
 import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod"
 import { Link } from "@inertiajs/inertia-react"
@@ -49,6 +51,11 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
 
     // ebit / (totalAsset - totalCurrentLiabilities)
     const { data } = usePalette(`/api/security/${exchange}/${symbol}/image`)
+    const pastgrowth = [
+        { metric: "Revenue", metricKey: "revenue" },
+        { metric: "Operating Income", metricKey: "operatingIncome" },
+        { metric: "Net Income", metricKey: "netIncome" },
+    ]
 
     const returns = [
         { metric: "ROE", metricKey: "returnOnEquity" },
@@ -74,13 +81,35 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                     </ul>
                 </div>
             </Hero>
-            <Hero onTop>
+            <Hero height={30}>
                 <HugeHeader color="text-slate-500" bold={false} padding={0}>{companyName}</HugeHeader>
                 <HugeHeader>Profitability</HugeHeader>
                 <CompanyInfo />
                 <SelectPeriod />
+            </Hero>
+            <Hero onTop height={60}>
+                <HugeHeader>Past Growth</HugeHeader>
+                <Description>{descriptions["PASTGROWTH"]}</Description>
+                <div className="h-6"></div>
                 <div className="grid grid-cols-1 items-center lg:grid-cols-3 gap-4 w-full">
-                    <Margins
+                    <ProfitablityOverview
+                        symbol={symbol}
+                        exchange={exchange}
+                        periodType={periodType}
+                        limit={limit}
+                        companyName={companyName}
+                        palette={data}
+                        metrics={pastgrowth}
+                        metricKind={"INCOME"}
+                    />
+                </div>
+            </Hero>
+            <Hero onTop height={60}>
+                <HugeHeader>Margins</HugeHeader>
+                <Description>{descriptions["MARGINS"]}</Description>
+                <div className="h-6"></div>
+                <div className="grid grid-cols-1 items-center lg:grid-cols-3 gap-4 w-full">
+                    <ProfitablityOverview
                         symbol={symbol}
                         exchange={exchange}
                         periodType={periodType}
@@ -88,8 +117,16 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         companyName={companyName}
                         palette={data}
                         metrics={margins}
+                        metricKind={""}
                     />
-                    <Margins
+                </div>
+            </Hero>
+            <Hero onTop>
+                <HugeHeader>Return On Captial</HugeHeader>
+                <Description>{descriptions["ROC"]}</Description>
+                <div className="h-6"></div>
+                <div className="grid grid-cols-1 items-center lg:grid-cols-3 gap-4 w-full">
+                    <ProfitablityOverview
                         symbol={symbol}
                         exchange={exchange}
                         periodType={periodType}
@@ -97,6 +134,7 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         companyName={companyName}
                         palette={data}
                         metrics={returns}
+                        metricKind={""}
                     />
                 </div>
             </Hero>
