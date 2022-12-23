@@ -60,9 +60,7 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
         tickValues = useMemo(() => Array.from(map.keys()), [periodType])
     }
 
-    console.log(tickValues);
-    
-
+    // console.log(tickValues);
     const parseTime = timeParse("%Y-%m-%d")
     const formatTime = timeFormat("%b-%Y")
 
