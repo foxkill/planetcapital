@@ -11,7 +11,8 @@
 		"bmewburn.vscode-intelephense-client",
 		"xdebug.php-debug",
 		"bradlc.vscode-tailwindcss",
-		"dbaeumer.vscode-eslint"
+		"dbaeumer.vscode-eslint",
+		"mattpocock.ts-error-translator"
 		// "mikestead.dotenv",
 		// "amiralizadeh9480.laravel-extra-intellisense",
 		// "ryannaddy.laravel-artisan",
