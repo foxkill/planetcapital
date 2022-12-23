@@ -86,7 +86,7 @@ const LineItem: IPage<ILineItemProps> = (props) => {
     const incomeStatementQueryKey = [symbol, exchange, period, limit].join("-").toLowerCase()
     const incomeStatementQuery = useQuery<IIncomeStatement[]>(
         [incomeStatementQueryKey, { exchange, symbol, periodType: period, limit }],
-        fetchIncomeStatement as any,
+        fetchIncomeStatement,
         {
             enabled: Boolean(symbol && exchange),
             retry: false,
