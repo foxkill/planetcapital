@@ -29,13 +29,17 @@ function calculateAverage(data: IIncomeStatement[], dataKey: string, length: num
     return sum / length
 }
 
-function calculateCagr(data: IIncomeStatement[], dataKey: string, length: number): number {
+function calculateCagr(data: IIncomeStatement[], dataKey: string, periods: number, periodType: string): number {
+    let index = periods
+
+    if (periodType != "FY") {
+        index = periods << 2
+    }
+
     const currentValue = data[0][dataKey]
-    const priorValue = data[length - 1][dataKey]
+    const priorValue = data[index][dataKey]
 
-    const r = cagr(priorValue, currentValue, length)
-
-    return r.percentage
+    return cagr(priorValue, currentValue, periods).percentage
 }
 
 const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.Element | null => {
@@ -52,7 +56,7 @@ const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.
     let caption = ""
     let value = 0
 
-    console.log(data.length);
+    // console.log(data.length);
     
     if (data.length >= 4) {
         switch (mode) {
@@ -61,7 +65,7 @@ const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.
                 caption = `Last ${periodTypeMap[periodType]} Value`
                 break
             case LineItemAverageKind.THREE_YEARS_CAGR_VALUE:
-                value = calculateCagr(data, lineitem, periodType == "FY" ? 3 : 3*4)
+                value = calculateCagr(data, lineitem, 3, periodType)
                 threeYearPerf =  value.toFixed(0) + "%"
                 caption = "3-Years Growth (CAGR)"
                 break;
