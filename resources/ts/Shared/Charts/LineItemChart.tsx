@@ -17,6 +17,7 @@ type LineItemChartProps = {
     incomeStatements: IIncomeStatement[]
     lineitem: string
     palette: PaletteColors
+    noLabels: boolean
 }
 
 interface IAxisData {
@@ -47,12 +48,23 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
     const periodType = props.periodType
     const map = new Map()
 
+    if (!props.incomeStatements) {
+        return null
+    }
+
     props.incomeStatements.map((is: IIncomeStatement) => {
         map.set(is.date, {
             period: is.period,
             calendarYear: is.calendarYear
         })
     })
+
+    const hasLabels = props.noLabels ? false : true
+    const margin = hasLabels
+        ?  { top: 0, right: 20, bottom: props.periodType != "FY" ? 60 : 20, left: 0 }
+        : { top: 0, right: 0, bottom: 0, left: 0 }
+    
+    const padding = hasLabels ? 0.4 : 0.6
 
     let tickValues: string[] = []
 
@@ -67,11 +79,12 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
     const formatTime = timeFormat("%b-%Y")
 
     return <ResponsiveBar
+        className="z-0"
         data={props.incomeStatements}
         keys={[props.lineitem]}
         indexBy="date"
-        margin={{ top: 0, right: 20, bottom: props.periodType != "FY" ? 60 : 20, left: 0 }}
-        padding={0.4}
+        margin={margin}
+        padding={padding}
         valueScale={{ type: "linear" }}
         colors={props.palette.vibrant}
         animate={true}
@@ -81,7 +94,7 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
         axisRight={null}
         borderRadius={props.periodType !== "FY" ? 4 : 2}
         // labelFormat={time:"%Y"}
-        axisBottom={{
+        axisBottom={!hasLabels ? null : {
             // tickValues: props.periodType == "TTM" ? 4 : "every year",
             tickValues: tickValues,
             tickSize: 0,
@@ -110,7 +123,7 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
             const delimterColor = props.palette.lightMuted
             return (
                 <>
-                    <div className="alert shadow-lg bg-opacity-40 backdrop-blur">
+                    <div className="alert shadow-lg bg-opacity-40 backdrop-blur absolute z-0 w-36">
                         <div className="flex items-center gap-2 w-36">
                             <div className="text-center flex-grow">
                                 <div className="min-w-full pb-1">
