@@ -16,8 +16,7 @@ function cagr(startValue: number, endValue: number, nPeriod: number): ICagr {
         rounded: 0,
         percentage: 0
     }
-
-    console.log(endValue, startValue, nPeriod);
+    
     result.raw = Math.pow(endValue / startValue, 1 / nPeriod) - 1
     result.rounded = Math.round(result.raw * 1000) / 1000
     result.percentage = result.rounded * 100;
