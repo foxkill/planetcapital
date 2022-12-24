@@ -118,7 +118,6 @@ const IncomeStatementChart: React.FC<IIncomeStatementProps> = (props) => {
             // TODO: use alert shadow-lg from daisyui
             const { node } = nd
             const fmt = moneyformat(node.value, node.signed)
-            console.log(node);
             return (
                 <>
                     <div className="w-40 rounded" style={{ background: "white", padding: "9px 12px", border: "1px solid #ccc" }}>
