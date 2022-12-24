@@ -140,12 +140,12 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
                             default:
                                 tmr = formatTimeDefault(timerange) + " " + period
                         }
+                        
                         // const period = formatTimeDefault(timerange) + " " + (dataPoint.data as  any as IKeyMetric).period
-
                         // const tmr = formatTimeQT(timerange) + " " + dataPoint.data.period
+                        // const delimiterColor = props.palette.lightMuted
                         const background = props.palette.darkMuted
                         const color = props.palette.lightVibrant
-                        // const delimiterColor = props.palette.lightMuted
 
                         return (
                             <>
