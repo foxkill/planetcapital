@@ -36,13 +36,14 @@ const Index: React.FC<IIncomeStatementProps> = () => {
     const { exchange, symbol, periodType } = useSecurity().context
 
     const period = periodType.toLocaleLowerCase()
-
-    const { data } = usePalette(`/api/security/${exchange}/${symbol}/image`)
+    // `/api/security/${profileQuery.data?.exchangeShortName.toLowerCase()}/${profileQuery.data?.symbol.toLowerCase()}/image`
+    const imageUrl = `/api/security/${exchange}/${symbol}/image`
+    const { data } = usePalette(imageUrl)
 
     let limit = 10
 
     if (period != "FY") {
-        limit *= 4
+        limit = 40
     }
 
     const profileQueryKey = ["profile", symbol, exchange, period].join("-").toLocaleLowerCase()
@@ -61,7 +62,7 @@ const Index: React.FC<IIncomeStatementProps> = () => {
     const incomeStatementQueryKey = ["income-statement", symbol, exchange, period, limit].join("-").toLocaleLowerCase()
     const incomeStatementQuery = useQuery<IIncomeStatement[]>(
         [incomeStatementQueryKey, { exchange, symbol, periodType: period, limit }],
-        fetchIncomeStatement as any,
+        fetchIncomeStatement,
         {
             enabled: Boolean(symbol && exchange),
             retry: false,
@@ -97,15 +98,21 @@ const Index: React.FC<IIncomeStatementProps> = () => {
                         const entries = Object.entries(value)
                         const caption = entries[0][1].caption
                         const key = entries[0][0]
+                        const lineitem = caption.toLocaleLowerCase().split(/\s+/).join("-")
                         return (
-                            <StatementCard
-                                key={index}
-                                caption={caption}
-                                data={incomeStatementQuery.data!}
-                                isLoading={incomeStatementQuery.isLoading}
-                                dataKey={key}>
-                                <Spinner width={24} height={24}></Spinner>
-                            </StatementCard>
+                            <>
+                                <Link href={route("security.financials.incomestatement.lineitem", { symbol, exchange, lineitem })}>
+                                    <StatementCard
+                                        key={index}
+                                        caption={caption}
+                                        data={incomeStatementQuery.data!}
+                                        isLoading={incomeStatementQuery.isLoading}
+                                        periodType={periodType}
+                                        dataKey={key}>
+                                        <Spinner width={24} height={24}></Spinner>
+                                    </StatementCard>
+                                </Link>
+                            </>
                         )
                     })
                     }
@@ -116,7 +123,7 @@ const Index: React.FC<IIncomeStatementProps> = () => {
                         colSpan={"col-span-1 lg:col-span-3"}
                         header={"Earnings Sankey Graph"}
                         subheader={profileQuery.data?.companyName || ""}
-                        image={`/api/security/${profileQuery.data?.exchangeShortName.toLowerCase()}/${profileQuery.data?.symbol.toLowerCase()}/image`}
+                        image={imageUrl}
                         icon={<WaterfallImage width={30} height={30} />}>
                         {
                             incomeStatementQuery.isLoading
