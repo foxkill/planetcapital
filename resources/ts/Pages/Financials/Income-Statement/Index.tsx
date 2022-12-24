@@ -105,6 +105,7 @@ const Index: React.FC<IIncomeStatementProps> = () => {
                                     <StatementCard
                                         key={index}
                                         caption={caption}
+                                        palette={data}
                                         data={incomeStatementQuery.data!}
                                         isLoading={incomeStatementQuery.isLoading}
                                         periodType={periodType}
