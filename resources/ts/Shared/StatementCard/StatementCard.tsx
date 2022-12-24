@@ -9,6 +9,8 @@ import moneyformat from "@/utils/moneyformat"
 import IIncomeStatement from "@/types/income-statement"
 import ValueIndicator from "../ValueIndicator/ValueIndicator"
 import { calculateCagr } from "@/utils/preparecalc"
+import { LineItemChart } from "../Charts"
+import { PaletteColors } from "react-palette"
 
 interface IStatementCardProperties {
     children: React.ReactNode
@@ -17,6 +19,7 @@ interface IStatementCardProperties {
     periodType: string
     data: IIncomeStatement[]
     dataKey: string
+    palette: PaletteColors
 }
 
 
@@ -37,10 +40,9 @@ const StatementCard: React.FC<IStatementCardProperties> = (props): JSX.Element |
     let oneYearPerf = 0
 
     if (data && data.length >= 6) {
-        // TODO: remove.
-        if (dataKey == "netIncome") {
-            console.log(data.map((v) => v[dataKey]));
-        }
+        // if (dataKey == "netIncome") {
+        // console.log(data.map((v) => v[dataKey]));
+        // }
 
         fiveYearPerf = handleZeroAmount(calculateCagr(data, dataKey, 5, periodType))
     }
@@ -62,31 +64,34 @@ const StatementCard: React.FC<IStatementCardProperties> = (props): JSX.Element |
         // Code.       
     }
 
-
-    const performance = [{1: oneYearPerf}, {3: threeYearPerf}, {5:fiveYearPerf}]
+    const performance = [{ 1: oneYearPerf }, { 3: threeYearPerf }, { 5: fiveYearPerf }]
 
     return (
-        <div className="card bg-base-100 hover:shadow-xl p-8">
+        <div className="card bg-base-100 hover:shadow-xl p-8 z-auto">
             <div className="text-center text-5xl">{moneyformat(value)}</div>
             <div className="inline-block align-top uppercase leading-6 text-center pb-4 text-base font-bold">
                 {caption}
             </div>
-            <div className="card-body p-0">
+            <div className="card-body p-0 text-center">
                 {isLoading ? (<div className="overflow-x-auto text-center">{children}</div>) : (
-                    <div className="overflow-x-auto">
-                        <table className="table table-compact w-full text-slate-500">
+                    <div className="">
+                        <div className="h-14 w-full overflow-visible pb-2">
+                            <LineItemChart noLabels={true} periodType={periodType} incomeStatements={data} lineitem={dataKey} palette={props.palette}>
+                                {caption}
+                            </LineItemChart>
+                        </div>
+                        <table className="table table-compact w-full text-slate-500 z-0">
                             <tbody>
                                 {performance.map((perf) => {
-                                    if (Number.isNaN(perf)) return <></>
                                     const [key, value] = Object.entries(perf)[0];
-                                    
-                                    return (
+                                    return (<>
                                         <tr key={key} className="hover">
-                                            <th className="rounded-none">{key} Year</th>
+                                            <th className="rounded-none">{key} {parseInt(key) > 1 ? "Years" : "Year"}</th>
                                             <td className="rounded-none text-right border-b-0">
-                                                <ValueIndicator unit="%">{value.toFixed(0)}</ValueIndicator>
+                                                <ValueIndicator unit="%">{Number.isNaN(value) ? "N/A" : value.toFixed(fractionDigits)}</ValueIndicator>
                                             </td>
                                         </tr>
+                                    </>
                                     )
                                 })
                                 }
