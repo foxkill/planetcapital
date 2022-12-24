@@ -14,8 +14,11 @@ interface IValueIndicatorProps {
 }
 
 const ValueIndicator: React.FC<IValueIndicatorProps> = (props) => {
+    let colorString =  (props.children == 0) 
+        ? "badge" 
+        : props.children! > 0 ? "badge badge-success" : "badge badge-error"
     return (
-        <div className={`badge ${props.children! > 0 ? "badge-success" : "badge-error"} badge-lg gap-2 min-w-full text-slate-50 justify-between`}>
+        <div className={`${colorString} badge-lg gap-2 min-w-full text-slate-50 justify-between`}>
             {props.children! >= 0 ?  <ArrowUpImage /> : <ArrowDnImage />}
             <div className="inline-block ml-3">{props.children}{props.unit}</div>
         </div>
