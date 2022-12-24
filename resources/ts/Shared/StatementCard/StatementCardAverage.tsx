@@ -7,10 +7,10 @@
 import React from "react"
 import moneyformat from "@/utils/moneyformat"
 import IIncomeStatement from "@/types/income-statement"
-import cagr from "@/utils/cagr"
 import { LineItemAverageKind } from "./lineitem.enum"
 import { useSecurity } from "../SecurityContext/SecurityContext"
-import get_period_type_map from "@/utils/periodtypemap"
+import getPeriodTypeMap from "@/utils/periodtypemap"
+import calculateCagr, { calculateAverage } from "@/utils/preparecalc"
 
 /* eslint-disable indent */
 
@@ -18,28 +18,6 @@ interface IStatementCardAverageProps {
     data: IIncomeStatement[]
     mode: LineItemAverageKind
     lineitem: string
-}
-
-function calculateAverage(data: IIncomeStatement[], dataKey: string, length: number): number {
-    let sum = 0
-    for (let i = 0; i < length; i++) {
-        sum += data[i][dataKey]
-    }
-
-    return sum / length
-}
-
-function calculateCagr(data: IIncomeStatement[], dataKey: string, periods: number, periodType: string): number {
-    let index = periods
-
-    if (periodType != "FY") {
-        index = periods << 2
-    }
-
-    const currentValue = data[0][dataKey]
-    const priorValue = data[index][dataKey]
-
-    return cagr(priorValue, currentValue, periods).percentage
 }
 
 const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.Element | null => {
@@ -50,14 +28,12 @@ const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.
 
     if (data.length <= 3) { return null }
 
-    const periodTypeMap = get_period_type_map() 
+    const periodTypeMap = getPeriodTypeMap() 
 
     let threeYearPerf = ""
     let caption = ""
     let value = 0
 
-    // console.log(data.length);
-    
     if (data.length >= 4) {
         switch (mode) {
             case LineItemAverageKind.LAST_YEARS_VALUE:
