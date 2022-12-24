@@ -21,4 +21,13 @@ function calculateCagr(data: IIncomeStatement[], dataKey: string, periods: numbe
     return cagr(priorValue, currentValue, periods).percentage
 }
 
-export default calculateCagr
+function calculateAverage(data: IIncomeStatement[], dataKey: string, length: number): number {
+    let sum = 0
+    for (let i = 0; i < length; i++) {
+        sum += data[i][dataKey]
+    }
+
+    return sum / length
+}
+
+export {calculateCagr, calculateAverage}
