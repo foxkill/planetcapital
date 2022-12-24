@@ -5,7 +5,7 @@
 // Closed Source
 //
 import React, { useMemo } from "react"
-import { ResponsiveBar } from "@nivo/bar"
+import { BarDatum, ResponsiveBar } from "@nivo/bar"
 import IIncomeStatement from "@/types/income-statement"
 import moneyformat from "@/utils/moneyformat"
 import { PaletteColors } from "react-palette"
@@ -42,9 +42,11 @@ function getHighestDates(dates: string[]): string[] {
 
     return Object.values(yearToDates);
 }
+
 const LineItemChart: React.FC<LineItemChartProps> = (props) => {
     const periodType = props.periodType
     const map = new Map()
+
     props.incomeStatements.map((is: IIncomeStatement) => {
         map.set(is.date, {
             period: is.period,
@@ -101,18 +103,33 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
             if (null === timerange) {
                 return <></>
             }
+
             const tmr = formatTime(timerange)
-            const background = props.palette.darkMuted
-            const color = props.palette.lightVibrant
+            // const background = props.palette.darkMuted
+            // const color = props.palette.lightVibrant
             const delimterColor = props.palette.lightMuted
             return (
-                <div className="text-center pt-2 pl-8 pr-8 rounded" style={{ color, background }}>
-                    {tmr}
-                    <hr style={{ border: `1px solid ${delimterColor}`, marginBottom: "8px" }} />
-                    <div className="font-bold text-2xl !leading-none p-0 m-0">{moneyformat(dataPoint.value, false, 1)}
+                <>
+                    <div className="alert shadow-lg bg-opacity-40 backdrop-blur">
+                        <div className="flex items-center gap-2 w-36">
+                            <div className="text-center flex-grow">
+                                <div className="min-w-full pb-1">
+                                    {/*<div className="align-middle inline-block w-4 h-4" style={{ backgroundColor: color, border: "1px solid " + background }}>
+                                    </div>*/}
+                                    <div className="inline-block leading-4 align-middle text-slate-500 font-bold">{tmr}</div>
+                                </div>
+                                <hr style={{border: "1px solid " + delimterColor}}></hr>
+                                {/* <hr className="border-1 border-slate-100 pb-1"></hr> */}
+                                <div className="font-bold text-2xl mt-1">
+                                    {/* TODO: prevent -0% values */}
+                                    {moneyformat(dataPoint.value, false, 1)}
+                                </div>
+                                {/* <div className="text-xs">4.9%</div> */}
+                                <div className="uppercase text-sm">{props.children}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="uppercase text-xs pb-2">{props.children}</div>
-                </div>
+                </>
             )
         }}
     />
