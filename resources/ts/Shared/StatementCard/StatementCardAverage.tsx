@@ -10,7 +10,7 @@ import IIncomeStatement from "@/types/income-statement"
 import { LineItemAverageKind } from "./lineitem.enum"
 import { useSecurity } from "../SecurityContext/SecurityContext"
 import getPeriodTypeMap from "@/utils/periodtypemap"
-import calculateCagr, { calculateAverage } from "@/utils/preparecalc"
+import { calculateCagr, calculateAverage } from "@/utils/preparecalc"
 
 /* eslint-disable indent */
 
@@ -24,11 +24,11 @@ const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.
     const { periodType } = useSecurity().context
     const { data, mode, lineitem } = props
 
-    if (!data ) { return null }
+    if (!data) { return null }
 
     if (data.length <= 3) { return null }
 
-    const periodTypeMap = getPeriodTypeMap() 
+    const periodTypeMap = getPeriodTypeMap()
 
     let threeYearPerf = ""
     let caption = ""
@@ -42,11 +42,11 @@ const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.
                 break
             case LineItemAverageKind.THREE_YEARS_CAGR_VALUE:
                 value = calculateCagr(data, lineitem, 3, periodType)
-                threeYearPerf =  value.toFixed(0) + "%"
+                threeYearPerf = Number.isNaN(value) ? "N/A" : value.toFixed(0) + "%"
                 caption = "3-Years Growth (CAGR)"
                 break;
             case LineItemAverageKind.THREE_YEARS_AVG_VALUE:
-                threeYearPerf = moneyformat(calculateAverage(data, lineitem, periodType == "FY" ? 3 : 3*4), false, 0) + " " + data[0]["reportedCurrency"]
+                threeYearPerf = moneyformat(calculateAverage(data, lineitem, periodType == "FY" ? 3 : 3 * 4), false, 0) + " " + data[0]["reportedCurrency"]
                 caption = "3-Years Average"
                 break;
             default:
@@ -62,8 +62,8 @@ const StatementCardAverage: React.FC<IStatementCardAverageProps> = (props): JSX.
         <div className="card bg-base-100 hover:shadow-xl p-8">
             <div className="text-center text-5xl">
                 {(mode == LineItemAverageKind.THREE_YEARS_CAGR_VALUE) ? (
-                    <span className={`${value > 0 ? "text-ics-green": "text-ics-red"}`}>{threeYearPerf}</span>
-                ):(threeYearPerf)
+                    <span className={`${Number.isNaN(value) ? "text-slate-400" : (value > 0) ? "text-ics-green" : "text-ics-red"}`}>{threeYearPerf}</span>
+                ) : (threeYearPerf)
                 }
             </div>
             <div className="inline-block align-top uppercase leading-6 text-center pb-4 text-base font-bold">

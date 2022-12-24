@@ -14,13 +14,13 @@ interface IValueIndicatorProps {
 }
 
 const ValueIndicator: React.FC<IValueIndicatorProps> = (props) => {
-    let colorString =  (props.children == 0) 
+    let colorString = (props.children == 0 || props.children == "N/A") 
         ? "badge" 
         : props.children! > 0 ? "badge badge-success" : "badge badge-error"
     return (
         <div className={`${colorString} badge-lg gap-2 min-w-full text-slate-50 justify-between`}>
             {props.children! >= 0 ?  <ArrowUpImage /> : <ArrowDnImage />}
-            <div className="inline-block ml-3">{props.children}{props.unit}</div>
+            <div className="inline-block ml-3">{props.children}{props.children == "N/A" ? "" : props.unit}</div>
         </div>
     )
 }
