@@ -14,7 +14,7 @@ const SelectPeriod = (): JSX.Element => {
     const periodTypes: Record<string, string>[] = [
         { "TTM": "TTM" },
         { "QTR": "Quarterly"},
-        { "FY": "Anually"},
+        { "FY": "Annually"},
     ] 
 
     const validPeriodTypes = periodTypes.map((v) => Object.keys(v)[0])

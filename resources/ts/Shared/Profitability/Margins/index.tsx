@@ -5,4 +5,4 @@
 // Closed Source
 //
 
-export { default } from "./Margins"
+export { default } from "./Description"
