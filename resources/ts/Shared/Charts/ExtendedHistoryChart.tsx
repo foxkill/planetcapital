@@ -133,12 +133,11 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
                         const period = (dataPoint.data as any as IKeyMetric).period
 
                         switch (period) {
-                            case "FY":
-                            case "TTM":
-                                tmr = period + " " + formatTimeYear(timerange)
-                                break
-                            default:
-                                tmr = formatTimeDefault(timerange) + " " + period
+                        case "FY":
+                            tmr = period + " " + formatTimeYear(timerange)
+                            break
+                        default:
+                            tmr = formatTimeDefault(timerange) + " " + period
                         }
                         
                         // const period = formatTimeDefault(timerange) + " " + (dataPoint.data as  any as IKeyMetric).period
@@ -164,7 +163,7 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
                                                 {/* TODO: prevent -0% values */}
                                                 {props.metricKind === "INCOME"
                                                     ? moneyformat(dataPoint.value, false, 0)
-                                                    : (dataPoint.value * 100).toFixed(1) + "%"}
+                                                    : (dataPoint.value * 100).toFixed(2) + "%"}
                                             </div>
                                             <span className="uppercase">{props.metric}</span>
                                         </div>
