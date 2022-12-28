@@ -135,7 +135,6 @@ Route::get('/security/{exchange}/{security}/profitability/period/{period}/limit/
 //
 // Balance sheet (for heatmap)
 //
-// https://financialmodelingprep.com/api/v3/balance-sheet-statement/AAPL?apikey=YOUR_API_KEY&limit=120'
 Route::get('/security/{exchange}/{security}/balance-sheet/period/{period}/limit/{limit}', function (Request $request) {
     $key = join(
         '_',

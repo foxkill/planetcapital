@@ -13,7 +13,6 @@ import getPeriodTypeMap from "@/utils/periodtypemap"
 import { calculateCagr, calculateAverage } from "@/utils/preparecalc"
 
 /* eslint-disable indent */
-
 interface IStatementCardAverageProps {
     data: IIncomeStatement[]
     mode: LineItemAverageKind
