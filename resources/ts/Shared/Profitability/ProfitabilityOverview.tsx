@@ -29,14 +29,16 @@ interface IProfitablityOverview {
 
 const ProfitablityOverview: React.FC<IProfitablityOverview> = (props) => {
     const { symbol, exchange, periodType, limit, companyName, palette, metrics } = props
-    let query
+
+    let query: unknown
     let key = ""
+
     if (props.metricKind === "INCOME") {
         // Code
         key = ["income-statement", symbol, exchange, periodType, limit].join("-").toLocaleLowerCase()
         query = useQuery<IIncomeStatement[]>(
             [key, { exchange, symbol, periodType, limit }],
-            fetchIncomeStatement as any,
+            fetchIncomeStatement,
             {
                 enabled: Boolean(symbol && exchange),
                 retry: false,
@@ -53,6 +55,11 @@ const ProfitablityOverview: React.FC<IProfitablityOverview> = (props) => {
             {
                 enabled: Boolean(symbol && exchange),
                 retry: false,
+                onSuccess(data) {
+                    if (periodType === "QTR") {
+                        console.log(data.map((v) => v.grossProfitMargin));
+                    }
+                },
             }
         )
     }
