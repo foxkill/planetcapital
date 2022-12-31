@@ -14,10 +14,13 @@ interface IHeroProperties {
     height?: number
     contextAware?: boolean
     onTop?: boolean
+    backgroundColor?: string
 }
 
-export function Hero({ children, useColumnLayout, height, contextAware, onTop }: IHeroProperties): JSX.Element | null {
+export function Hero({ children, useColumnLayout, height, contextAware, onTop, backgroundColor }: IHeroProperties): JSX.Element | null {
     const ctx = useSecurity()
+
+    const bgc = backgroundColor ?? "bg-base-200"
 
     if (contextAware) {
         if (! ctx.context.symbol && !ctx.context.exchange) {
@@ -29,7 +32,7 @@ export function Hero({ children, useColumnLayout, height, contextAware, onTop }:
     const align = onTop ? "items-start" : ""
     return (
         <>
-            <div className={`hero bg-base-200 ${h} ${align}`}>
+            <div className={`hero ${bgc} ${h} ${align}`}>
                 <div className={`hero-content ${useColumnLayout ? "flex-col lg:flex-row-reverse lg:gap-16" : "flex-col"}`}>
                     {children}
                 </div>
