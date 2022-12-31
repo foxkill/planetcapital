@@ -53,9 +53,6 @@ class RelativeValuations extends Controller
         }
 
         $limit = $request->limit ?? 1;
-        if ($isTTM) {
-            $limit *= 4;
-        }
 
         // Build the endpoint.
         $endpoint = sprintf(
@@ -200,34 +197,6 @@ class RelativeValuations extends Controller
     private function ttm($data, $limit)
     {
         return $this->calc_ttm($data);
-
-        $ttm = [];
-
-        $current = [];
-        $lim = $limit - 4;
-
-        for ($i = 0; $i < ($lim); $i++) {
-            $current = $this->createRatio();
-            $current["symbol"] = $data[$i]["symbol"];
-            $current["date"] = $data[$i]["date"];
-
-            for ($j = $i; $j < ($i + 4); $j++) {
-                $current["grossProfitMargin"] += $data[$j]["grossProfitMargin"];
-                $current["operatingProfitMargin"] += $data[$j]["operatingProfitMargin"];
-                $current["netProfitMargin"] += $data[$j]["netProfitMargin"];
-                $current["returnOnEquity"] += $data[$j]["returnOnEquity"];
-                $current["returnOnAssets"] += $data[$j]["returnOnAssets"];
-                $current["returnOnCapitalEmployed"] += $data[$j]["returnOnCapitalEmployed"];
-            }
-
-            $current["grossProfitMargin"] /= 4;
-            $current["operatingProfitMargin"] /= 4;
-            $current["netProfitMargin"] /= 4;
-            // $current["returnOnEquity"] /= 4;
-            $ttm[] = $current;
-        }
-
-        return $ttm;
     }
 
     /**
@@ -293,9 +262,6 @@ class RelativeValuations extends Controller
             $sum['returnOnCapitalEmployed'] -= $data[$i - 3]['returnOnCapitalEmployed'];
             $sum['returnOnCapitalEmployed'] += $data[$i + 1]['returnOnCapitalEmployed'];
 
-            // $sum['grossProfitMargin'] = $sum['grossProfitMargin'] / 4;
-            // $sum['operatingProfitMargin'] = $sum['operatingProfitMargin'] / 4;
-            // $sum['netProfitMargin'] = $sum['netProfitMargin'] / 4;
             $current['grossProfitMargin'] = $sum['grossProfitMargin'] / 4;
             $current['operatingProfitMargin'] = $sum['operatingProfitMargin'] / 4;
             $current['netProfitMargin'] = $sum['netProfitMargin'] / 4;
@@ -309,26 +275,6 @@ class RelativeValuations extends Controller
             $current = $this->createRatio();
         }
 
-        return $ttm_list;
-
-        // for ($i = 0; $i < count($gross_profit_margin); $i++) {
-        //     if ($i >= 4) {
-        //         $sum -= $gross_profit_margin[$i - 4];
-        //     }
-
-        //     $sum += $gross_profit_margin[$i];
-
-        //     if ($i >= 3) {
-        //         $ttm_list[] = $sum / 4;
-        //     } else {
-        //         $ttm_list[] = null;
-        //     }
-        // }
-
-        // for ($i = 0, $n = count($gross_profit_margin) - 4; $i < $n; $i++) {
-        //     $ttm = array_sum(array_slice($gross_profit_margin, $i, 4)) / 4;
-        //     $ttm_list[] = $ttm;
-        // }
-        return $ttm_list;
+        return array_slice($ttm_list, 0, -4);
     }
 }
