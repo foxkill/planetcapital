@@ -13,6 +13,7 @@ import Layout from "@/Shared/Layout"
 import ProfitablityOverview from "@/Shared/Profitability/ProfitabilityOverview"
 import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
 import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod"
+import Spacer from "@/Shared/Spacer"
 import { Link } from "@inertiajs/inertia-react"
 import React from "react"
 import { usePalette } from "react-palette"
@@ -44,13 +45,14 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
     }
 
     let limit = 11
-    if (periodType === "QTR") {
+    if (periodType != "FY") {
         // For the TTM calculation.
-        limit += 4;
+        limit *= 4;
     }
 
     // ebit / (totalAsset - totalCurrentLiabilities)
     const { data } = usePalette(`/api/security/${exchange}/${symbol}/image`)
+
     const pastgrowth = [
         { metric: "Revenue", metricKey: "revenue" },
         { metric: "Operating Income", metricKey: "operatingIncome" },
@@ -104,10 +106,12 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                     />
                 </div>
             </Hero>
-            <Hero onTop height={60}>
+            <Hero onTop height={60} backgroundColor="bg-base-300">
+                <Spacer/>
                 <HugeHeader>Margins</HugeHeader>
+                <Spacer/>
                 <Description>{descriptions["MARGINS"]}</Description>
-                <div className="h-6"></div>
+                <Spacer/>
                 <div className="grid grid-cols-1 items-center lg:grid-cols-3 gap-4 w-full">
                     <ProfitablityOverview
                         symbol={symbol}
@@ -120,9 +124,12 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         metricKind={""}
                     />
                 </div>
+                <Spacer/>
             </Hero>
             <Hero onTop>
+                <div className="h-8"></div>
                 <HugeHeader>Return On Captial</HugeHeader>
+                <div className="h-8"></div>
                 <Description>{descriptions["ROC"]}</Description>
                 <div className="h-6"></div>
                 <div className="grid grid-cols-1 items-center lg:grid-cols-3 gap-4 w-full">
