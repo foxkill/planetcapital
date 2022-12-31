@@ -55,10 +55,10 @@ const ProfitablityOverview: React.FC<IProfitablityOverview> = (props) => {
             {
                 enabled: Boolean(symbol && exchange),
                 retry: false,
-                onSuccess(data) {
-                    if (periodType === "QTR") {
-                        console.log(data.map((v) => v.grossProfitMargin));
-                    }
+                onSuccess() {
+                    // if (periodType === "QTR") {
+                    // console.log(data.map((v) => v.returnOnEquity));
+                    // }
                 },
             }
         )
