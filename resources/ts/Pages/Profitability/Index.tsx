@@ -5,18 +5,26 @@
 // Closed Source
 //
 import descriptions from "@/models/descriptions.model"
+import fetchIncomeStatement from "@/planetapi/fetch.income-statement"
+import { IncomeStatementChart } from "@/Shared/Charts"
 import CompanyInfo from "@/Shared/CompanyInfo"
 import Description from "@/Shared/Description"
 import Hero from "@/Shared/Hero"
 import HugeHeader from "@/Shared/HugeHeader"
+import WaterfallImage from "@/Shared/Images/WaterfallImage"
+import { StatementTable } from "@/Shared/IncomeStatement"
+import InfoCard from "@/Shared/InfoCard"
 import Layout from "@/Shared/Layout"
 import ProfitablityOverview from "@/Shared/Profitability/ProfitabilityOverview"
 import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
 import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod"
 import Spacer from "@/Shared/Spacer"
+import Spinner from "@/Shared/Spinner"
+import IIncomeStatement from "@/types/income-statement"
 import { Link } from "@inertiajs/inertia-react"
 import React from "react"
 import { usePalette } from "react-palette"
+import { useQuery } from "react-query"
 
 interface IProfitabilityPageProps {
     symbol: string
@@ -51,7 +59,8 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
     }
 
     // ebit / (totalAsset - totalCurrentLiabilities)
-    const { data } = usePalette(`/api/security/${exchange}/${symbol}/image`)
+    const imageUrl = `/api/security/${exchange}/${symbol}/image`
+    const { data } = usePalette(imageUrl)
 
     const pastgrowth = [
         { metric: "Revenue", metricKey: "revenue" },
@@ -70,6 +79,16 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
         { metric: "Operating Margin", metricKey: "operatingProfitMargin" },
         { metric: "Net Margin", metricKey: "netProfitMargin" }
     ]
+
+    const incomeStatementQueryKey = ["income-statement", symbol, exchange, periodType, limit].join("-").toLocaleLowerCase()
+    const incomeStatementQuery = useQuery<IIncomeStatement[]>(
+        [incomeStatementQueryKey, { exchange, symbol, periodType, limit }],
+        fetchIncomeStatement,
+        {
+            enabled: Boolean(symbol && exchange),
+            retry: false,
+        }
+    )
 
     return (
         <>
@@ -107,11 +126,11 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                 </div>
             </Hero>
             <Hero onTop height={60} backgroundColor="bg-base-300">
-                <Spacer/>
+                <Spacer />
                 <HugeHeader>Margins</HugeHeader>
-                <Spacer/>
+                <Spacer />
                 <Description>{descriptions["MARGINS"]}</Description>
-                <Spacer/>
+                <Spacer />
                 <div className="grid grid-cols-1 items-center lg:grid-cols-3 gap-4 w-full">
                     <ProfitablityOverview
                         symbol={symbol}
@@ -124,14 +143,14 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         metricKind={""}
                     />
                 </div>
-                <Spacer/>
+                <Spacer />
             </Hero>
             <Hero onTop>
-                <div className="h-8"></div>
+                <Spacer />
                 <HugeHeader>Return On Captial</HugeHeader>
-                <div className="h-8"></div>
+                <Spacer />
                 <Description>{descriptions["ROC"]}</Description>
-                <div className="h-6"></div>
+                <Spacer />
                 <div className="grid grid-cols-1 items-center lg:grid-cols-3 gap-4 w-full">
                     <ProfitablityOverview
                         symbol={symbol}
@@ -143,7 +162,39 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         metrics={returns}
                         metricKind={""}
                     />
+                    {incomeStatementQuery.isLoading
+                        ? <Spinner></Spinner>
+                        : (<InfoCard
+                            stacked
+                            colSpan={"col-span-1 lg:col-span-3"}
+                            header={"Earnings Sankey Graph"}
+                            subheader={companyName || ""}
+                            image={imageUrl}
+                            icon={<WaterfallImage width={30} height={30} />}>
+                            {
+                                incomeStatementQuery.isLoading
+                                    ? (<div className="flex w-full h-96 justify-center items-center"><Spinner width={48} height={48}></Spinner></div>)
+                                    : (<>
+                                        <div className="w-1/2 h-96">
+                                            <IncomeStatementChart palette={data} data={incomeStatementQuery.data || []} />
+                                        </div>
+                                        <div className="w-1/2 h-full">
+                                            <StatementTable incomeStatements={incomeStatementQuery.data || []} />
+                                        </div>
+                                    </>
+                                    )
+                            }
+                        </InfoCard>)
+                    }
                 </div>
+                <Spacer />
+            </Hero>
+            <Hero onTop backgroundColor="bg-base-300">
+                <Spacer />
+                <HugeHeader>Free Cash Flow</HugeHeader>
+                <Spacer />
+                <Description>{descriptions["FCF"]}</Description>
+                <Spacer />
             </Hero>
         </>
     )
