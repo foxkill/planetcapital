@@ -12,13 +12,14 @@ import { timeFormat, timeParse } from "d3-time-format"
 import { PaletteColors } from "react-palette";
 import IRatio from "@/types/ratio";
 import moneyformat from "@/utils/moneyformat";
+import { FinMetricKind, FinMetricType } from "@/types/finmetrickind";
 
 interface ExtendedHistoryChartProps {
     children?: React.ReactNode
     metric: string
     metrics: IKeyMetric[] | IRatio[]
     metricKey: string
-    metricKind: string
+    metricKind: FinMetricType
     periodType: string
     palette: PaletteColors
 }
@@ -100,9 +101,9 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
 
     return (
         <>
-            <div className="text-4xl pb-6">{props.metricKind !== "INCOME" ? ((lastValue * 100).toFixed(1) + "%") : moneyformat(lastValue, false, 1)}
+            <div className="text-4xl pb-6">{props.metricKind !== FinMetricKind.INCOME ? ((lastValue * 100).toFixed(1) + "%") : moneyformat(lastValue, false, 1)}
             </div>
-            <div className="h-32 w-96 min-w-full">
+            <div className="h-32 w-80 min-w-full">
                 <ResponsiveBar
                     data={props.metrics as unknown as BarDatum[]}
                     indexBy="date"
@@ -133,13 +134,13 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
                         const period = (dataPoint.data as any as IKeyMetric).period
 
                         switch (period) {
-                        case "FY":
-                            tmr = period + " " + formatTimeYear(timerange)
-                            break
-                        default:
-                            tmr = formatTimeDefault(timerange) + " " + period
+                            case "FY":
+                                tmr = period + " " + formatTimeYear(timerange)
+                                break
+                            default:
+                                tmr = formatTimeDefault(timerange) + " " + period
                         }
-                        
+
                         // const period = formatTimeDefault(timerange) + " " + (dataPoint.data as  any as IKeyMetric).period
                         // const tmr = formatTimeQT(timerange) + " " + dataPoint.data.period
                         // const delimiterColor = props.palette.lightMuted
@@ -161,7 +162,7 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
                                             <hr className="border-1 border-slate-300 pb-1"></hr>
                                             <div className="font-bold">
                                                 {/* TODO: prevent -0% values */}
-                                                {props.metricKind === "INCOME"
+                                                {props.metricKind === FinMetricKind.INCOME
                                                     ? moneyformat(dataPoint.value, false, 0)
                                                     : (dataPoint.value * 100).toFixed(2) + "%"}
                                             </div>

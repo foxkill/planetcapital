@@ -46,4 +46,4 @@ declare interface IIncomeStatement {
     finalLink: string;
 }
 
-export default IIncomeStatement
+export default IIncomeStatement 

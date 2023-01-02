@@ -20,6 +20,7 @@ import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
 import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod"
 import Spacer from "@/Shared/Spacer"
 import Spinner from "@/Shared/Spinner"
+import { FinMetricKind } from "@/types/finmetrickind"
 import IIncomeStatement from "@/types/income-statement"
 import { Link } from "@inertiajs/inertia-react"
 import React from "react"
@@ -62,22 +63,28 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
     const imageUrl = `/api/security/${exchange}/${symbol}/image`
     const { data } = usePalette(imageUrl)
 
-    const pastgrowth = [
-        { metric: "Revenue", metricKey: "revenue" },
-        { metric: "Operating Income", metricKey: "operatingIncome" },
-        { metric: "Net Income", metricKey: "netIncome" },
+    const pastgrowth: PastGrowthMetric[] = [
+        { revenue: "Revenue" },
+        { netIncome: "Net Income" },
+        { operatingIncome: "Operating Income" }
     ]
 
     const returns = [
-        { metric: "ROE", metricKey: "returnOnEquity" },
-        { metric: "ROA", metricKey: "returnOnAssets" },
-        { metric: "ROCE", metricKey: "returnOnCapitalEmployed" },
+        { returnOnEquity: "ROE" },
+        { returnOnAssets:  "ROA" },
+        { returnOnCapitalEmployed: "ROCE" },
     ]
 
     const margins = [
-        { metric: "Gross Profit Margin", metricKey: "grossProfitMargin" },
-        { metric: "Operating Margin", metricKey: "operatingProfitMargin" },
-        { metric: "Net Margin", metricKey: "netProfitMargin" }
+        { grossProfitMargin: "Gross Profit Margin" },
+        { operatingProfitMargin: "Operating Margin" },
+        { netProfitMargin: "Net Margin" },
+    ]
+
+    const fcfs = [
+        { operatingCashFlow: "Operating Cash Flow" },
+        { capitalExpenditures: "Capital Expenditures" },
+        { freeCashFlow: "Free Cash Flow"},
     ]
 
     const incomeStatementQueryKey = ["income-statement", symbol, exchange, periodType, limit].join("-").toLocaleLowerCase()
@@ -102,16 +109,18 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                     </ul>
                 </div>
             </Hero>
+            {/* Selection */}
             <Hero height={30}>
                 <HugeHeader color="text-slate-500" bold={false} padding={0}>{companyName}</HugeHeader>
                 <HugeHeader>Profitability</HugeHeader>
                 <CompanyInfo />
                 <SelectPeriod />
             </Hero>
+            {/* Past Growth */}
             <Hero onTop height={60}>
                 <HugeHeader>Past Growth</HugeHeader>
                 <Description>{descriptions["PASTGROWTH"]}</Description>
-                <div className="h-6"></div>
+                <Spacer />
                 <div className="grid grid-cols-1 items-center lg:grid-cols-3 gap-4 w-full">
                     <ProfitablityOverview
                         symbol={symbol}
@@ -121,14 +130,15 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         companyName={companyName}
                         palette={data}
                         metrics={pastgrowth}
-                        metricKind={"INCOME"}
+                        metricKind={FinMetricKind.INCOME}
                     />
                 </div>
+                <Spacer />
             </Hero>
+            {/* Margins */}
             <Hero onTop height={60} backgroundColor="bg-base-300">
                 <Spacer />
                 <HugeHeader>Margins</HugeHeader>
-                <Spacer />
                 <Description>{descriptions["MARGINS"]}</Description>
                 <Spacer />
                 <div className="grid grid-cols-1 items-center lg:grid-cols-3 gap-4 w-full">
@@ -140,11 +150,12 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         companyName={companyName}
                         palette={data}
                         metrics={margins}
-                        metricKind={""}
+                        metricKind={FinMetricKind.NONE}
                     />
                 </div>
                 <Spacer />
             </Hero>
+            {/* Return on Capital */}
             <Hero onTop>
                 <Spacer />
                 <HugeHeader>Return On Captial</HugeHeader>
@@ -160,7 +171,7 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         companyName={companyName}
                         palette={data}
                         metrics={returns}
-                        metricKind={""}
+                        metricKind={FinMetricKind.NONE}
                     />
                     {incomeStatementQuery.isLoading
                         ? <Spinner></Spinner>
@@ -189,12 +200,16 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                 </div>
                 <Spacer />
             </Hero>
+            {/* Free Cash Flow */}
             <Hero onTop backgroundColor="bg-base-300">
                 <Spacer />
                 <HugeHeader>Free Cash Flow</HugeHeader>
                 <Spacer />
                 <Description>{descriptions["FCF"]}</Description>
                 <Spacer />
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 w-full">
+
+                </div>
             </Hero>
         </>
     )
