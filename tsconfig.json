@@ -17,6 +17,7 @@
         "useDefineForClassFields": true,
         "allowSyntheticDefaultImports": true,
         "noImplicitAny": false,
+        "skipLibCheck": true,
         "typeRoots": ["./node_modules/@types", "./resources/ts/types"]
     }
 }
