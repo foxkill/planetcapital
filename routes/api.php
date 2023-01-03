@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CashflowStatements;
 use App\Http\Controllers\Api\IncomeStatements;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Api\CompanyImage;
@@ -80,6 +81,11 @@ Route::get('/security/{exchange}/{security}/profile', function (Request $request
 // Income Statement
 // 
 Route::get('/security/{exchange}/{security}/income-statement/period/{period}/limit/{limit}', [IncomeStatements::class, 'index']);
+
+//
+// Cash Flow Statement
+// 
+Route::get('/security/{exchange}/{security}/cash-flow-statement/period/{period}/limit/{limit}', [CashflowStatements::class, 'index']);
 
 //
 // Profitability
