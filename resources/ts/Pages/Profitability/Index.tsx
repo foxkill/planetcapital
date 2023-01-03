@@ -20,6 +20,7 @@ import { useSecurity } from "@/Shared/SecurityContext/SecurityContext"
 import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod"
 import Spacer from "@/Shared/Spacer"
 import Spinner from "@/Shared/Spinner"
+import { CashFlowMetric, MarginMetric, PastGrowthMetric, ReturnOnCapitalMetric } from "@/types/finmetric"
 import { FinMetricKind } from "@/types/finmetrickind"
 import IIncomeStatement from "@/types/income-statement"
 import { Link } from "@inertiajs/inertia-react"
@@ -69,21 +70,21 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
         { operatingIncome: "Operating Income" }
     ]
 
-    const returns = [
+    const returns: ReturnOnCapitalMetric[] = [
         { returnOnEquity: "ROE" },
         { returnOnAssets:  "ROA" },
         { returnOnCapitalEmployed: "ROCE" },
     ]
 
-    const margins = [
+    const margins: MarginMetric[] = [
         { grossProfitMargin: "Gross Profit Margin" },
         { operatingProfitMargin: "Operating Margin" },
         { netProfitMargin: "Net Margin" },
     ]
 
-    const fcfs = [
+    const fcfs: CashFlowMetric[] = [
         { operatingCashFlow: "Operating Cash Flow" },
-        { capitalExpenditures: "Capital Expenditures" },
+        { capitalExpenditure: "Capital Expenditures" },
         { freeCashFlow: "Free Cash Flow"},
     ]
 
@@ -150,7 +151,7 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         companyName={companyName}
                         palette={data}
                         metrics={margins}
-                        metricKind={FinMetricKind.NONE}
+                        metricKind={FinMetricKind.RATIO}
                     />
                 </div>
                 <Spacer />
@@ -171,7 +172,7 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         companyName={companyName}
                         palette={data}
                         metrics={returns}
-                        metricKind={FinMetricKind.NONE}
+                        metricKind={FinMetricKind.RATIO}
                     />
                     {incomeStatementQuery.isLoading
                         ? <Spinner></Spinner>
@@ -207,9 +208,19 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                 <Spacer />
                 <Description>{descriptions["FCF"]}</Description>
                 <Spacer />
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 w-full">
-
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full">
+                    <ProfitablityOverview
+                        symbol={symbol}
+                        exchange={exchange}
+                        periodType={periodType}
+                        limit={limit}
+                        companyName={companyName}
+                        palette={data}
+                        metrics={fcfs}
+                        metricKind={FinMetricKind.CASH}
+                    />
                 </div>
+                <Spacer />
             </Hero>
         </>
     )

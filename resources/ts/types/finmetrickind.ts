@@ -9,7 +9,8 @@ const FinMetricKind = {
     NONE: "NONE",
     BALANCE: "BALANCE",
     INCOME: "INCOME",
-    CASH: "CASH"
+    CASH: "CASH",
+    RATIO: "RATIO"
 } as const
 
 type FinMetricType = typeof FinMetricKind[keyof typeof FinMetricKind]
