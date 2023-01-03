@@ -25,7 +25,7 @@ module.exports = {
         files: ["**/*.ts", "**/*.tsx"]
     }],
     rules: {
-        indent: ["error", 4],
+        indent: ["error", 4, {SwitchCase:1}],
         "linebreak-style": ["error", "unix"],
         quotes: ["error", "double"],
         "no-console": "warn",
