@@ -10,7 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class IncomeStatements extends Controller
 {
-
+    /**
+     * The url for the income statement
+     * 
+     * @string
+     */
     const FMP_INCOME_STATEMENT = 'https://financialmodelingprep.com/api/v3/income-statement/%s?apikey=%s&limit=%s';
 
     /**
