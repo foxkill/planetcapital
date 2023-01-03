@@ -5,8 +5,10 @@
 // Closed Source
 //
 
+import fetchCashFlowStatement from "@/planetapi/fetch.cash-flow-statement"
 import fetchFinancialRatios from "@/planetapi/fetch.financialratios"
 import fetchIncomeStatement from "@/planetapi/fetch.income-statement"
+import ICashflowStatement from "@/types/cashflow-statement"
 import { FinMetricKind, FinMetricType } from "@/types/finmetrickind"
 import IIncomeStatement from "@/types/income-statement"
 import IRatio from "@/types/ratio"
@@ -38,42 +40,59 @@ const ProfitablityOverview: React.FC<IProfitablityOverview> = (props) => {
     const performance = [{ 1: 0 }, { 3: 0 }, { 5: 0 }]
     const fractionDigits = 0
 
-    if (props.metricKind === FinMetricKind.INCOME) {
-        // Code
-        key = ["income-statement", symbol, exchange, periodType, limit].join("-").toLocaleLowerCase()
-        query = useQuery<IIncomeStatement[]>(
-            [key, { exchange, symbol, periodType, limit }],
-            fetchIncomeStatement,
-            {
-                enabled: Boolean(symbol && exchange),
-                retry: false,
-            }
-        )
-    } else {
-        key = ["ratios", symbol, exchange, periodType, limit].join("-").toLocaleLowerCase()
-        query = useQuery<IRatio[]>(
-            [
-                key,
-                { symbol, exchange, periodType, limit }
-            ],
-            fetchFinancialRatios,
-            {
-                enabled: Boolean(symbol && exchange),
-                retry: false,
-                onSuccess() {
-                    // if (periodType === "QTR") {
-                    // console.log(data.map((v) => v.returnOnEquity));
-                    // }
-                },
-            }
-        )
+    switch (props.metricKind) {
+        case FinMetricKind.INCOME:
+            key = ["income-statement", symbol, exchange, periodType, limit].join("-").toLocaleLowerCase()
+            query = useQuery<IIncomeStatement[]>(
+                [key, { exchange, symbol, periodType, limit }],
+                fetchIncomeStatement,
+                {
+                    enabled: Boolean(symbol && exchange),
+                    retry: false,
+                }
+            )
+            break;
+        case FinMetricKind.RATIO:
+            key = ["ratios", symbol, exchange, periodType, limit].join("-").toLocaleLowerCase()
+            query = useQuery<IRatio[]>(
+                [
+                    key,
+                    { symbol, exchange, periodType, limit }
+                ],
+                fetchFinancialRatios,
+                {
+                    enabled: Boolean(symbol && exchange),
+                    retry: false,
+                    onSuccess() {
+                        // if (periodType === "QTR") {
+                        // console.log(data.map((v) => v.returnOnEquity));
+                        // }
+                    },
+                }
+            )
+            break;
+
+        case FinMetricKind.CASH:
+            key = ["cash-flow-statement", symbol, exchange, periodType, limit].join("-").toLowerCase()
+            query = useQuery<ICashflowStatement[]>(
+                [key, { exchange, symbol, periodType, limit }],
+                fetchCashFlowStatement,
+                {
+                    enabled: Boolean(symbol && exchange),
+                    retry: false,
+                }
+            )
+            break;
+        default:
+            break;
     }
+    
     return (<>
         {
             metrics.map((value, index) => {
                 const [metricKey, metric] = Object.entries<string>(value)[0];
                 console.log(metricKey, metric, query.data);
-                
+
                 return (
                     <InfoCard
                         key={index}
