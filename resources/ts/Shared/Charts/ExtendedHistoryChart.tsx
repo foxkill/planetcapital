@@ -101,7 +101,11 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
 
     return (
         <>
-            <div className="text-4xl pb-6">{props.metricKind !== FinMetricKind.INCOME ? ((lastValue * 100).toFixed(1) + "%") : moneyformat(lastValue, false, 1)}
+            <div className="text-4xl pb-6">{
+                (props.metricKind !== FinMetricKind.INCOME) && (props.metricKind !== FinMetricKind.CASH)
+                    ? ((lastValue * 100).toFixed(1) + "%")
+                    : moneyformat(lastValue, false, 1)
+            }
             </div>
             <div className="h-32 w-80 min-w-full">
                 <ResponsiveBar
@@ -162,9 +166,12 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
                                             <hr className="border-1 border-slate-300 pb-1"></hr>
                                             <div className="font-bold">
                                                 {/* TODO: prevent -0% values */}
-                                                {props.metricKind === FinMetricKind.INCOME
-                                                    ? moneyformat(dataPoint.value, false, 0)
-                                                    : (dataPoint.value * 100).toFixed(2) + "%"}
+                                                {
+                                                    (props.metricKind !== FinMetricKind.INCOME) &&
+                                                        (props.metricKind !== FinMetricKind.CASH)
+                                                        ? (dataPoint.value * 100).toFixed(2) + "%"
+                                                        : moneyformat(dataPoint.value, false, 0)
+                                                }
                                             </div>
                                             <span className="uppercase">{props.metric}</span>
                                         </div>
