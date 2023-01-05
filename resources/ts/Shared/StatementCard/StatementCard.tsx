@@ -11,6 +11,7 @@ import ValueIndicator from "../ValueIndicator/ValueIndicator"
 import { calculateCagr } from "@/utils/preparecalc"
 import { LineItemChart } from "../Charts"
 import { PaletteColors } from "react-palette"
+import handleZero from "@/utils/handlezero"
 
 interface IStatementCardProperties {
     children: React.ReactNode
@@ -22,10 +23,6 @@ interface IStatementCardProperties {
     palette: PaletteColors
 }
 
-
-function handleZeroAmount(value: number): number {
-    return (Math.round(value) == 0) ? 0 : value
-}
 
 //
 // Statement Card.
@@ -40,19 +37,15 @@ const StatementCard: React.FC<IStatementCardProperties> = (props): JSX.Element |
     let oneYearPerf = 0
 
     if (data && data.length >= 6) {
-        // if (dataKey == "netIncome") {
-        // console.log(data.map((v) => v[dataKey]));
-        // }
-
-        fiveYearPerf = handleZeroAmount(calculateCagr(data, dataKey, 5, periodType))
+        fiveYearPerf = handleZero(calculateCagr(data, dataKey, 5, periodType))
     }
 
     if (data && data.length >= 4) {
-        threeYearPerf = handleZeroAmount(calculateCagr(data, dataKey, 3, periodType))
+        threeYearPerf = handleZero(calculateCagr(data, dataKey, 3, periodType))
     }
 
     if (data && data.length >= 2) {
-        oneYearPerf = handleZeroAmount(calculateCagr(data, dataKey, 1, periodType))
+        oneYearPerf = handleZero(calculateCagr(data, dataKey, 1, periodType))
     }
 
     let value = 0.0

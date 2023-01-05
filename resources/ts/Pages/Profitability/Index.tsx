@@ -132,6 +132,7 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         palette={data}
                         metrics={pastgrowth}
                         metricKind={FinMetricKind.INCOME}
+                        showPerformanceTable
                     />
                 </div>
                 <Spacer />
@@ -218,6 +219,7 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         palette={data}
                         metrics={fcfs}
                         metricKind={FinMetricKind.CASH}
+                        showPerformanceTable={true}
                     />
                 </div>
                 <Spacer />

@@ -7,21 +7,13 @@
 // import IIncomeStatement from "./income-statement"
 
 import ICashflowStatement from "./cashflow-statement"
+import IIncomeStatement from "./income-statement"
 import IRatio from "./ratio"
 
-type PastGrowthLineItems = Pick<IIncomeStatement, "revenue" | "operatingIncome" | "netIncome">
-type PastGrowthLineItem = keyof PastGrowthLineItems
-type PastGrowthMetric = Partial<Record<PastGrowthLineItem, string>>
+type Metric<T, K, R> = Partial<Record<keyof Pick<T, K>, R>>
 
-type ReturnOnCapitalLineItems = Pick<IRatio, "returnOnEquity" | "returnOnAssets" | "returnOnCapitalEmployed">
-type ReturnOnCapitalLineItem = keyof ReturnOnCapitalLineItems
-type ReturnOnCapitalMetric = Partial<Record<ReturnOnCapitalLineItem, string>>
-
-type MarginLineItems = Pick<IRatio, "grossProfitMargin" | "operatingProfitMargin" | "netProfitMargin" >
-type MarginLineItem = keyof MarginLineItems
-type MarginMetric = Partial<Record<MarginLineItem, string>>
-
-type CashFlowLineItems = Pick<ICashflowStatement, "operatingCashFlow" | "capitalExpenditure" | "freeCashFlow">
-type CashFlowLineItem = keyof CashFlowLineItems
-type CashFlowMetric = Partial<Record<CashFlowLineItem, string>>
+type PastGrowthMetric = Metric<IIncomeStatement, "revenue" | "operatingIncome" | "netIncome", string>
+type ReturnOnCapitalMetric = Metric<IRatio, "returnOnEquity" | "returnOnAssets" | "returnOnCapitalEmployed">
+type MarginMetric = Matric<IRatio, "grossProfitMargin" | "operatingProfitMargin" | "netProfitMargin", string>
+type CashFlowMetric = Metric<ICashflowStatement, "operatingCashFlow" | "capitalExpenditure" | "freeCashFlow", string>
 
