@@ -12,13 +12,15 @@ import ICashflowStatement from "@/types/cashflow-statement"
 import { FinMetricKind, FinMetricType } from "@/types/finmetrickind"
 import IIncomeStatement from "@/types/income-statement"
 import IRatio from "@/types/ratio"
-import React from "react"
+import handleZero from "@/utils/handlezero"
+import { calculateCagr } from "@/utils/preparecalc"
+import React, { useState } from "react"
 import { PaletteColors } from "react-palette"
 import { useQuery, UseQueryResult } from "react-query"
 import ExtendedHistoryChart from "../Charts/ExtendedHistoryChart"
 import InfoCard from "../InfoCard"
+import PerformanceTable from "../Performance/performance"
 import Spinner from "../Spinner"
-import ValueIndicator from "../ValueIndicator/ValueIndicator"
 
 interface IProfitablityOverview {
     symbol: string
@@ -32,13 +34,48 @@ interface IProfitablityOverview {
     showPerformanceTable?: boolean
 }
 
+function calculatePerformance(props: IProfitablityOverview, data: IIncomeStatement[] | IRatio[] | ICashflowStatement[]): Map<string, number> | void {
+    if (!props.showPerformanceTable) {
+        return;
+    }
+
+    const pf = new Map()
+
+    props.metrics.map((value) => {
+        const [metricKey] = Object.entries<string>(value)[0];
+        const performance = [
+            { 1: 0 },
+            { 3: 0 },
+            { 5: 0 },
+        ]
+
+
+        // TODO: query the correct length of the data in the calculateCagr function.
+        if (data && data.length >= 6) {
+            performance[2][5] = handleZero(calculateCagr(data, metricKey, 5, props.periodType))
+        }
+
+        if (data && data.length >= 4) {
+            performance[1][3] = handleZero(calculateCagr(data, metricKey, 3, props.periodType))
+        }
+
+        if (data && data.length >= 2) {
+            performance[0][1] = handleZero(calculateCagr(data, metricKey, 1, props.periodType))
+        }
+
+        pf.set(metricKey, performance)
+    })
+
+    return pf
+}
+
 const ProfitablityOverview: React.FC<IProfitablityOverview> = (props) => {
     const { symbol, exchange, periodType, limit, companyName, palette, metrics } = props
 
     let query: UseQueryResult
     let key = ""
-    const performance = [{ 1: 0 }, { 3: 0 }, { 5: 0 }]
-    const fractionDigits = 0
+
+    const [perf, setPerf] = useState<Map<string, number> | number>(0)
 
     switch (props.metricKind) {
         case FinMetricKind.INCOME:
@@ -49,6 +86,12 @@ const ProfitablityOverview: React.FC<IProfitablityOverview> = (props) => {
                 {
                     enabled: Boolean(symbol && exchange),
                     retry: false,
+                    onSuccess(data) {
+                        const pf = calculatePerformance(props, data)
+                        if (pf) {
+                            setPerf(pf)
+                        }
+                    }
                 }
             )
             break;
@@ -63,10 +106,11 @@ const ProfitablityOverview: React.FC<IProfitablityOverview> = (props) => {
                 {
                     enabled: Boolean(symbol && exchange),
                     retry: false,
-                    onSuccess() {
-                        // if (periodType === "QTR") {
-                        // console.log(data.map((v) => v.returnOnEquity));
-                        // }
+                    onSuccess(data) {
+                        const pf = calculatePerformance(props, data)
+                        if (pf) {
+                            setPerf(pf)
+                        }
                     },
                 }
             )
@@ -80,19 +124,23 @@ const ProfitablityOverview: React.FC<IProfitablityOverview> = (props) => {
                 {
                     enabled: Boolean(symbol && exchange),
                     retry: false,
+                    onSuccess(data) {
+                        const pf = calculatePerformance(props, data)
+                        if (pf) {
+                            setPerf(pf)
+                        }
+                    },
                 }
             )
             break;
         default:
             break;
     }
-    
+
     return (<>
         {
             metrics.map((value, index) => {
                 const [metricKey, metric] = Object.entries<string>(value)[0];
-                console.log(metricKey, metric, query.data);
-
                 return (
                     <InfoCard
                         key={index}
@@ -102,34 +150,21 @@ const ProfitablityOverview: React.FC<IProfitablityOverview> = (props) => {
                         {
                             query.isLoading
                                 ? (<div className="w-96 h-52 min-w-full text-center pt-12"><Spinner width={24} height={24} /></div>)
-                                : (<>
-                                    <ExtendedHistoryChart
-                                        key={index}
-                                        metric={metric}
-                                        metrics={query.data! as IRatio[]}
-                                        metricKey={metricKey}
-                                        metricKind={props.metricKind!}
-                                        periodType={periodType}
-                                        palette={palette}
-                                    />
-                                    <table className="table table-compact w-full text-slate-500 z-0">
-                                        <tbody>
-                                            {performance.map((perf) => {
-                                                const [key, value] = Object.entries(perf)[0]
-                                                return (<>
-                                                    <tr key={key} className="hover">
-                                                        <th className="rounded-none">{key} {parseInt(key) > 1 ? "Years" : "Year"}</th>
-                                                        <td className="rounded-none text-right border-b-0 w-28">
-                                                            <ValueIndicator unit="%">{Number.isNaN(value) ? "N/A" : value.toFixed(fractionDigits)}</ValueIndicator>
-                                                        </td>
-                                                    </tr>
-                                                </>
-                                                )
-                                            })
-                                            }
-                                        </tbody>
-                                    </table>
-                                </>
+                                : (
+                                    <>
+                                        <ExtendedHistoryChart
+                                            key={metric}
+                                            metric={metric}
+                                            metrics={query.data! as IRatio[]}
+                                            metricKey={metricKey}
+                                            metricKind={props.metricKind!}
+                                            periodType={periodType}
+                                            palette={palette}
+                                        />
+                                        {perf
+                                            ? <PerformanceTable key={metric} performance={(perf as Map<any, any>).get(metricKey) ?? []}></PerformanceTable>
+                                            : <></>}
+                                    </>
                                 )
                         }
                     </InfoCard>
