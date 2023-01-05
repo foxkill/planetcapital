@@ -5,10 +5,12 @@
 // Closed Source
 //
 
+import ICashflowStatement from "@/types/cashflow-statement"
 import IIncomeStatement from "@/types/income-statement"
+import IRatio from "@/types/ratio"
 import cagr from "./cagr"
 
-function calculateCagr(data: IIncomeStatement[], dataKey: string, periods: number, periodType: string): number {
+function calculateCagr(data: IIncomeStatement[]|IRatio[]|ICashflowStatement[], dataKey: string, periods: number, periodType: string): number {
     let index = periods
 
     if (periodType != "FY") {
