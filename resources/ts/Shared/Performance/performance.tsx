@@ -9,8 +9,10 @@ import ValueIndicator from "../ValueIndicator/ValueIndicator"
 
 const DEFAULT_FRACTION_DIGITS = 2
 
+type PerformanceEntry = Record<number, number>
+
 type PerformanceTableProps = {
-    performance: unknown[]
+    performance: PerformanceEntry[]
     fractionDigits?: number
 }
 
@@ -22,14 +24,15 @@ const PerformanceTable: React.FC<PerformanceTableProps> = (props) => {
             <tbody>
                 {props.performance.map((perf) => {
                     const [key, value] = Object.entries(perf)[0]
-                    return (<>
-                        <tr key={key} className="hover">
-                            <th className="rounded-none">{key} {parseInt(key) > 1 ? "Years" : "Year"}</th>
-                            <td className="rounded-none text-right border-b-0 w-28">
-                                <ValueIndicator unit="%">{Number.isNaN(value) ? "N/A" : value.toFixed(digits)}</ValueIndicator>
-                            </td>
-                        </tr>
-                    </>
+                    return (
+                        <>
+                            <tr key={key} className="hover">
+                                <th className="rounded-none">{key} {parseInt(key) > 1 ? "Years" : "Year"}</th>
+                                <td className="rounded-none text-right border-b-0 w-28">
+                                    <ValueIndicator unit="%">{Number.isNaN(value) ? "N/A" : value.toFixed(digits)}</ValueIndicator>
+                                </td>
+                            </tr>
+                        </>
                     )
                 })
                 }
