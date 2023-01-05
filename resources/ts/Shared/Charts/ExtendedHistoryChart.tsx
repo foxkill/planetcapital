@@ -112,7 +112,8 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
                     data={props.metrics as unknown as BarDatum[]}
                     indexBy="date"
                     keys={[props.metricKey]}
-                    margin={{ top: 10, right: 0, bottom: 5, left: 0 }}
+                    margin={{ top: 0, right: 0, bottom: 5, left: 0 }}
+                    // valueScale={{ type: "symlog" }}
                     valueScale={{ type: "linear" }}
                     enableLabel={false}
                     enableGridY={false}
@@ -121,7 +122,7 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
                     axisLeft={null}
                     axisRight={null}
                     animate
-                    padding={0.8}
+                    padding={0.7}
                     colors={[props.palette.vibrant!]}
                     borderRadius={2}
                     // layers={["grid", "axes", "bars", "markers", "legends"]}
@@ -135,7 +136,7 @@ const ExtendedHistoryChart: React.FC<ExtendedHistoryChartProps> = (props) => {
                         }
 
                         let tmr = ""
-                        const period = (dataPoint.data as any as IKeyMetric).period
+                        const period = (dataPoint.data as unknown as IKeyMetric).period
 
                         switch (period) {
                             case "FY":
