@@ -12,6 +12,7 @@ import Navbar from "./Navbar";
 interface ILayoutProperities {
     children: React.ReactNode
 }
+
 const Layout = ({ children }: ILayoutProperities): JSX.Element => {
     return (
         <>

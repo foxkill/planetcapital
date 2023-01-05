@@ -34,10 +34,9 @@ interface IIncomeStatementProps {
 //
 const Index: React.FC<IIncomeStatementProps> = () => {
     const { exchange, symbol, periodType } = useSecurity().context
-
     const period = periodType.toLocaleLowerCase()
-    // `/api/security/${profileQuery.data?.exchangeShortName.toLowerCase()}/${profileQuery.data?.symbol.toLowerCase()}/image`
     const imageUrl = `/api/security/${exchange}/${symbol}/image`
+
     const { data } = usePalette(imageUrl)
 
     let limit = 10
