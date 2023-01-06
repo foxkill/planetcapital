@@ -5,8 +5,8 @@
 // Closed Source
 //
 import React from "react"
-import { ArrowDnImage } from "../Images/ArrowDnImage"
-import { ArrowUpImage } from "../Images/ArrowUpImage"
+import { ArrowDnImage } from "@/Shared/Images/ArrowDnImage"
+import { ArrowUpImage } from "@/Shared/Images/ArrowUpImage"
 
 interface IValueIndicatorProps {
     children: React.ReactNode

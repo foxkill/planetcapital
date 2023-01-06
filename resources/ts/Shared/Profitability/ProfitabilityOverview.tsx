@@ -4,7 +4,6 @@
 // https://github.com/foxkill/planetcapital
 // Closed Source
 //
-
 import fetchCashFlowStatement from "@/planetapi/fetch.cash-flow-statement"
 import fetchFinancialRatios from "@/planetapi/fetch.financialratios"
 import fetchIncomeStatement from "@/planetapi/fetch.income-statement"
