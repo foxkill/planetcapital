@@ -12,13 +12,14 @@ import Cards from "@/Shared/Cards";
 import CompanyInfo from "@/Shared/CompanyInfo";
 import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod";
 import valuations from "@/models/valuation.models";
+import HugeHeader from "@/Shared/HugeHeader";
 
-interface IRelativeValuationProperties {
+type RelativeValuationProperties = {
     exchange: string,
     symbol: string
 }
 
-function RelativeValuation({ exchange, symbol }: IRelativeValuationProperties): JSX.Element {
+function RelativeValuation({ exchange, symbol }: RelativeValuationProperties): JSX.Element {
     return (
         <>
             <Hero height={30}>
@@ -26,7 +27,8 @@ function RelativeValuation({ exchange, symbol }: IRelativeValuationProperties): 
                 <SelectPeriod />
             </Hero>
             <Hero useColumnLayout={false} height={60}>
-                <Cards valuations={valuations}>2. Valuation Multiples</Cards>
+                <HugeHeader>Valuation Multiples</HugeHeader>
+                <Cards valuations={valuations}>&nbsp;</Cards>
             </Hero>
         </>
     )
