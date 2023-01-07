@@ -9,30 +9,34 @@ import Card from "../Card";
 import IRatio from "@/types/ratio";
 import { useSecurity } from "../SecurityContext/SecurityContext";
 import styles from "./Cards.styles"
-import HugeHeader from "../HugeHeader/HugeHeader";
 import { Valuations } from "@/models/valuation.models";
 import Hero from "../Hero";
 import { useQuery } from "react-query";
 import fetchFinancialRatios from "@/planetapi/fetch.financialratios";
 import Spinner from "../Spinner";
 import Error from "@/Shared/Error"
+import getQueryKey from "@/utils/querykey";
+import HugeHeader from "../HugeHeader";
+import Spacer from "../Spacer";
 
 interface ICardsProperties {
     children: React.ReactNode
     valuations: Valuations
+    enterpriseValuations: any[]
 }
 
 export function Cards(props: ICardsProperties): JSX.Element | null {
     const context = useSecurity().context
+    const limit = 1
 
     const ratioQuery = useQuery<IRatio>(
         [
-            ["ratios", context.symbol, context.exchange, context.periodType].join("-").toLocaleLowerCase(),
+            getQueryKey("ratios", limit, context),
             {
                 symbol: context.symbol,
                 exchange: context.exchange,
                 periodType: context.periodType,
-                limit: context.limit
+                limit: limit
             }
         ],
         fetchFinancialRatios,
@@ -61,7 +65,7 @@ export function Cards(props: ICardsProperties): JSX.Element | null {
                     )
                 }
             </div>
-            <Hero></Hero>
+            <Spacer />
         </>
     )
 }
