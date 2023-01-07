@@ -24,7 +24,7 @@ const securityContextModel: ISecurityContext = {
     image: "",
     price: 0,
     changes: 0,
-    limit: 1
+    limit: 11
 }
 
 export default securityContextModel
