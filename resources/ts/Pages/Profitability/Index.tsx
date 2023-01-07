@@ -158,7 +158,7 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                 <Spacer />
             </Hero>
             {/* Return on Capital */}
-            <Hero onTop>
+            <Hero onTop height={60}>
                 <Spacer />
                 <HugeHeader>Return On Captial</HugeHeader>
                 <Spacer />
@@ -200,10 +200,9 @@ const Index: IPage<IProfitabilityPageProps> = (props) => {
                         </InfoCard>)
                     }
                 </div>
-                <Spacer />
             </Hero>
             {/* Free Cash Flow */}
-            <Hero onTop backgroundColor="bg-base-300">
+            <Hero onTop backgroundColor="bg-base-300" height={60}>
                 <Spacer />
                 <HugeHeader>Free Cash Flow</HugeHeader>
                 <Spacer />
