@@ -31,32 +31,52 @@ const Card = (props: CardProps): JSX.Element | null => {
     }
 
     if (!props.data) {
-        return null 
+        return null
     }
 
     const width = props.width ? props.width : "full"
 
     const key = props.ikey + keymap[props.type ?? "FY"]
     let value = props.data[key]?.toFixed(2) ?? "0.00"
- 
+
     const detailUrl = props.ikey.split(/(?=[A-Z])/).join("-").toLowerCase();
     return (
-        <div className={`card card-bordered w-${width} h-60 bg-base-100 hover:shadow-xl`}>
-            <div className="bg-slate-200 relative p-2 justify-self-auto">
-                <h2 className="leading-8 pt-2 text-4xl text-center">{value}</h2>
-                <p className="pt-1 pb-1 text-sm text-center leading-4 uppercase">{props.children}</p>
-                <button className="btn btn-square btn-xs absolute right-3 top-[15%] transform-50">
-                    {/* // TODO: use route() function */}
-                    <Link href={`/security/${context.exchange.toLowerCase()}/${context.symbol.toLowerCase()}/relative-valuation/ratio/${detailUrl}`}>
-                        <ExternalLinkImage />
-                    </Link>
-                </button>
-                <button className="btn btn-square btn-xs absolute right-3 top-[55%] transform-50">
-                    <InformationImage />
-                </button>
-            </div>
+        <div className={`card card-bordered w-${width} h-60 bg-base-100 hover:shadow-xl group`}>
+            <figure className="bg-slate-200 justify-between">
+                <div className="basis-1/4">&nbsp;</div>
+                <div className="basis-2/4">
+                    <h2 className="text-4xl text-center bg-slate-200 pt-1 overflow-hidden">{value}</h2>
+                    <p className="pb-1 text-sm text-center uppercase">{props.children}</p>
+                </div>
+                <div className="basis-1/4 flex flex-col items-end pr-2 opacity-0 group-hover:opacity-100">
+                    <button className="btn btn-square btn-xs">
+                        <Link href={`/security/${context.exchange.toLowerCase()}/${context.symbol.toLowerCase()}/relative-valuation/ratio/${detailUrl}`}>
+                            <ExternalLinkImage />
+                        </Link>
+                    </button>
+                    <div className="h-1"></div>
+                    <button className="btn btn-square btn-xs">
+                        <InformationImage />
+                    </button>
+                </div>
+            </figure>
             <div className="card-body text-center">
-                {props.data.period ?? props.type}
+                <table className="table table-compact w-full text-slate-600 z-0">
+                    <tbody>
+                        <tr className="hover">
+                            <td>Median</td>
+                            <td className="text-right font-bold">10.8</td>
+                        </tr>
+                        <tr className="hover">
+                            <td>Industry</td>
+                            <td className="text-right font-bold">2.4</td>
+                        </tr>
+                        <tr className="hover">
+                            <td>Forward Multiple</td>
+                            <td className="text-right font-bold">7.6</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     )
