@@ -38,7 +38,7 @@ export interface IKeyMetric {
     currentRatio: number;
     interestCoverage: number;
     incomeQuality: number;
-    dividendYield?: any;
+    dividendYield?: number;
     payoutRatio: number;
     salesGeneralAndAdministrativeToRevenue: number;
     researchAndDdevelopementToRevenue: number;
