@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use RuntimeException;
 
 class RelativeValuations extends Controller
 {
@@ -28,8 +29,8 @@ class RelativeValuations extends Controller
         ];
 
         $period = strtolower($request->period);
-
         $isTTM = $period === "ttm" && $request->limit > 1;
+        $limit = intval($request->limit) ?? 1;
 
         $key = join(
             '_',
@@ -39,10 +40,9 @@ class RelativeValuations extends Controller
                 // TODO: check valid period.
                 $period,
                 strtolower($request->security),
-                $request->limit ?? 1,
+                $limit,
             ]
         );
-
 
         $cachedSecurity = Cache::get($key);
 
@@ -51,8 +51,6 @@ class RelativeValuations extends Controller
             $data = json_decode($cachedSecurity);
             return response()->json($data, Response::HTTP_OK);
         }
-
-        $limit = $request->limit ?? 1;
 
         // Build the endpoint.
         $endpoint = sprintf(
@@ -128,6 +126,11 @@ class RelativeValuations extends Controller
         //
     }
 
+    /**
+     * Create an empty ratio structure.
+     * 
+     * @return array
+     */
     private function createRatio()
     {
         return [
@@ -204,8 +207,13 @@ class RelativeValuations extends Controller
      */
     private function calc_ttm($data)
     {
-        $ttm_list = [];
+        if (count($data) < 4) {
+            throw new RuntimeException("Invalid data structure given.");
+        }
+
         $sum = [];
+        $ttm_list = [];
+        
         // First pass.
         $current = $this->createRatio();
         $current['symbol'] = $data[0]['symbol'];
