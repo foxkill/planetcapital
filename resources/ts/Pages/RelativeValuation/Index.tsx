@@ -11,7 +11,7 @@ import Hero from "@/Shared/Hero";
 import Cards from "@/Shared/Cards";
 import CompanyInfo from "@/Shared/CompanyInfo";
 import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod";
-import valuations from "@/models/valuation.models";
+import { valuations, enterpriseValuations } from "@/models/valuation.models";
 import HugeHeader from "@/Shared/HugeHeader";
 
 type RelativeValuationProperties = {
@@ -28,7 +28,7 @@ function RelativeValuation({ exchange, symbol }: RelativeValuationProperties): J
             </Hero>
             <Hero useColumnLayout={false} height={60}>
                 <HugeHeader>Valuation Multiples</HugeHeader>
-                <Cards valuations={valuations}>&nbsp;</Cards>
+                <Cards valuations={valuations} enterpriseValuations={enterpriseValuations}>&nbsp;</Cards>
             </Hero>
         </>
     )

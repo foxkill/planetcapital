@@ -5,7 +5,7 @@
 // Closed Source
 //
 
-import { IKeyMetric } from "@/types/key-metric";
+import IKeyMetric from "@/types/key-metric";
 import { AxiosResponse } from "axios";
 import { get } from "./axios.get";
 

@@ -67,5 +67,4 @@ declare interface IRatioTTM {
 }
 
 export default IRatioTTM;
-
-export declare type SecurityTTMProperties = keyof IRatioTTM
+export declare type TTMRatioProperties = keyof IRatioTTM

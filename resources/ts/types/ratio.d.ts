@@ -68,10 +68,10 @@ declare interface IRatio {
 
 export declare type RatioProperties = keyof IRatio
 
+export default IRatio
+
 // export declare type ShortCutType = ISecurity[keyof ISecurity]
 // export declare type ShortCutType<T> = {
 //     [P in keyof T]: T[P]
 // }
 // export declare type ShortCutIndexType = ShortCutType<ISecurity>
-
-export default IRatio

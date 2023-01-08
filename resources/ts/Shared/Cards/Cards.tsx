@@ -4,32 +4,40 @@
 // https://github.com/foxkill/planetapi
 // Closed Source
 //
-import React from "react";
-import Card from "../Card";
-import IRatio from "@/types/ratio";
-import { useSecurity } from "../SecurityContext/SecurityContext";
-import styles from "./Cards.styles"
-import { Valuations } from "@/models/valuation.models";
-import Hero from "../Hero";
-import { useQuery } from "react-query";
+import { EnterpriseRecord, EnterpriseRecordTTM, RatioRecord, RatioTTMRecord } from "@/models/valuation.models";
 import fetchFinancialRatios from "@/planetapi/fetch.financialratios";
-import Spinner from "../Spinner";
-import Error from "@/Shared/Error"
+import fetchKeyMetrics from "@/planetapi/fetch.key-metrics";
+import Card from "@/Shared/Card";
+import Error from "@/Shared/Error";
+import HugeHeader from "@/Shared/HugeHeader";
+import { useSecurity } from "@/Shared/SecurityContext/SecurityContext";
+import Spacer from "@/Shared/Spacer";
+import Spinner from "@/Shared/Spinner";
+import { IKeyMetric, KeyMetricProperites } from "@/types/key-metric";
+import { IKeyMetricTTM } from "@/types/key-metric.ttm";
+import IRatio from "@/types/ratio";
+import IRatioTTM from "@/types/ratio.ttm";
+import { ISecurityContext } from "@/types/security.context";
 import getQueryKey from "@/utils/querykey";
-import HugeHeader from "../HugeHeader";
-import Spacer from "../Spacer";
+import React from "react";
+import { useQuery } from "react-query";
+import styles from "./Cards.styles";
 
 interface ICardsProperties {
     children: React.ReactNode
-    valuations: Valuations
-    enterpriseValuations: any[]
+    valuations: RatioRecord[] | RatioTTMRecord[]
+    enterpriseValuations: EnterpriseRecord[] | EnterpriseRecordTTM[]
+}
+
+function isRatioTTMRecord(context: ISecurityContext, data: RatioRecord[] | RatioTTMRecord[]): data is RatioTTMRecord[] {
+    return context.periodType === "TTM" ? true : false
 }
 
 export function Cards(props: ICardsProperties): JSX.Element | null {
     const context = useSecurity().context
     const limit = 1
 
-    const ratioQuery = useQuery<IRatio>(
+    const ratioQuery = useQuery<IRatio | IRatioTTM>(
         [
             getQueryKey("ratios", limit, context),
             {
@@ -46,22 +54,49 @@ export function Cards(props: ICardsProperties): JSX.Element | null {
         }
     )
 
+    const keyMetricsQuery = useQuery<IKeyMetric[] | IKeyMetricTTM[]>(
+        [
+            getQueryKey("key-metrics", limit, context),
+            {
+                symbol: context.symbol,
+                exchange: context.exchange,
+                periodType: context.periodType,
+                limit: limit
+            }
+        ],
+        fetchKeyMetrics,
+        {
+            enabled: Boolean(context.symbol && context.exchange),
+            retry: false
+        }
+    )
+
     return (
         <>
             <HugeHeader>{props.children}</HugeHeader>
             <Error error={ratioQuery.error}>Es konnten keine Daten für diese Aktie geladen werden</Error>
             <div className={"grid " + styles.cards}>
                 {
-                    ratioQuery.isLoading ? (
+                    ratioQuery.isLoading || keyMetricsQuery.isLoading ? (
                         <div className="text-center w-full lg:col-span-4 md:col-span-3">
                             <Spinner height={24} width={24}></Spinner>
                         </div>
                     ) : (
-                        props.valuations.map((value) => {
+                        props.valuations.map((value: RatioRecord | RatioTTMRecord) => {
                             const [key, val] = Object.entries(value)[0]
                             const data = ratioQuery.data ? ratioQuery.data[0] : []
-                            return <Card type={context.periodType} key={key} ikey={val} data={data as IRatio}>{key}</Card>
-                        })
+                            return <Card key={key} ikey={val} data={data}>{key}</Card>
+                        }).concat(
+                            props.enterpriseValuations.map((value: EnterpriseRecord | EnterpriseRecordTTM) => {
+                                const [key, val] = Object.entries(value)[0]
+                                const data = keyMetricsQuery.data ? keyMetricsQuery.data[0] : [] as unknown as IKeyMetric
+                                if (typeof val === "string" && val != "-") {
+                                    return <Card key={key} ikey={val as KeyMetricProperites} data={data}>{key}</Card>
+                                } else {
+                                    return <></>
+                                }
+                            })
+                        )
                     )
                 }
             </div>

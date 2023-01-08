@@ -12,10 +12,12 @@ import Cards from "@/Shared/Cards";
 import CompanyInfo from "@/Shared/CompanyInfo";
 import TickerSearch from "@/Shared/TickerSearch";
 import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod";
-import valuations from "@/models/valuation.models";
+import {valuations, ttmValuations, enterpriseValuations, enterpriseValuationsTTM} from "@/models/valuation.models";
 import HugeHeader from "@/Shared/HugeHeader";
+import { useSecurity } from "@/Shared/SecurityContext/SecurityContext";
 
 function App(): JSX.Element {
+    const { context } = useSecurity()
     return (
         <>
             <Hero useColumnLayout={true} height={60}><TickerSearch></TickerSearch></Hero>
@@ -25,7 +27,9 @@ function App(): JSX.Element {
                 <SelectPeriod></SelectPeriod>
             </Hero>
             <Hero useColumnLayout={false} height={60}>
-                <Cards valuations={valuations}>
+                <Cards 
+                    valuations={context.periodType === "TTM" ? ttmValuations : valuations} 
+                    enterpriseValuations={context.periodType === "TTM" ? enterpriseValuationsTTM : enterpriseValuations}>
                 </Cards>
             </Hero>
         </>

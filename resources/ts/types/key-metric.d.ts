@@ -5,7 +5,7 @@
 // Closed Source
 //
 
-export interface IKeyMetric {
+declare interface IKeyMetric {
     symbol: string;
     date: string;
     period: string;
@@ -67,3 +67,7 @@ export interface IKeyMetric {
     roe: number;
     capexPerShare: number;
 }
+
+declare type KeyMetricProperites = keyof IKeyMetric
+
+export { IKeyMetric, type KeyMetricProperites }

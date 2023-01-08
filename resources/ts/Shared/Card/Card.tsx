@@ -8,27 +8,21 @@ import React from "react";
 import IRatio, { RatioProperties } from "@/types/ratio";
 import { ExternalLinkImage } from "../Images/ExternalLinkImage";
 import { InformationImage } from "../Images/InformationImage";
-import PeriodTypes from "@/types/period";
 import { useSecurity } from "../SecurityContext/SecurityContext";
 import { Link } from "@inertiajs/inertia-react"
+import IRatioTTM, { TTMRatioProperties as RatioTTMProperties } from "@/types/ratio.ttm";
+import { IKeyMetric, KeyMetricProperites } from "@/types/key-metric";
+import { IKeyMetricTTM } from "@/types/key-metric.ttm";
 
 interface CardProps {
-    type?: PeriodTypes
-    data: IRatio | undefined
-    ikey: RatioProperties
+    data: IRatio | IRatioTTM | IKeyMetric | IKeyMetricTTM
+    ikey: RatioProperties | RatioTTMProperties | KeyMetricProperites
     children: React.ReactNode
     width?: number
 }
-// href="https://www.alphaspread.com/security/nyse/asix/relative-valuation/ratio/price-to-sales"
 
 const Card = (props: CardProps): JSX.Element | null => {
     const { context } = useSecurity()
-
-    const keymap = {
-        "FY": "",
-        "TTM": "TTM",
-        "QTR": "",
-    }
 
     if (!props.data) {
         return null
@@ -36,10 +30,11 @@ const Card = (props: CardProps): JSX.Element | null => {
 
     const width = props.width ? props.width : "full"
 
-    const key = props.ikey + keymap[props.type ?? "FY"]
+    const key = props.ikey
     let value = props.data[key]?.toFixed(2) ?? "0.00"
 
     const detailUrl = props.ikey.split(/(?=[A-Z])/).join("-").toLowerCase();
+
     return (
         <div className={`card card-bordered w-${width} h-60 bg-base-100 hover:shadow-xl group`}>
             <figure className="bg-slate-200 justify-between">
@@ -61,7 +56,7 @@ const Card = (props: CardProps): JSX.Element | null => {
                 </div>
             </figure>
             <div className="card-body text-center">
-                <table className="table table-compact w-full text-slate-600 z-0">
+                <table className="table table-compact w-full text-slate-600">
                     <tbody>
                         <tr className="hover">
                             <td>Median</td>
