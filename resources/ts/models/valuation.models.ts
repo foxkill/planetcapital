@@ -7,12 +7,16 @@
 
 import ICashflowStatement from "@/types/cashflow-statement";
 import { IKeyMetric } from "@/types/key-metric";
+import { IKeyMetricTTM } from "@/types/key-metric.ttm";
 import IRatio, { RatioProperties } from "@/types/ratio";
+import { TTMRatioProperties } from "@/types/ratio.ttm";
 
 type K = IKeyMetric | IRatio | ICashflowStatement
 type RatioCalculationFunc = <T extends K>(data: T[], numerator: string, denominator: string) => number
 
-const valuations: Record<string, RatioProperties>[] = [
+type RatioRecord = Record<string, RatioProperties>
+
+const valuations: RatioRecord[] = [
     { "p/s": "priceToSalesRatio" },
     { "p/e": "priceEarningsRatio" },
     { "p/ocf": "priceToOperatingCashFlowsRatio" },
@@ -24,6 +28,20 @@ const valuations: Record<string, RatioProperties>[] = [
     { "quick ratio": "quickRatio" },
 ]
 
+type RatioTTMRecord = Record<string, TTMRatioProperties>
+
+const ttmValuations: RatioTTMRecord[] = [
+    { "p/s": "priceToSalesRatioTTM" },
+    { "p/e": "peRatioTTM" },
+    { "p/ocf": "priceToOperatingCashFlowsRatioTTM" },
+    { "p/fcf": "priceToFreeCashFlowsRatioTTM" },
+    { "p/b": "priceToBookRatioTTM" },
+    { "peg": "priceEarningsToGrowthRatioTTM" },
+    { "cash ratio": "cashRatioTTM" },
+    { "current ratio": "currentRatioTTM" },
+    { "quick ratio": "quickRatioTTM" },
+]
+
 const ratio: RatioCalculationFunc = <T>(data: T, numerator: string, denominator: string): number => {
     return data[numerator] / data[denominator]
 }
@@ -33,16 +51,37 @@ const ratio: RatioCalculationFunc = <T>(data: T, numerator: string, denominator:
 // ev/fcfe - Enterprice Value / Free Cash Flow To Equity
 // ev/ic - Enterprice Value / Investing Capital
 // ev - IKeyMetric
-const enterpriseValuations: Record<string, keyof IKeyMetric | RatioCalculationFunc | "-">[] = [
+type EnterpriseRecord = Record<string, keyof IKeyMetric | RatioCalculationFunc | "-">
+
+const enterpriseValuations: EnterpriseRecord[] = [
     { "ev/s": "evToSales" },
     { "ev/ocf": "evToOperatingCashFlow" },
     { "ev/fcf": "evToFreeCashFlow" },
     { "ev/ebit": "-" },
     { "ev/ic": "-" },
     { "ev/fcff": "-" },
-    { "ev/gp": ratio }
+    { "ev/gp": "-" }
 ]
 
-export type Valuations = typeof valuations
-export {enterpriseValuations}
-export default valuations
+type EnterpriseRecordTTM = Record<string, keyof IKeyMetricTTM | RatioCalculationFunc | "-">
+const enterpriseValuationsTTM: EnterpriseRecordTTM[] = [
+    { "ev/s": "evToSalesTTM" },
+    { "ev/ocf": "evToOperatingCashFlowTTM" },
+    { "ev/fcf": "evToFreeCashFlowTTM" },
+    { "ev/ebit": "-" },
+    { "ev/ic": "-" },
+    { "ev/fcff": "-" },
+    { "ev/gp": "-" }
+]
+
+export { 
+    valuations, 
+    ttmValuations, 
+    enterpriseValuations, 
+    enterpriseValuationsTTM, 
+    type RatioRecord, 
+    type RatioTTMRecord, 
+    type EnterpriseRecord, 
+    type EnterpriseRecordTTM
+}
+
