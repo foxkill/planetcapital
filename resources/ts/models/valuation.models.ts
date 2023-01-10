@@ -74,6 +74,8 @@ const enterpriseValuationsTTM: EnterpriseRecordTTM[] = [
     { "ev/gp": "-" }
 ]
 
+// const isOfRatioType = <T>(context: any, d: keyof T): d is T[] => true
+
 export { 
     valuations, 
     ttmValuations, 
