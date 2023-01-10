@@ -12,6 +12,7 @@ export default new QueryClient({
         queries: {
             refetchOnWindowFocus: false,
             staleTime: 5000,
+            retry: false,
             // Other query settings.
         },
     },
