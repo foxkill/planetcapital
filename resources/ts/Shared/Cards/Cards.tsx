@@ -5,6 +5,7 @@
 // Closed Source
 //
 import { EnterpriseRecord, EnterpriseRecordTTM, RatioRecord, RatioTTMRecord } from "@/models/valuation.models";
+import fetchAnalystEstimates from "@/planetapi/fetch.analyst-estimates";
 import fetchFinancialRatios from "@/planetapi/fetch.financialratios";
 import fetchKeyMetrics from "@/planetapi/fetch.key-metrics";
 import Card from "@/Shared/Card";
@@ -13,6 +14,7 @@ import HugeHeader from "@/Shared/HugeHeader";
 import { useSecurity } from "@/Shared/SecurityContext/SecurityContext";
 import Spacer from "@/Shared/Spacer";
 import Spinner from "@/Shared/Spinner";
+import IAnalystEstimate from "@/types/analyst-estimates";
 import { IKeyMetric, KeyMetricProperites } from "@/types/key-metric";
 import { IKeyMetricTTM } from "@/types/key-metric.ttm";
 import IRatio from "@/types/ratio";
@@ -27,10 +29,6 @@ interface ICardsProperties {
     children: React.ReactNode
     valuations: RatioRecord[] | RatioTTMRecord[]
     enterpriseValuations: EnterpriseRecord[] | EnterpriseRecordTTM[]
-}
-
-function isRatioTTMRecord(context: ISecurityContext, data: RatioRecord[] | RatioTTMRecord[]): data is RatioTTMRecord[] {
-    return context.periodType === "TTM" ? true : false
 }
 
 export function Cards(props: ICardsProperties): JSX.Element | null {
@@ -50,7 +48,6 @@ export function Cards(props: ICardsProperties): JSX.Element | null {
         fetchFinancialRatios,
         {
             enabled: Boolean(context.symbol && context.exchange),
-            retry: false,
         }
     )
 
@@ -67,10 +64,27 @@ export function Cards(props: ICardsProperties): JSX.Element | null {
         fetchKeyMetrics,
         {
             enabled: Boolean(context.symbol && context.exchange),
-            retry: false
         }
     )
 
+    const analystEstimatesQuery = useQuery<IAnalystEstimate[]>(
+        [
+            getQueryKey("analyst-estimates", limit, context),
+            {
+                symbol: context.symbol,
+                exchange: context.exchange,
+                periodType: context.periodType,
+                limit: limit
+            }
+        ],
+        fetchAnalystEstimates,
+        {
+            enabled: Boolean(context.symbol && context.exchange),
+        }
+    )
+
+    console.log(analystEstimatesQuery.data);
+    
     return (
         <>
             <HugeHeader>{props.children}</HugeHeader>
