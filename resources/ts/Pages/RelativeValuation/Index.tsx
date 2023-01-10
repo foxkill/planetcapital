@@ -11,8 +11,9 @@ import Hero from "@/Shared/Hero";
 import Cards from "@/Shared/Cards";
 import CompanyInfo from "@/Shared/CompanyInfo";
 import SelectPeriod from "@/Shared/SelectPeriod/SelectPeriod";
-import { valuations, enterpriseValuations } from "@/models/valuation.models";
+import { valuations, enterpriseValuations, ttmValuations, enterpriseValuationsTTM } from "@/models/valuation.models";
 import HugeHeader from "@/Shared/HugeHeader";
+import { useSecurity } from "@/Shared/SecurityContext/SecurityContext";
 
 type RelativeValuationProperties = {
     exchange: string,
@@ -20,6 +21,7 @@ type RelativeValuationProperties = {
 }
 
 function RelativeValuation({ exchange, symbol }: RelativeValuationProperties): JSX.Element {
+    const { context } = useSecurity()
     return (
         <>
             <Hero height={30}>
@@ -28,7 +30,10 @@ function RelativeValuation({ exchange, symbol }: RelativeValuationProperties): J
             </Hero>
             <Hero useColumnLayout={false} height={60}>
                 <HugeHeader>Valuation Multiples</HugeHeader>
-                <Cards valuations={valuations} enterpriseValuations={enterpriseValuations}>&nbsp;</Cards>
+                <Cards 
+                    valuations={context.periodType === "TTM" ? ttmValuations : valuations} 
+                    enterpriseValuations={context.periodType === "TTM" ? enterpriseValuationsTTM : enterpriseValuations}>
+                </Cards>
             </Hero>
         </>
     )
