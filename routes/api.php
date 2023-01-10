@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AnalystEstimates;
 use App\Http\Controllers\Api\CashflowStatements;
 use App\Http\Controllers\Api\IncomeStatements;
 use Symfony\Component\HttpFoundation\Response;
@@ -187,6 +188,11 @@ Route::get('/security/{exchange}/{security}/balance-sheet/period/{period}/limit/
 
     return response()->json($data, Response::HTTP_CREATED);
 });
+
+//
+// Analyst Estimates
+//
+Route::get('/security/{exchange}/{security}/analyst-estimates/{period}/limit/{limit}', [AnalystEstimates::class, 'index']);
 
 //
 // Image
