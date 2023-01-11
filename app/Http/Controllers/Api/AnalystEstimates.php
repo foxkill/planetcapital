@@ -39,7 +39,7 @@ class AnalystEstimates extends Controller
 
         if ($period == "ttm") {
             $isTTMRequest = true;
-            $limit += 4;
+            $limit *= 4;
         }
 
         $endpoint = sprintf(
@@ -68,7 +68,9 @@ class AnalystEstimates extends Controller
         $data = $response->json();
         if (count($data)) {
             if ($isTTMRequest) {
-                // calculate ttm.
+                $ttmData = $this->ttm($data, count($data));
+                Cache::put($key, json_encode($ttmData));
+                return response()->json($ttmData, Response::HTTP_CREATED);
             }
 
             Cache::put($key, json_encode($data));
@@ -158,7 +160,7 @@ class AnalystEstimates extends Controller
             'estimatedRevenueLow' => 0,
             'estimatedRevenueHigh' => 0,
             'estimatedRevenueAvg' => 0,
-            'estimatedEbitLow' => 0,
+            'estimatedEbitdaLow' => 0,
             'estimatedEbitdaHigh' => 0,
             'estimatedEbitdaAvg' => 0,
             'estimatedEbitLow' => 0,
@@ -170,9 +172,9 @@ class AnalystEstimates extends Controller
             'estimatedSgaExpenseLow' => 0,
             'estimatedSgaExpenseHigh' => 0,
             'estimatedSgaExpenseAvg' => 0,
-            'estimatedEpsAvg' => 0,
-            'estimatedEpsHigh' => 0,
             'estimatedEpsLow' => 0,
+            'estimatedEpsHigh' => 0,
+            'estimatedEpsAvg' => 0,
             'numberAnalystEstimatedRevenue' => 0,
             'numberAnalystsEstimatedEps' => 0,
         ];
@@ -197,7 +199,7 @@ class AnalystEstimates extends Controller
         $current['symbol'] = $data[0]['symbol'];
         $current['date'] = $data[0]['date'];
         $current['numberAnalystEstimatedRevenue'] = $data[0]['numberAnalystEstimatedRevenue'];
-        $current['numberAnalystEstimatedEps'] = $data[0]['numberAnalystEstimatedEps'];
+        $current['numberAnalystsEstimatedEps'] = $data[0]['numberAnalystsEstimatedEps'];
 
         // Calculate the base sums.
         for ($i = 0; $i < 4; $i++) {
@@ -205,7 +207,7 @@ class AnalystEstimates extends Controller
             $current['estimatedRevenueHigh'] += $data[$i]['estimatedRevenueHigh'];
             $current['estimatedRevenueAvg'] += $data[$i]['estimatedRevenueAvg'];
 
-            $current['estimatedEbitdaLow'] += $data[$i]['estimatedRevenueLow'];
+            $current['estimatedEbitdaLow'] += $data[$i]['estimatedEbitdaLow'];
             $current['estimatedEbitdaHigh'] += $data[$i]['estimatedEbitdaHigh'];
             $current['estimatedEbitdaAvg'] += $data[$i]['estimatedEbitdaAvg'];
 
