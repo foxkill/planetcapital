@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use Foxkill\Fmptools\Ratio;
 use RuntimeException;
 
 class RelativeValuations extends Controller
@@ -69,7 +70,7 @@ class RelativeValuations extends Controller
         $data = $response->json();
 
         if (0 == count($data)) {
-            throw new \RuntimeException("No data available from endpoint");
+            throw new \RuntimeException("No data available from this endpoint");
         }
 
         if ($isTTM) {
@@ -131,81 +132,74 @@ class RelativeValuations extends Controller
      * 
      * @return array
      */
-    private function createRatio()
+    private function createEmptyRatio()
     {
-        return [
-            "symbol" => "",
-            "date" => "",
-            "period" => "TTM",
-            "currentRatio" => 0,
-            "quickRatio" => 0,
-            "cashRatio" => 0,
-            "daysOfSalesOutstanding" => 0,
-            "daysOfInventoryOutstanding" => 0,
-            "operatingCycle" => 0,
-            "daysOfPayablesOutstanding" => 0,
-            "cashConversionCycle" => 0,
-            "grossProfitMargin" => 0,
-            "operatingProfitMargin" => 0,
-            "pretaxProfitMargin" => 0,
-            "netProfitMargin" => 0,
-            "effectiveTaxRate" => 0,
-            "returnOnAssets" => 0,
-            "returnOnEquity" => 0,
-            "returnOnCapitalEmployed" => 0,
-            "netIncomePerEBT" => 0,
-            "ebtPerEbit" => 0,
-            "ebitPerRevenue" => 0,
-            "debtRatio" => 0,
-            "debtEquityRatio" => 0,
-            "longTermDebtToCapitalization" => 0,
-            "totalDebtToCapitalization" => 0,
-            "interestCoverage" => 0,
-            "cashFlowToDebtRatio" => 0,
-            "companyEquityMultiplier" => 0,
-            "receivablesTurnover" => 0,
-            "payablesTurnover" => 0,
-            "inventoryTurnover" => 0,
-            "fixedAssetTurnover" => 0,
-            "assetTurnover" => 0,
-            "operatingCashFlowPerShare" => 0,
-            "freeCashFlowPerShare" => 0,
-            "cashPerShare" => 0,
-            "payoutRatio" => 0,
-            "operatingCashFlowSalesRatio" => 0,
-            "freeCashFlowOperatingCashFlowRatio" => 0,
-            "cashFlowCoverageRatios" => 0,
-            "shortTermCoverageRatios" => 0,
-            "capitalExpenditureCoverageRatio" => 0,
-            "dividendPaidAndCapexCoverageRatio" => 0,
-            "dividendPayoutRatio" => 0,
-            "priceBookValueRatio" => 0,
-            "priceToBookRatio" => 0,
-            "priceToSalesRatio" => 0,
-            "priceEarningsRatio" => 0,
-            "priceToFreeCashFlowsRatio" => 0,
-            "priceToOperatingCashFlowsRatio" => 0,
-            "priceCashFlowRatio" => 0,
-            "priceEarningsToGrowthRatio" => 0,
-            "priceSalesRatio" => 0,
-            "dividendYield" => 0,
-            "enterpriseValueMultiple" => 0,
-            "priceFairValue" => 0
-        ];
+        return Ratio::create();
+        // return [
+        //     "symbol" => "",
+        //     "date" => "",
+        //     "period" => "TTM",
+        //     "currentRatio" => 0,
+        //     "quickRatio" => 0,
+        //     "cashRatio" => 0,
+        //     "daysOfSalesOutstanding" => 0,
+        //     "daysOfInventoryOutstanding" => 0,
+        //     "operatingCycle" => 0,
+        //     "daysOfPayablesOutstanding" => 0,
+        //     "cashConversionCycle" => 0,
+        //     "grossProfitMargin" => 0,
+        //     "operatingProfitMargin" => 0,
+        //     "pretaxProfitMargin" => 0,
+        //     "netProfitMargin" => 0,
+        //     "effectiveTaxRate" => 0,
+        //     "returnOnAssets" => 0,
+        //     "returnOnEquity" => 0,
+        //     "returnOnCapitalEmployed" => 0,
+        //     "netIncomePerEBT" => 0,
+        //     "ebtPerEbit" => 0,
+        //     "ebitPerRevenue" => 0,
+        //     "debtRatio" => 0,
+        //     "debtEquityRatio" => 0,
+        //     "longTermDebtToCapitalization" => 0,
+        //     "totalDebtToCapitalization" => 0,
+        //     "interestCoverage" => 0,
+        //     "cashFlowToDebtRatio" => 0,
+        //     "companyEquityMultiplier" => 0,
+        //     "receivablesTurnover" => 0,
+        //     "payablesTurnover" => 0,
+        //     "inventoryTurnover" => 0,
+        //     "fixedAssetTurnover" => 0,
+        //     "assetTurnover" => 0,
+        //     "operatingCashFlowPerShare" => 0,
+        //     "freeCashFlowPerShare" => 0,
+        //     "cashPerShare" => 0,
+        //     "payoutRatio" => 0,
+        //     "operatingCashFlowSalesRatio" => 0,
+        //     "freeCashFlowOperatingCashFlowRatio" => 0,
+        //     "cashFlowCoverageRatios" => 0,
+        //     "shortTermCoverageRatios" => 0,
+        //     "capitalExpenditureCoverageRatio" => 0,
+        //     "dividendPaidAndCapexCoverageRatio" => 0,
+        //     "dividendPayoutRatio" => 0,
+        //     "priceBookValueRatio" => 0,
+        //     "priceToBookRatio" => 0,
+        //     "priceToSalesRatio" => 0,
+        //     "priceEarningsRatio" => 0,
+        //     "priceToFreeCashFlowsRatio" => 0,
+        //     "priceToOperatingCashFlowsRatio" => 0,
+        //     "priceCashFlowRatio" => 0,
+        //     "priceEarningsToGrowthRatio" => 0,
+        //     "priceSalesRatio" => 0,
+        //     "dividendYield" => 0,
+        //     "enterpriseValueMultiple" => 0,
+        //     "priceFairValue" => 0
+        // ];
     }
 
     /*
      * Calculate TTM values.
      */
-    private function ttm($data, $limit)
-    {
-        return $this->calc_ttm($data);
-    }
-
-    /**
-     * Calculate TTM Value
-     */
-    private function calc_ttm($data)
+    private function ttm($data)
     {
         if (count($data) < 4) {
             throw new RuntimeException("Invalid data structure given.");
@@ -215,7 +209,7 @@ class RelativeValuations extends Controller
         $ttm_list = [];
         
         // First pass.
-        $current = $this->createRatio();
+        $current = $this->createEmptyRatio();
         $current['symbol'] = $data[0]['symbol'];
         $current['date'] = $data[0]['date'];
 
@@ -246,7 +240,7 @@ class RelativeValuations extends Controller
 
         $ttm_list[] = $current;
 
-        $current = $this->createRatio();
+        $current = $this->createEmptyRatio();
 
         for ($i = 3, $n = count($data) - 4; $i < $n; $i++) {
             $current['symbol'] = $data[$i - 2]['symbol'];
@@ -280,7 +274,7 @@ class RelativeValuations extends Controller
 
             $ttm_list[] = $current;
 
-            $current = $this->createRatio();
+            $current = $this->createEmptyRatio();
         }
 
         return array_slice($ttm_list, 0, -4);
