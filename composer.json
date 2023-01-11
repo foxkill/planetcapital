@@ -4,8 +4,15 @@
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://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@github.com/foxkill/fmptools.git"
+        }
+    ],
     "require": {
         "php": "^8.0.2",
+        "foxkill/fmptools": "*",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.3",
         "laravel/framework": "^9.19",
@@ -15,6 +22,7 @@
         "tightenco/ziggy": "^1.5"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.12",
         "fakerphp/faker": "^1.9.1",
         "laravel/breeze": "^1.13",
         "laravel/pint": "^1.0",
