@@ -10,7 +10,7 @@ class RatiosController extends Controller
     public function index(Request $req)
     {
         Inertia::setRootView('layouts.app');
-        return inertia(
+        return Inertia::render(
             'RelativeValuation/Ratio/Index', 
             [
                 'ratioCamelCaseName' => $this->ratioToCamelCaseName($req->ratio),
