@@ -68,6 +68,6 @@ declare interface IKeyMetric {
     capexPerShare: number;
 }
 
-declare type KeyMetricProperites = keyof IKeyMetric
+declare type KeyMetricProperities = keyof IKeyMetric
 
-export { IKeyMetric, type KeyMetricProperites }
+export { IKeyMetric, type KeyMetricProperities as KeyMetricProperites }
