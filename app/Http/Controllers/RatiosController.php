@@ -107,7 +107,7 @@ class RatiosController extends Controller
             "quickRatio" => "quick ratio",
         ];
 
-        $camelCaseKey = $this->ratioToCamelCaseName($ratio);
+        $camelCaseKey = $this->ratioToCamelCaseName($ratio) ;
 
         return array_key_exists($camelCaseKey, $formula) 
             ? $formula[$camelCaseKey]
