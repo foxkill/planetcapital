@@ -19,7 +19,6 @@ import { IKeyMetric, KeyMetricProperites } from "@/types/key-metric";
 import { IKeyMetricTTM } from "@/types/key-metric.ttm";
 import IRatio from "@/types/ratio";
 import IRatioTTM from "@/types/ratio.ttm";
-import { ISecurityContext } from "@/types/security.context";
 import getQueryKey from "@/utils/querykey";
 import React from "react";
 import { useQuery } from "react-query";
@@ -35,7 +34,7 @@ export function Cards(props: ICardsProperties): JSX.Element | null {
     const context = useSecurity().context
     const limit = 1
 
-    const ratioQuery = useQuery<IRatio | IRatioTTM>(
+    const ratioQuery = useQuery<IRatio[] | IRatioTTM[]>(
         [
             getQueryKey("ratios", limit, context),
             {
@@ -83,8 +82,6 @@ export function Cards(props: ICardsProperties): JSX.Element | null {
         }
     )
 
-    console.log(analystEstimatesQuery.data);
-    
     return (
         <>
             <HugeHeader>{props.children}</HugeHeader>
