@@ -86,4 +86,3 @@ export {
     type EnterpriseRecord, 
     type EnterpriseRecordTTM
 }
-
