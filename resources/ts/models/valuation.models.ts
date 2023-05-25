@@ -42,6 +42,7 @@ const ttmValuations: RatioTTMRecord[] = [
     { "quick ratio": "quickRatioTTM" },
 ]
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ratio: RatioCalculationFunc = <T>(data: T, numerator: string, denominator: string): number => {
     return data[numerator] / data[denominator]
 }

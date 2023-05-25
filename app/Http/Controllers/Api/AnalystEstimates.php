@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
+use Foxkill\Fmptools\AnalystEstimate;
 use Illuminate\Http\Request;
 use RuntimeException;
 
@@ -148,54 +149,19 @@ class AnalystEstimates extends Controller
     }
 
     /**
-     * Return an empty analyst estimation.
-     * 
-     * @return array
-     */
-    private function createEmptyEstimate()
-    {
-        $ae = [
-            'symbol' => '',
-            'date' => '',
-            'estimatedRevenueLow' => 0,
-            'estimatedRevenueHigh' => 0,
-            'estimatedRevenueAvg' => 0,
-            'estimatedEbitdaLow' => 0,
-            'estimatedEbitdaHigh' => 0,
-            'estimatedEbitdaAvg' => 0,
-            'estimatedEbitLow' => 0,
-            'estimatedEbitHigh' => 0,
-            'estimatedEbitAvg' => 0,
-            'estimatedNetIncomeLow' => 0,
-            'estimatedNetIncomeHigh' => 0,
-            'estimatedNetIncomeAvg' => 0,
-            'estimatedSgaExpenseLow' => 0,
-            'estimatedSgaExpenseHigh' => 0,
-            'estimatedSgaExpenseAvg' => 0,
-            'estimatedEpsLow' => 0,
-            'estimatedEpsHigh' => 0,
-            'estimatedEpsAvg' => 0,
-            'numberAnalystEstimatedRevenue' => 0,
-            'numberAnalystsEstimatedEps' => 0,
-        ];
-
-        return $ae;
-    }
-
-    /**
      * Calculate the TTM value.
      */
-    private function ttm($data, $limit)
+    private function ttm($data)
     {
         if (count($data) < 4) {
             throw new RuntimeException("Invalid data structure given.");
         }
 
         $sum = [];
-        $ttm_list = [];
+        $ttmList = [];
 
         // First pass.
-        $current = $this->createEmptyEstimate();
+        $current = AnalystEstimate::create();
         $current['symbol'] = $data[0]['symbol'];
         $current['date'] = $data[0]['date'];
         $current['numberAnalystEstimatedRevenue'] = $data[0]['numberAnalystEstimatedRevenue'];
@@ -228,9 +194,9 @@ class AnalystEstimates extends Controller
             $current['estimatedEpsAvg'] += $data[$i]['estimatedEpsAvg'];
         }
 
-        $ttm_list[] = $current;
+        $ttmList[] = $current;
 
         // TODO: consider implementing second pass.
-        return $ttm_list;
+        return $ttmList;
     }
 }
