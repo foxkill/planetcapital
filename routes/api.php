@@ -48,6 +48,11 @@ Route::get('/tickers', function (Request $request) {
 Route::get('/security/{exchange}/{security}/relative-valuation/{period}/limit/{limit}', [RelativeValuations::class, 'index']);
 
 //
+// Forward Valuation
+//
+Route::get('/security/{exchange}/{security}/forward-valuation/{period}/limit/{limit}', [RelativeValuations::class, 'index']);
+
+//
 // Profile
 // 
 Route::get('/security/{exchange}/{security}/profile', function (Request $request) {
@@ -137,7 +142,6 @@ Route::get('/security/{exchange}/{security}/profitability/period/{period}/limit/
 
     return response()->json($data, Response::HTTP_CREATED);
 });
-
 
 //
 // Balance sheet (for heatmap)
