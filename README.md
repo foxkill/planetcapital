@@ -13,7 +13,7 @@ This side project enables you to get a quick overview how good the fundamentals 
 ## The profitability overview
 ![profitability](https://github.com/foxkill/planetcapital/assets/7531860/5a1710c8-bb58-461a-a73a-2d25a9c2cb6e)
 
-## The income statement of company visualized
+## The income statement of a company visualized
 ![income-statement](https://github.com/foxkill/planetcapital/assets/7531860/b6765884-8bce-4289-ba15-631d08059aff)
 
 ## The relative valuation (more to come)...
