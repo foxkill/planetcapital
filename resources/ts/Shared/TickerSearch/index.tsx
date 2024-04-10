@@ -1,1 +1,1 @@
-export { default } from './TickerSearch'
+export { default } from "./TickerSearch"
