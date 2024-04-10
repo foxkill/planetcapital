@@ -39,6 +39,12 @@ class RatiosController extends Controller
         return implode(' ', $names);
     }
 
+    /**
+     * Converts a ratio name to its abbreviated representation.
+     * 
+     * @param mixed $ratio The ratio to get a shortcut of.
+     * @return string 
+     */
     protected function ratioToShortName($ratio)
     {
         $valuations = [
