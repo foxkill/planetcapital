@@ -58,7 +58,7 @@ Route::get('/security/{exchange}/{symbol}/financials/income-statement/{lineitem}
 })->name("security.financials.incomestatement.lineitem");
 
 //
-// Profitablity
+// Profitability
 //
 Route::get('/security/{exchange}/{symbol}/profitability', function (Request $req) {
     Inertia::setRootView('layouts.app');
