@@ -62,7 +62,7 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
 
     const hasLabels = props.noLabels ? false : true
     const margin = hasLabels
-        ?  { top: 0, right: 20, bottom: props.periodType != "FY" ? 60 : 20, left: 0 }
+        ? { top: 0, right: 20, bottom: props.periodType != "FY" ? 60 : 20, left: 0 }
         : { top: 0, right: 0, bottom: 0, left: 0 }
     
     const padding = hasLabels ? 0.4 : 0.6
@@ -80,8 +80,8 @@ const LineItemChart: React.FC<LineItemChartProps> = (props) => {
     const formatTime = timeFormat("%b-%Y")
 
     return <ResponsiveBar
-        className="z-0"
-        data={props.incomeStatements}
+        // className="z-0"
+        data={props.incomeStatements as unknown as BarDatum[]}
         keys={[props.lineitem]}
         indexBy="date"
         margin={margin}
