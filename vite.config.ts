@@ -6,6 +6,9 @@ export default defineConfig({
     resolve: {
         alias: [{find: "@", replacement: "/resources/ts"}]
     },
+    server: {
+        hmr: {host: "localhost"}
+    },
     plugins: [
         react(),
         laravel({
