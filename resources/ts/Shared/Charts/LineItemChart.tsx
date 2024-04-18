@@ -20,6 +20,7 @@ type LineItemChartProps = {
     noLabels: boolean
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface IAxisData {
     period: string
     calendarYear: string
