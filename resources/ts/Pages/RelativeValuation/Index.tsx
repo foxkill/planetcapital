@@ -15,12 +15,13 @@ import { valuations, enterpriseValuations, ttmValuations, enterpriseValuationsTT
 import HugeHeader from "@/Shared/HugeHeader";
 import { useSecurity } from "@/Shared/SecurityContext/SecurityContext";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type RelativeValuationProperties = {
     exchange: string,
     symbol: string
 }
 
-function RelativeValuation({ exchange, symbol }: RelativeValuationProperties): JSX.Element {
+function RelativeValuation(): JSX.Element {
     const { context } = useSecurity()
     return (
         <>
