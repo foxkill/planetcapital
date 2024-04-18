@@ -75,7 +75,8 @@ function Ratio(props: IRatioProperties): JSX.Element {
                 // context.information.error = null
                 // context.information.loading = false
             },
-            onError: (err) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            onError: (_err) => {
                 // context.information.data = null
                 // context.information.error = err
                 // context.information.loading = false
