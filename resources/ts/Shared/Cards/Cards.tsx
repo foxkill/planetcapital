@@ -25,7 +25,7 @@ import { useQuery } from "react-query";
 import styles from "./Cards.styles";
 
 interface ICardsProperties {
-    children: React.ReactNode
+    children?: React.ReactNode
     valuations: RatioRecord[] | RatioTTMRecord[]
     enterpriseValuations: EnterpriseRecord[] | EnterpriseRecordTTM[]
 }
@@ -66,6 +66,7 @@ export function Cards(props: ICardsProperties): JSX.Element | null {
         }
     )
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const analystEstimatesQuery = useQuery<IAnalystEstimate[]>(
         [
             getQueryKey("analyst-estimates", limit, context),
@@ -95,7 +96,7 @@ export function Cards(props: ICardsProperties): JSX.Element | null {
                     ) : (
                         props.valuations.map((value: RatioRecord | RatioTTMRecord) => {
                             const [key, val] = Object.entries(value)[0]
-                            const data = ratioQuery.data ? ratioQuery.data[0] : []
+                            const data = ratioQuery.data ? ratioQuery.data[0] : [] as unknown as IRatio
                             return <Card key={key} ikey={val} data={data}>{key}</Card>
                         }).concat(
                             props.enterpriseValuations.map((value: EnterpriseRecord | EnterpriseRecordTTM) => {
